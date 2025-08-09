@@ -17,6 +17,23 @@ async function getGuests() {
     });
 }
 
+async function addGuest(guest) {
+    fetch(url+'/guests', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(guest)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Guest added:', data);
+    })
+    .catch(error => {
+        console.error('Error adding guest:', error);
+    });
+}
+
 async function updateGuest(guest) {
     fetch(url+'/guests/', {
         method: 'PUT',
@@ -29,7 +46,25 @@ async function updateGuest(guest) {
     .catch(error => {
         console.error('Error updating guest:', error);
     });
-    
 }
 
-export default { getGuests, updateGuest };
+async function deleteGuest(id) {
+    fetch(url+'/guests/'+id, {
+        method: 'DELETE',   
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Guest deleted successfully');
+        } else {
+            throw new Error('Failed to delete guest');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting guest:', error);
+    });
+}   
+
+export default { getGuests, addGuest, updateGuest, deleteGuest };

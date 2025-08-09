@@ -42,9 +42,4 @@ router.delete('/:id', async (req, res) => {
     res.status(204).send();
 });
 
-router.post('/test', (req, res) => {
-    console.log('Test POST hit');
-    res.json({ message: 'Test passed' });
-});
-
 export default router;
