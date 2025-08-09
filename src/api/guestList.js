@@ -17,4 +17,19 @@ async function getGuests() {
     });
 }
 
-export { getGuests };
+async function updateGuest(guest) {
+    fetch(url+'/guests/', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => {
+        console.error('Error updating guest:', error);
+    });
+    
+}
+
+export default { getGuests, updateGuest };

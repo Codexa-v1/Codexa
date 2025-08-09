@@ -1,11 +1,12 @@
 // Add, update, and retrieve guest details and RSVP status.
 import express from 'express';
+import Guest from '../models/guest.js';
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        // Logic to retrieve guests from the database
-        const guests = await getGuestsFromDatabase(); // Placeholder for actual database logic
+        const guests = await Guest.find();
         res.status(200).json(guests);
     } catch (error) {
         res.status(500).send('Error retrieving guests');
@@ -14,13 +15,36 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const newGuest = req.body; // Assuming the guest data is sent in the request body
-        // Logic to add a new guest to the database
-        await addGuestToDatabase(newGuest); // Placeholder for actual database logic
-        res.status(201).send('Guest added successfully');
+        console.log("Post called");
+        const newGuest = new Guest({
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            rsvpStatus: req.body.rsvpStatus,
+            dietaryPreferences: req.body.dietaryPreferences
+        });
+
+        const savedGuest = await newGuest.save();
+        res.status(201).json(savedGuest);
     } catch (error) {
         res.status(500).send('Error adding guest');
     }
+});
+
+router.put('/', async (req, res) => {
+    const { id, ...data } = req.body;
+    const updated = await Guest.findByIdAndUpdate(id, data, { new: true });
+    res.status(200).json(updated);
+});
+
+router.delete('/:id', async (req, res) => {
+    await Guest.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+});
+
+router.post('/test', (req, res) => {
+    console.log('Test POST hit');
+    res.json({ message: 'Test passed' });
 });
 
 export default router;
