@@ -1,7 +1,7 @@
 # Codexa Event Planner — Project Documentation
 
 ## Overview
-Codexa is building an Event Planning platform that allows users to create and manage events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization.
+Codexa is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning.
 
 ## Project Goals
 - Enable event creation and guest invitations (manual, RSVP, CSV import)
@@ -37,5 +37,8 @@ We follow the Github Flow methodology:
 - Discord
 - Trello Board (link)
 - GitHub Issues and Pull Requests
+- Microsoft teams
+- [First Meeting Notes](./meetings/2025-08-07-first-meeting.md)
+
 
 ---
