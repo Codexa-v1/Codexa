@@ -1,0 +1,1 @@
+// Event metadata (theme, date, schedule, maps).
