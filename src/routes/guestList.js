@@ -31,9 +31,9 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/', async (req, res) => {
-    const { id, ...data } = req.body;
-    const updated = await Guest.findByIdAndUpdate(id, data, { new: true });
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const updated = await Guest.findByIdAndUpdate(id, req.body, { new: true });
     res.status(200).json(updated);
 });
 

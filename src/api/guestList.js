@@ -34,12 +34,12 @@ async function addGuest(guest) {
     });
 }
 
-async function updateGuest(guest) {
-    fetch(url+'/guests/', {
+async function updateGuest(id) {
+    fetch(url+'/guests/'+id, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
     })
     .then(response => response.json())
     .then(data => console.log(data))
