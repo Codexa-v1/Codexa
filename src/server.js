@@ -1,15 +1,16 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
-const guestRouter = require('./routes/guestList');
-const eventRouter = require('./routes/eventData');
-const exportRouter = require('./routes/exportData');
-const vendorRouter = require('./routes/vendorList');
+import connectDB from './mongodb.js';
+import guestRouter from './routes/guestList.js';
+import eventRouter from './routes/eventData.js';
+import exportRouter from './routes/export.js';
+import vendorRouter from './routes/vendor.js';
 const server = express();
 const port = 3000;
 
 //Database connection setup
-
-
-//The thing will connect to the database and start the server
+connectDB();
 
 server.use(express.json());
 
