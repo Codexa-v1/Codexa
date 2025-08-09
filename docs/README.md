@@ -23,6 +23,7 @@ We follow the Agile Scrum methodology:
 - Standups: Tuesdays, Thursdays, Sundays
 - Sprint Retrospectives: After every sprint
 - Roles are rotated every sprint
+
 We follow the Github Flow methodology:
 - main (or master) branch always deployable
 - Create short-lived feature branches
