@@ -1,4 +1,4 @@
-# 🗓 Codexa Scrum 01 — Agenda & Minutes
+# 🗓 Scrum 01: Agenda & Minutes
 
 **Date:** August 10, 2025  
 **Time:** 20:00 – 20:22  
@@ -83,8 +83,8 @@ Each member answers:
 - **Given**: Continue documentation work.  
 
 ## Meeting proof:
-- ![Alt text](./assets/meetings/scrum1.jpg)
-- ![Alt text](./assets/meetings/scrum1.mp4)
+- ![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.jpg)
+- ![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.mp4)
 ---
 
 ## 📅 Next Meeting

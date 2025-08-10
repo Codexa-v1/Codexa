@@ -1,4 +1,4 @@
-# Mockups — Codexa Event Planner
+# Mockups 
 
 This page contains the visual mockups for our Event Planning application.
 
