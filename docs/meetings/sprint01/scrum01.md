@@ -83,8 +83,8 @@ Each member answers:
 - **Given**: Continue documentation work.  
 
 ## Meeting proof:
-- ![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.jpg)
-- ![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.mp4)
+![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.jpg)
+![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.mp4)
 ---
 
 ## 📅 Next Meeting
