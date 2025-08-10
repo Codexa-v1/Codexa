@@ -1,4 +1,4 @@
-# Sprint 1 — Requirements & Deliverables
+# Sprint 1: Requirements & Deliverables
 
 **Sprint Duration:** Aug 07 – Aug 19, 2025  
 **Sprint Goal:** Set up project foundation, initial UI, and deployment plan.

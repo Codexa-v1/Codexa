@@ -1,4 +1,4 @@
-# Meeting Minutes — First In-Person Team Meeting
+# Meeting Minutes, Frst In-Person Team Meeting
 
 **Date:** August 07, 2025  
 **Time:** 13:15 – 14:53  

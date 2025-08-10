@@ -1,4 +1,4 @@
-# Team Roles & Responsibilities — Codexa Event Planner
+# Team Roles & Responsibilities
 
 ## Scrum Master
 **Assigned to:** Given  

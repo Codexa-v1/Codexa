@@ -1,25 +1,25 @@
-# Tech Stack — Codexa Event Planner
+# Tech Stack
 
 ## Backend
-- Node.js (runtime environment)
-- Express.js (server framework)
-- MongoDB (database)
-- Mongoose (ODM)
+- **Node.js:** Provides a fast, scalable JavaScript runtime for server-side code.
+- **Express.js:** Lightweight and flexible server framework, making API development straightforward.
+- **MongoDB:** A NoSQL database that handles flexible data models, perfect for evolving project requirements.
+- **Mongoose:** Simplifies interactions with MongoDB through object data modeling (ODM).
 
 ## Frontend
-- React 19 + Vite (frontend framework & build tool)
-- Tailwind CSS (utility-first CSS framework)
-- Material Tailwind (prebuilt UI components)
-- Framer Motion (animations)
+- **React 19 + Vite:** React offers a powerful and popular frontend framework, while Vite provides a fast, modern build tool with instant hot module replacement.
+- **Tailwind CSS:** Utility-first CSS framework enabling rapid, consistent UI styling without writing custom CSS from scratch.
+- **Material Tailwind:** Prebuilt UI components styled with Tailwind, speeding up UI development.
+- **Framer Motion:** Smooth, declarative animations to enhance user experience with minimal effort.
 
 ## Authentication
-- OAuth (Google login planned for MVP)
+- **OAuth:** Planned Google login integration ensures secure and user-friendly authentication for MVP.
 
 ## Deployment
-- Microsoft Azure (frontend & backend hosting)
-- CI/CD with GitHub Actions
+- **Microsoft Azure:** Reliable cloud platform hosting both frontend and backend with scalability and security.
+- **CI/CD with GitHub Actions:** Automated testing and deployment workflows to maintain quality and fast iteration.
 
 ## Development Tools
-- GitHub for version control
-- GitHub Copilot for AI code assistance
-- Trello for task management
+- **GitHub:** Version control and collaboration platform integral to our GitHub Flow methodology.
+- **GitHub Copilot:** AI-assisted coding to improve developer productivity.
+- **Trello:** Visual task management to organize sprints, track progress, and prioritize work.

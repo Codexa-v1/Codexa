@@ -1,4 +1,4 @@
-# Communication & Transparency — Codexa Event Planner
+# Communication & Transparency
 
 ## Importance
 Open and consistent communication ensures project alignment, early problem detection, and smooth collaboration.
