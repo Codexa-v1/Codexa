@@ -49,7 +49,9 @@ We follow the Github Flow methodology:
 - Sprint one
     - [Sprint one brief](./planning/sprint-1.md)
     - [Team Roles](./planning/team-roles.md)
-    - [First Meeting Notes](./meetings/2025-08-07-first-meeting.md)
+    - [First Meeting Notes](./meetings/sprint01/2025-08-07-first-meeting.md)
+    - [Mockups](./development/mockups.md)
+    - [Scrum 01](./meetings/sprint01/scrum01.md)
 - Sprint two
 
 ---
