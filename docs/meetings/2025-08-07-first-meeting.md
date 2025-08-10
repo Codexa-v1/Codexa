@@ -35,4 +35,4 @@ Alfred, Given, Kutlwano, Molemo, Ntando, Ntobeko
 - Frontend: Ntando, Kutlwano, Ntobeko
 - Testing/Deployment: Alfred
 - Documentation/Scrum Master: Given
-- Wireframes: Ntando, Ntobeko, Kutlwano — start by Sunday
+- Wireframes: Ntando, Ntobeko, Kutlwano; start by Sunday
