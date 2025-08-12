@@ -1,7 +1,7 @@
 // Manage venues, catering, and other services.
 import express from 'express';
-import Event from '../models/event';
-import Vendor from '../models/vendor';
+import Event from '../models/event.js';
+import Vendor from '../models/vendor.js';
 const router = express.Router();
 
 // Define your routes here

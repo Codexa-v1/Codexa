@@ -1,6 +1,7 @@
 // Provide downloadable event packages for other apps.
 import express from 'express';
 const router = express.Router();
+import Event from '../models/event.js';
 
 // Define your routes here
 router.get('/event/:eventId', (req, res) => {

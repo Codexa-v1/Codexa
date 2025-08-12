@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const guest = new mongoose.Schema({
-  // for 
+  // for id, just use the automatically created field in mongo
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
