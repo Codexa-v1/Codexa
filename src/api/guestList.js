@@ -1,7 +1,7 @@
 // Add, update, and retrieve guest details and RSVP status.
 const url = 'http://localhost:3000'; // Base URL for the API - the reason why this is the full address is because the frontend and the backend are running on different ports.
 
-async function getGuests() {
+export async function getGuests() {
     fetch(url+'/guests', {
         method: 'GET',
         headers: {
@@ -17,7 +17,7 @@ async function getGuests() {
     });
 }
 
-async function addGuest(guest) {
+export async function addGuest(guest) {
     fetch(url+'/guests', {
         method: 'POST',
         headers: {
@@ -34,7 +34,7 @@ async function addGuest(guest) {
     });
 }
 
-async function updateGuest(id) {
+export async function updateGuest(id) {
     fetch(url+'/guests/'+id, {
         method: 'PUT',
         headers: {
@@ -48,7 +48,7 @@ async function updateGuest(id) {
     });
 }
 
-async function deleteGuest(id) {
+export async function deleteGuest(id) {
     fetch(url+'/guests/'+id, {
         method: 'DELETE',   
         headers: {
