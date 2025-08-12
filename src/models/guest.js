@@ -6,10 +6,8 @@ const guest = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
   eventId: { type: Number, required: true },
-  rsvpStatus: { type: String, enum: ['pending', 'accepted', 'declined'], default: 'pending', required: true },
+  rsvpStatus: { type: String, enum: ['Pending', 'Accepted', 'Declined'], default: 'Pending', required: true },
   dietaryPreferences: { type: String, default: '' },
-  createdAt: { type: Date, default: Date.now },
-
-});
+}, { timestamps: true});
 
 export default mongoose.model('Guest', guest);
