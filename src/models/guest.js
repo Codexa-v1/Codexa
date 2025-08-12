@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const guest = new mongoose.Schema({
+  // for 
   name: {
     type: String,
     required: true,
@@ -14,10 +15,15 @@ const guest = new mongoose.Schema({
     type: String,
     required: true,
   },
+  eventId: {
+    type: Number,
+    required: true,
+  },
   rsvpStatus: {
     type: String,
     enum: ['pending', 'accepted', 'declined'],
     default: 'pending',
+    required: true,
   },
   dietaryPreferences: {
     type: String,
