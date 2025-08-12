@@ -7,7 +7,8 @@ const eventSchema = new mongoose.Schema({
     description: { type: String, required: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
-    floorplan: { type: String, required: true }
+    floorplan: { type: String, required: true },
+    guests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Guest' }]
 });
 
 const Event = mongoose.model("Event", eventSchema);

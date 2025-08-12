@@ -1,8 +1,8 @@
 // Add, update, and retrieve guest details and RSVP status.
 const url = 'http://localhost:3000'; // Base URL for the API - the reason why this is the full address is because the frontend and the backend are running on different ports.
 
-export async function getGuests() {
-    fetch(url+'/guests', {
+export async function getGuests(eventId) {
+    fetch(url+'/event/'+eventId, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -17,8 +17,8 @@ export async function getGuests() {
     });
 }
 
-export async function addGuest(guest) {
-    fetch(url+'/guests', {
+export async function addGuest(eventId, guest) {
+    fetch(url+'/event/'+eventId+'/guest', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -34,12 +34,13 @@ export async function addGuest(guest) {
     });
 }
 
-export async function updateGuest(id) {
-    fetch(url+'/guests/'+id, {
+export async function updateGuest(eventId, guestId, guest) {
+    fetch(url+'/event/'+eventId+'/guest/'+guestId, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
         },
+        body: JSON.stringify(guest)
     })
     .then(response => response.json())
     .then(data => console.log(data))
@@ -48,8 +49,8 @@ export async function updateGuest(id) {
     });
 }
 
-export async function deleteGuest(id) {
-    fetch(url+'/guests/'+id, {
+export async function deleteGuest(eventId, guestId) {
+    fetch(url+'/event/'+eventId+'/guest/'+guestId, {
         method: 'DELETE',   
         headers: {
             'Content-Type': 'application/json'
