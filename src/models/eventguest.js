@@ -17,7 +17,7 @@ const eventGuestSchema = new mongoose.Schema({
         default: 'pending'
     },
     customNotes: { type: String },
-    invitationSent: { type: Boolean, default: true }
+    invitationSent: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('EventGuest', eventGuestSchema);
