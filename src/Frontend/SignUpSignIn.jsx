@@ -13,9 +13,9 @@ export default function SignInSignUp() {
 
   // Slideshow
   const images = [
-    "/src/Ntando.jpeg",
-    "/src/Ntando2.jpeg",
-    "/src/Ntando3.jpeg",
+    "/src/assets/Ntando.jpeg",
+    "/src/assets/Ntando2.jpeg",
+    "/src/assets/Ntando3.jpeg",
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
 
