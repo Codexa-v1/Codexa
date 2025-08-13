@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./Frontend/landing"; // ✅ New landing page component
-import SignInSignUp from "./Frontend/SignInSignUp"; // ✅ Auth form toggle componentimport { useState } from 'react'
+import SignInSignUp from "./Frontend/SignUpSignIn"; // ✅ Auth form toggle componentimport { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
