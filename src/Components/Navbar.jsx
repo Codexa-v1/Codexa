@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FaUserCircle } from "react-icons/fa";
 import { HiChevronDown } from "react-icons/hi";
@@ -24,14 +25,21 @@ const Navbar = () => {
     };
   }, []);
 
+  const navigate = useNavigate();
+  const location = useLocation();
   return (
     <nav className="bg-white px-6 py-3 flex justify-between items-center shadow-sm">
-      <h1 className="text-2xl font-bold text-green-800">PlanIt</h1>
+      <h1
+        className="text-2xl font-bold text-green-800 cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        PlanIt
+      </h1>
 
       <section className="flex space-x-6">
         <a
-          href="/dashboard"
-          className="text-gray-700 hover:text-green-800 font-medium"
+          href="/home"
+          className={`font-medium px-2 py-1 rounded transition-colors duration-200 ${location.pathname === "/home" ? "bg-green-800 text-white" : "text-gray-700 hover:text-green-800"}`}
         >
           Dashboard
         </a>
