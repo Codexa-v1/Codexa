@@ -52,7 +52,7 @@ We follow the Github Flow methodology:
     - [First Meeting Notes](./meetings/sprint01/2025-08-07-first-meeting.md)
     - [Mockups](./development/mockups.md)
     - [Scrum 01](./meetings/sprint01/scrum01.md)
-    - [Scrum 03](./meetings/sprint01/Scrum03)
+    - [Scrum 03](./meetings/sprint01/Scrum03.md)
 - Sprint two
 
 ---
