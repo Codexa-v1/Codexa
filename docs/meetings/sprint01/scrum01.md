@@ -82,9 +82,12 @@ Each member answers:
 - **Ntando & Ntobeko**: Finalise application design.  
 - **Given**: Continue documentation work.  
 
+---
+
 ## Meeting proof:
-![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.jpg)
-![Alt text](/Codexa/docs/assets/meetings/scrum01/scrum01.mp4)
+![Scrum 01 Image](../assets/meetings/scrum01/scrum01.jpg)
+[Watch Scrum 01 Video](../assets/meetings/scrum01/scrum01.mp4)
+
 ---
 
 ## 📅 Next Meeting
