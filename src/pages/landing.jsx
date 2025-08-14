@@ -16,21 +16,22 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+  <div className="min-h-screen bg-white w-full">
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div className="w-full px-0 mx-0">
           <div className="flex justify-between items-center py-4">
             <h1 className="text-2xl font-bold text-gray-900">PlanIt</h1>
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-8">
-              <a
-                href="#about"
+              <button
+                type="button"
                 className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                onClick={() => navigate("/about")}
               >
                 About
-              </a>
+              </button>
               {isAuthenticated ? (
                 <>
                   <button
@@ -72,13 +73,13 @@ export default function LandingPage() {
           {/* Mobile Nav Menu */}
           {mobileNavOpen && (
             <nav className="md:hidden flex flex-col space-y-2 py-2">
-              <a
-                href="#about"
-                className="text-gray-600 hover:text-gray-900 px-4 py-2"
-                onClick={() => setMobileNavOpen(false)}
+              <button
+                type="button"
+                className="text-gray-600 hover:text-gray-900 px-4 py-2 text-left"
+                onClick={() => { setMobileNavOpen(false); navigate("/about"); }}
               >
                 About
-              </a>
+              </button>
               {isAuthenticated ? (
                 <>
                   <button
@@ -111,7 +112,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-cyan-50 via-teal-50 to-teal-100 min-h-screen flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div className="w-full px-0 mx-0">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
@@ -220,12 +221,16 @@ export default function LandingPage() {
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="hover:text-white transition-colors duration-200"
+                  <button
+                    type="button"
+                    className="hover:text-white transition-colors duration-200 bg-transparent border-none p-0 cursor-pointer"
+                    onClick={() => {
+                      const hero = document.getElementById("hero");
+                      if (hero) hero.scrollIntoView({ behavior: "smooth" });
+                    }}
                   >
                     Features
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>

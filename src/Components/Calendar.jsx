@@ -46,7 +46,7 @@ const Calendar = () => {
     {
       type: "Wedding",
       title: "Emily & Jake’s Wedding",
-      date: "2025-08-14T09:00:00",
+      date: "2025-08-18T09:00:00",
       location: "Riverside Mansion",
       bgColor: "bg-pink-500",
     },
@@ -110,17 +110,38 @@ const Calendar = () => {
         {[...Array(firstDayOfMonth).keys()].map((_, index) => (
           <span
             key={`empty-${index}`}
-            className="h-12 flex justify-center items-center text-gray-800 text-base sm:text-lg rounded"
+            className="h-12 flex justify-center items-center text-gray-800 text-base sm:text-lg rounded border border-gray-300"
           />
         ))}
-        {[...Array(daysInMonth).keys()].map((day) => (
-          <span
-            key={day + 1}
-            className="h-12 flex justify-center items-center text-gray-800 text-base sm:text-lg cursor-pointer hover:bg-gray-100 rounded"
-          >
-            {day + 1}
-          </span>
-        ))}
+        {[...Array(daysInMonth).keys()].map((day) => {
+          const dateStr = dayjs(new Date(currentYear, currentMonth, day + 1)).format("YYYY-MM-DD");
+          const eventsForDay = events.filter(ev => dayjs(ev.date).format("YYYY-MM-DD") === dateStr);
+          return (
+            <span
+              key={day + 1}
+              className="h-12 flex flex-col justify-center items-center text-gray-800 text-base sm:text-lg cursor-pointer hover:bg-gray-100 rounded border border-gray-400 relative group"
+            >
+              <span>{day + 1}</span>
+              {eventsForDay.length > 0 && (
+                <span className={`w-4 h-1 mt-1 rounded ${eventsForDay[0].bgColor}`}></span>
+              )}
+              {/* Tooltip for events */}
+              {eventsForDay.length > 0 && (
+                <section className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-10 bg-white border border-gray-300 rounded shadow-lg p-2 min-w-[180px] text-xs text-gray-800 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200">
+                  <div className="font-bold mb-1">Events:</div>
+                  <ul>
+                    {eventsForDay.map((ev, idx) => (
+                      <li key={idx} className="mb-1">
+                        <span className={`inline-block w-2 h-2 rounded-full mr-2 align-middle ${ev.bgColor}`}></span>
+                        <span className="font-semibold">{ev.title}</span> <span className="text-gray-500">({ev.type})</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+            </span>
+          );
+        })}
       </section>
     </section>
   );
