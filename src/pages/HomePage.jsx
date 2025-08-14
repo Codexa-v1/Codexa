@@ -1,8 +1,8 @@
 import { FaCalendarPlus } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
-import Navbar from "../Components/Navbar";
-import Calendar from "../Components/Calendar";
-import EventPopup from "../Components/EventPopup";
+import Navbar from "../components/Navbar";
+import Calendar from "../components/Calendar";
+import EventPopup from "../components/EventPopup";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { mockUser } from "../mockuser"; // Import the mock user data
