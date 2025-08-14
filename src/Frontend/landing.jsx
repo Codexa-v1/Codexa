@@ -1,9 +1,11 @@
 import React from "react";
 import { Building2, Users, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom"; 
+import { useAuth0 } from '@auth0/auth0-react';
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { loginWithRedirect } = useAuth0();
 
   const scrollToFeatures = () => {
     const section = document.getElementById("features");
@@ -12,6 +14,7 @@ export default function LandingPage() {
     }
   };
 
+  const { isAuthenticated, logout } = useAuth0();
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -28,18 +31,31 @@ export default function LandingPage() {
               >
                 About
               </a>
-              <button
-                onClick={() => navigate("/signIn")}
-                className="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => navigate("/signUp")}
-                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200"
-              >
-                Sign Up
-              </button>
+              {isAuthenticated ? (
+                <>
+                  <button
+                    onClick={() => navigate("/dashboard")}
+                    className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition-colors duration-200"
+                  >
+                    Go to Dashboard
+                  </button>
+                  <button
+                    onClick={() => logout({ returnTo: window.location.origin })}
+                    className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors duration-200 ml-2"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => loginWithRedirect()}
+                    className="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200"
+                  >
+                    Sign In
+                  </button>
+                </>
+              )}
             </nav>
           </div>
         </div>
