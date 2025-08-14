@@ -4,10 +4,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { HiChevronDown } from "react-icons/hi";
 import profile from "../assets/profile.png";
 
-import { mockUser } from "../mockuser"; // Import the mock user data
+// import { mockUser } from "../mockuser"; // Remove mock user import to use actual user data
 
 const Navbar = () => {
-  const { logout } = useAuth0();
+  const { user, logout, isAuthenticated } = useAuth0();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -49,16 +49,18 @@ const Navbar = () => {
           className="flex items-center space-x-2 cursor-pointer"
           onClick={() => setDropdownOpen((open) => !open)}
         >
-          {mockUser.profilePic ? (
+          {isAuthenticated && user && user.picture ? (
             <img
-              src={mockUser.profilePic}
-              alt={mockUser.name}
+              src={user.picture}
+              alt={user.name || user.email}
               className="w-8 h-8 rounded-full object-cover"
             />
           ) : (
             <FaUserCircle className="text-gray-700 text-2xl" />
           )}
-          <span className="text-gray-700 font-medium">{mockUser.name}</span>
+          <span className="text-gray-700 font-medium">
+            {isAuthenticated && user ? (user.name || user.email) : "Guest"}
+          </span>
           <HiChevronDown className="text-gray-600 w-4 h-4" />
         </section>
         {dropdownOpen && (

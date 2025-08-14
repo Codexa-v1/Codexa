@@ -1,4 +1,5 @@
 import { FaCalendarPlus } from "react-icons/fa";
+import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../Components/Navbar";
 import Calendar from "../Components/Calendar";
 import EventPopup from "../Components/EventPopup";
@@ -8,6 +9,7 @@ import { mockUser } from "../mockuser"; // Import the mock user data
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth0();
 
   const events = [
     {
@@ -61,7 +63,7 @@ const HomePage = () => {
         {/* Header */}
         <section className="flex justify-between items-center">
           <h2 className="text-3xl font-bold text-green-900">
-            Welcome back, {mockUser.name}!
+            Welcome back, {user.name}!
           </h2>
           <button
             className="bg-green-900 text-white px-4 py-2 flex items-center gap-2 rounded-md hover:bg-green-700"
