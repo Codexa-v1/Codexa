@@ -34,7 +34,7 @@ export default function LandingPage() {
               {isAuthenticated ? (
                 <>
                   <button
-                    onClick={() => navigate("/dashboard")}
+                    onClick={() => navigate("/home")}
                     className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 transition-colors duration-200"
                   >
                     Go to Dashboard
