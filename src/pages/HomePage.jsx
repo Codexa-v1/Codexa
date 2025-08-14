@@ -15,7 +15,7 @@ const HomePage = () => {
     {
       type: "Wedding",
       title: "Emily & Jake’s Wedding",
-      date: "2025-08-14T09:00:00",
+      date: "2025-08-18T09:00:00",
       location: "Riverside Mansion",
       rsvpCurrent: 34,
       rsvpTotal: 46,

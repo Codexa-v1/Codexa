@@ -25,12 +25,13 @@ export default function LandingPage() {
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-8">
-              <a
-                href="#about"
+              <button
+                type="button"
                 className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                onClick={() => navigate("/about")}
               >
                 About
-              </a>
+              </button>
               {isAuthenticated ? (
                 <>
                   <button
@@ -72,13 +73,13 @@ export default function LandingPage() {
           {/* Mobile Nav Menu */}
           {mobileNavOpen && (
             <nav className="md:hidden flex flex-col space-y-2 py-2">
-              <a
-                href="#about"
-                className="text-gray-600 hover:text-gray-900 px-4 py-2"
-                onClick={() => setMobileNavOpen(false)}
+              <button
+                type="button"
+                className="text-gray-600 hover:text-gray-900 px-4 py-2 text-left"
+                onClick={() => { setMobileNavOpen(false); navigate("/about"); }}
               >
                 About
-              </a>
+              </button>
               {isAuthenticated ? (
                 <>
                   <button
