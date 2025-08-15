@@ -67,9 +67,9 @@ const Calendar = () => {
   ];
 
   return (
-    <section className="w-full">
+    <section className="w-full h-full">
       {/* Month & Year Navigation */}
-      <section className="flex items-center gap-4 my-14">
+      <section className="flex items-center gap-2 my-14">
         <h2 className="text-2xl sm:text-3xl font-bold pl-5 text-green-900">
           {monthsOfYear[currentMonth]},
         </h2>

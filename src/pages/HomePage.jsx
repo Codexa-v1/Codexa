@@ -1,60 +1,30 @@
-  import { FaCalendarPlus } from "react-icons/fa";
+import { FaCalendarPlus } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../components/Navbar";
 import Calendar from "../components/Calendar";
 import EventPopup from "../components/EventPopup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { mockUser } from "../mockuser"; // Import the mock user data
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, logout, isAuthenticated } = useAuth0();
+  const [events, setEvents] = useState([]);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const navigate = useNavigate();
 
-  const events = [
-    {
-      type: "Wedding",
-      title: "Emily & Jake’s Wedding",
-      date: "2025-08-18T09:00:00",
-      location: "Riverside Mansion",
-      rsvpCurrent: 34,
-      rsvpTotal: 46,
-      bgColor: "bg-pink-200",
-      labelColor: "bg-pink-500",
-      buttons: [
-        { text: "View", color: "bg-green-800" },
-        { text: "Cancel", color: "bg-red-600" },
-      ],
-    },
-    {
-      type: "Conference",
-      title: "Business Conference",
-      date: "2025-08-18T11:00:00",
-      location: "Wits Sport Conference Center",
-      rsvpCurrent: 24,
-      rsvpTotal: 46,
-      bgColor: "bg-yellow-200",
-      labelColor: "bg-yellow-700",
-      buttons: [
-        { text: "View", color: "bg-green-800" },
-        { text: "Cancel", color: "bg-red-600" },
-      ],
-    },
-    {
-      type: "Birthday",
-      title: "John’s 30th Birthday",
-      date: "2025-08-26T15:00:00",
-      location: "The Beach",
-      rsvpCurrent: 33,
-      rsvpTotal: 36,
-      bgColor: "bg-blue-200",
-      labelColor: "bg-blue-500",
-      buttons: [
-        { text: "View", color: "bg-green-800" },
-        { text: "Cancel", color: "bg-red-600" },
-      ],
-    },
-  ];
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      // Fetch events for the logged in user from backend
+      fetch(
+        `http://localhost:3000/api/events?userId=${encodeURIComponent(user.sub)}`
+      )
+        .then((res) => res.json())
+        .then((data) => setEvents(data))
+        .catch((err) => console.error("Failed to fetch events:", err));
+    }
+  }, [isAuthenticated, user]);
 
   return (
     <section className="home-page min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
@@ -98,49 +68,101 @@ const HomePage = () => {
             <h3 className="mb-3 text-xl font-semibold text-center text-green-900">
               Upcoming Events
             </h3>
-            {events.map((event, index) => (
-              <section
-                key={index}
-                className={`${event.bgColor} p-4 rounded-lg shadow mb-4`}
-              >
-                <span
-                  className={`${event.labelColor} text-white px-3 py-1 rounded-full text-xs`}
+            {Array.isArray(events) && events.length > 0 ? (
+              events.slice(0, 3).map((event, index) => (
+                <section
+                  key={index}
+                  className={`${event.bgColor || 'bg-gray-100'} p-4 rounded-lg shadow mb-4`}
                 >
-                  {event.type}
-                </span>
-                <h4 className="text-lg font-bold mt-2">{event.title}</h4>
-                <p className="text-sm">
-                  {dayjs(event.date).format("DD MMM YYYY")}
-                </p>
-                <p className="text-sm">{event.location}</p>
+                  <span
+                    className={`${event.labelColor || 'bg-gray-500'} text-white px-3 py-1 rounded-full text-xs`}
+                  >
+                    {event.category || event.type || 'Event'}
+                  </span>
+                  <h4 className="text-lg font-bold mt-2">{event.title}</h4>
+                  <p className="text-sm">
+                    {event.date ? (typeof event.date === 'string' ? dayjs(event.date).format("DD MMM YYYY") : dayjs(event.date).format("DD MMM YYYY")) : ''}
+                  </p>
+                  <p className="text-sm">{event.location}</p>
 
-                <p className="text-xs mt-3">RSVP Progress</p>
-                <section className="bg-gray-300 h-1 rounded mt-1">
-                  <section
-                    className="bg-green-900 h-1 rounded"
-                    style={{
-                      width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
-                    }}
-                  ></section>
-                </section>
-                <p className="text-xs mt-1">
-                  {event.rsvpCurrent}/{event.rsvpTotal}
-                </p>
+                  <p className="text-xs mt-3">RSVP Progress</p>
+                  <section className="bg-gray-300 h-1 rounded mt-1">
+                    <section
+                      className="bg-green-900 h-1 rounded"
+                      style={{
+                        width: `${event.rsvpCurrent && event.rsvpTotal ? (event.rsvpCurrent / event.rsvpTotal) * 100 : 0}%`,
+                      }}
+                    ></section>
+                  </section>
+                  <p className="text-xs mt-1">
+                    {event.rsvpCurrent || 0}/{event.rsvpTotal || 0}
+                  </p>
 
-                <section className="flex justify-between mt-3">
-                  {event.buttons.map((btn, i) => (
+                  {/* View and Cancel buttons */}
+                  <section className="flex justify-between mt-3">
                     <button
-                      key={i}
-                      className={`${btn.color} text-white px-6 py-1 rounded hover:opacity-90`}
+                      className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90"
+                      onClick={() => {/* TODO: handle view event */}}
                     >
-                      {btn.text}
+                      View
                     </button>
-                  ))}
+                    <button
+                      className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90"
+                      onClick={() => setConfirmDeleteId(event._id)}
+                    >
+                      Cancel
+                    </button>
+                  </section>
                 </section>
-              </section>
-            ))}
+              ))
+            ) : (
+              <p className="text-center text-gray-500">No events found.</p>
+            )}
+            {Array.isArray(events) && events.length > 3 && (
+              <button
+                className="mt-2 w-full bg-green-700 text-white py-2 rounded hover:bg-green-900 font-semibold"
+                onClick={() => navigate("/events")}
+              >
+                See more...
+              </button>
+            )}
           </section>
         </section>
+
+        {/* Confirmation Popup for Deleting Event */}
+        {confirmDeleteId && (
+          <section className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white border border-red-600 rounded-lg shadow-lg p-6 text-center">
+              <h3 className="text-red-700 text-xl font-bold mb-2">Cancel Event?</h3>
+              <p className="mb-4">Are you sure you want to cancel this event? This action cannot be undone.</p>
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded mr-2"
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`http://localhost:3000/api/events/${confirmDeleteId}`, {
+                      method: "DELETE",
+                    });
+                    if (!res.ok) throw new Error("Failed to delete event");
+                    setConfirmDeleteId(null);
+                    // Optionally refresh events list
+                    window.location.reload();
+                  } catch (err) {
+                    alert("Error cancelling event: " + err.message);
+                    setConfirmDeleteId(null);
+                  }
+                }}
+              >
+                Yes, Cancel
+              </button>
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                onClick={() => setConfirmDeleteId(null)}
+              >
+                No, Go Back
+              </button>
+            </div>
+          </section>
+        )}
       </section>
     </section>
   );
