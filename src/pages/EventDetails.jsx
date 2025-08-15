@@ -19,24 +19,39 @@ const mockEvents = [
     vendors: [
       {
         name: "Floral Designs",
+        vendorType: "Florist",
+        contactPerson: "Jane Flowers",
         phone: "012-345-6789",
         email: "floral@email.com",
+        website: "https://floraldesigns.com",
         address: "123 Flower St, Cityville",
         location: "Main Hall",
+        rating: 5,
+        notes: "Specializes in wedding bouquets."
       },
       {
         name: "DJ Mike",
+        vendorType: "Music",
+        contactPerson: "Mike Johnson",
         phone: "098-765-4321",
         email: "dj.mike@email.com",
+        website: "https://djmike.com",
         address: "456 Music Ave, Cityville",
         location: "Dance Floor",
+        rating: 4,
+        notes: "Has own sound equipment."
       },
       {
         name: "Catering Co.",
+        vendorType: "Catering",
+        contactPerson: "Sarah Chef",
         phone: "011-223-3445",
         email: "catering@email.com",
+        website: "https://cateringco.com",
         address: "789 Food Rd, Cityville",
         location: "Dining Area",
+        rating: 5,
+        notes: "Can accommodate vegan options."
       },
     ],
     description: "Join us for a beautiful wedding celebration!",
@@ -51,17 +66,27 @@ const mockEvents = [
     vendors: [
       {
         name: "AV Solutions",
+        vendorType: "Audio/Visual",
+        contactPerson: "Alex Vision",
         phone: "021-334-5566",
         email: "av@email.com",
+        website: "https://avsolutions.com",
         address: "321 AV Blvd, Cityville",
         location: "Conference Room",
+        rating: 4,
+        notes: "Provides projectors and microphones."
       },
       {
         name: "Catering Co.",
+        vendorType: "Catering",
+        contactPerson: "Sarah Chef",
         phone: "011-223-3445",
         email: "catering@email.com",
+        website: "https://cateringco.com",
         address: "789 Food Rd, Cityville",
         location: "Dining Area",
+        rating: 5,
+        notes: "Can accommodate vegan options."
       },
     ],
     description: "Annual business conference for networking and learning.",
@@ -76,17 +101,27 @@ const mockEvents = [
     vendors: [
       {
         name: "Beach Party Rentals",
+        vendorType: "Equipment",
+        contactPerson: "Sandy Beach",
         phone: "022-445-6677",
         email: "beachparty@email.com",
+        website: "https://beachpartyrentals.com",
         address: "654 Beach Rd, Seaville",
         location: "Beach Area",
+        rating: 5,
+        notes: "Offers full beach setup."
       },
       {
         name: "DJ Mike",
+        vendorType: "Music",
+        contactPerson: "Mike Johnson",
         phone: "098-765-4321",
         email: "dj.mike@email.com",
+        website: "https://djmike.com",
         address: "456 Music Ave, Cityville",
         location: "Dance Floor",
+        rating: 4,
+        notes: "Has own sound equipment."
       },
     ],
     description: "Celebrate John's milestone birthday by the sea!",
@@ -177,11 +212,7 @@ export default function EventDetails() {
           </section>
           <section className="bg-blue-100 rounded-lg shadow p-6 cursor-pointer hover:bg-blue-200 transition" onClick={() => setShowVendorsModal(true)}>
             <h3 className="text-lg font-semibold mb-2">Vendors</h3>
-            <ul className="list-disc pl-4 text-sm">
-              {event.vendors.map((vendor, idx) => (
-                <li key={idx}>{vendor.name} - {vendor.service}</li>
-              ))}
-            </ul>
+            <p className="text-xs mb-2">Total Vendors: {event.vendors.length}</p>
             <p className="text-xs text-blue-900 mt-2">Click to view vendor details</p>
           </section>
           {/* Floor Plan Tile */}
