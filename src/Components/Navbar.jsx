@@ -45,7 +45,7 @@ const Navbar = () => {
         </a>
         <a
           href="/events"
-          className="text-gray-700 hover:text-green-800 font-medium"
+          className={`font-medium px-2 py-1 rounded transition-colors duration-200 ${location.pathname === "/events" ? "bg-green-800 text-white" : "text-gray-700 hover:text-green-800"}`}
         >
           Events
         </a>

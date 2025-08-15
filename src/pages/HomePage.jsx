@@ -1,4 +1,4 @@
-import { FaCalendarPlus } from "react-icons/fa";
+  import { FaCalendarPlus } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
 import Navbar from "../components/Navbar";
 import Calendar from "../components/Calendar";
