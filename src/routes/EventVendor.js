@@ -81,17 +81,19 @@ router.post('/event/:eventId/vendors', async (req, res) => {
 router.patch('/event/:eventId/vendors/:vendorId', async (req, res) => {
     try {
         const { eventId, vendorId } = req.params;
+        const updateFields = req.body;
 
-        // Step 1: Check that vendor is linked to this event
+        // Validate EventVendor exists and belongs to this event and vendor
         const eventVendor = await EventVendor.findOne({ eventId, vendorId });
+
         if (!eventVendor) {
             return res.status(404).send('Vendor not found for this event');
         }
 
-        // Step 2: Update vendor info
+        // Update Vendor fields
         const updatedVendor = await Vendor.findByIdAndUpdate(
             vendorId,
-            req.body,
+            updateFields,
             { new: true, runValidators: true }
         );
 
@@ -99,10 +101,15 @@ router.patch('/event/:eventId/vendors/:vendorId', async (req, res) => {
             return res.status(404).send('Vendor not found');
         }
 
-        res.status(200).json(updatedVendor);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
+        // If you have event-specific fields in EventVendor, update them here - but we don't have such information
+        // Example: if (updateFields.notes) { eventVendor.notes = updateFields.notes; await eventVendor.save(); }
+
+        res.status(200).json({
+            vendor: updatedVendor
+        });
+    } catch (error) {
+        console.error('Error updating vendor:', error);
+        res.status(500).send('Error updating vendor');
     }
 });
 

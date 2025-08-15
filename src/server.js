@@ -3,10 +3,10 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import connectDB from './mongodb.js';
-import guestRouter from './routes/guestList.js';
-import eventRouter from './routes/eventData.js';
-import exportRouter from './routes/export.js';
-import vendorRouter from './routes/vendor.js';
+import guestRouter from './routes/EventGuest.js';
+import eventRouter from './routes/EventData.js';
+import exportRouter from './routes/EventExport.js';
+import vendorRouter from './routes/EventVendor.js';
 const server = express();
 const port = 3000;
 

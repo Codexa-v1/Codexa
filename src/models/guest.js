@@ -5,7 +5,7 @@ const guest = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: true },
-  eventId: { type: Number, required: true },
+  eventId: { type: String, required: true },
   rsvpStatus: { type: String, enum: ['Pending', 'Accepted', 'Declined'], default: 'Pending', required: true },
   dietaryPreferences: { type: String, default: '' },
 }, { timestamps: true});

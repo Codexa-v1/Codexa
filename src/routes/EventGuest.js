@@ -75,20 +75,20 @@ router.post('/event/:eventId/guest', async (req, res) => {
 // This is to alter the information of a particular guest in a particular event
 router.patch('/event/:eventId/guest/:guestId', async (req, res) => {
     try {
-        // Step 1: Find the EventGuest entry to validate guest belongs to event
-        const eventGuest = await EventGuest.findOne({
-            eventId: req.params.eventId,
-            guestId: req.params.guestId
-        });
+        const { eventId, guestId } = req.params;
+        const { name, email, phone, rsvpStatus, dietaryPreferences } = req.body;
+
+        // Validate EventGuest exists and belongs to this event and guest
+        const eventGuest = await EventGuest.findOne({ eventId, guestId });
 
         if (!eventGuest) {
             return res.status(404).send('Guest not found for this event');
         }
 
-        // Step 2: Update the Guest document using guestId
+        // Update Guest fields
         const updatedGuest = await Guest.findByIdAndUpdate(
-            req.params.guestId,
-            req.body,
+            guestId,
+            { name, email, phone, rsvpStatus, dietaryPreferences },
             { new: true, runValidators: true }
         );
 
@@ -96,12 +96,23 @@ router.patch('/event/:eventId/guest/:guestId', async (req, res) => {
             return res.status(404).send('Guest not found');
         }
 
-        res.status(200).json(updatedGuest);
+        // Update RSVP status (or other event-specific fields)
+        const updatedEventGuest = await EventGuest.findByIdAndUpdate(
+            eventGuest._id,
+            { rsvpStatus },
+            { new: true, runValidators: true }
+        );
+
+        res.status(200).json({
+            guest: updatedGuest,
+            eventGuest: updatedEventGuest
+        });
     } catch (error) {
         console.error('Error updating guest:', error);
         res.status(500).send('Error updating guest');
     }
 });
+
 
 
 // THis is to delete a particular guest in a particular event

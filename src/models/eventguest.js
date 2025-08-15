@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const eventGuestSchema = new mongoose.Schema({
     eventId: {
@@ -13,11 +13,12 @@ const eventGuestSchema = new mongoose.Schema({
     },
     rsvpStatus: {
         type: String,
-        enum: ['pending', 'accepted', 'declined'],
-        default: 'pending'
+        enum: ['Pending', 'Accepted', 'Declined'],
+        default: 'Pending'
     },
     customNotes: { type: String },
     invitationSent: { type: Boolean, default: false }
 }, { timestamps: true });
 
-module.exports = mongoose.model('EventGuest', eventGuestSchema);
+const EventGuest = mongoose.model('EventGuest', eventGuestSchema);
+export default EventGuest;
