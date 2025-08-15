@@ -40,6 +40,7 @@ router.post('/', async (req, res) => {
     const newEvent = new Event(req.body);
     try {
         const savedEvent = await newEvent.save();
+        console.log('New event created:', savedEvent);
         res.status(201).json(savedEvent);
     } catch (err) {
         console.error(err);
@@ -58,6 +59,19 @@ router.delete('/:id', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
+    }
+});
+// GET all events by userId (eventPlanner) via query param
+router.get('/', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'Missing userId query parameter' });
+        }
+        const events = await Event.find({ eventPlanner: userId });
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
