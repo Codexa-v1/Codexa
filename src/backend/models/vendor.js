@@ -5,6 +5,7 @@ const vendorSchema = new mongoose.Schema({
     phone: { type: String, required: true },
     email: { type: String, required: true },
     address: { type: String, required: true },
+    location: { type: String, required: true },
 });
 
 const Vendor = mongoose.model("Vendor", vendorSchema);
