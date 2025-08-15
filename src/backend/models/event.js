@@ -12,6 +12,10 @@ const eventSchema = new mongoose.Schema({
         enum: ['Planned', 'Ongoing', 'Completed', 'Cancelled'], 
         default: 'Planned' 
     },
+    budget: {
+        type: Number,
+        required: true
+    },
     capacity: Number,
     category: { type: String, required: true },
     organizer: {
