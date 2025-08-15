@@ -1,4 +1,5 @@
 import { GrClose } from "react-icons/gr";
+import { eventColors } from "../utils/eventColors";
 
 export default function EventPopup({ onClose }) {
   return (
@@ -26,11 +27,11 @@ export default function EventPopup({ onClose }) {
               className="w-full border border-gray-300 rounded-md p-2"
             >
               <option value="">Select Category</option>
-              <option value="conference">Conference</option>
-              <option value="meeting">Meeting</option>
-              <option value="party">Party</option>
-              <option value="wedding">Wedding</option>
-              <option value="other">Other</option>
+              {Object.keys(eventColors).map((category) => (
+                <option key={category} value={category}>
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </option>
+              ))}
             </select>
           </section>
 

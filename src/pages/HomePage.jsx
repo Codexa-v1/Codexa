@@ -6,6 +6,7 @@ import EventPopup from "../Components/EventPopup";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { mockUser } from "../mockuser"; // Import the mock user data
+import EventCard from "../Components/EventCard";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,12 +20,6 @@ const HomePage = () => {
       location: "Riverside Mansion",
       rsvpCurrent: 34,
       rsvpTotal: 46,
-      bgColor: "bg-pink-200",
-      labelColor: "bg-pink-500",
-      buttons: [
-        { text: "View", color: "bg-green-800" },
-        { text: "Cancel", color: "bg-red-600" },
-      ],
     },
     {
       type: "Conference",
@@ -33,26 +28,14 @@ const HomePage = () => {
       location: "Wits Sport Conference Center",
       rsvpCurrent: 24,
       rsvpTotal: 46,
-      bgColor: "bg-yellow-200",
-      labelColor: "bg-yellow-700",
-      buttons: [
-        { text: "View", color: "bg-green-800" },
-        { text: "Cancel", color: "bg-red-600" },
-      ],
     },
     {
-      type: "Birthday",
+      type: "Party",
       title: "John’s 30th Birthday",
       date: "2025-08-26T15:00:00",
       location: "The Beach",
       rsvpCurrent: 33,
       rsvpTotal: 36,
-      bgColor: "bg-blue-200",
-      labelColor: "bg-blue-500",
-      buttons: [
-        { text: "View", color: "bg-green-800" },
-        { text: "Cancel", color: "bg-red-600" },
-      ],
     },
   ];
 
@@ -99,45 +82,7 @@ const HomePage = () => {
               Upcoming Events
             </h3>
             {events.map((event, index) => (
-              <section
-                key={index}
-                className={`${event.bgColor} p-4 rounded-lg shadow mb-4`}
-              >
-                <span
-                  className={`${event.labelColor} text-white px-3 py-1 rounded-full text-xs`}
-                >
-                  {event.type}
-                </span>
-                <h4 className="text-lg font-bold mt-2">{event.title}</h4>
-                <p className="text-sm">
-                  {dayjs(event.date).format("DD MMM YYYY")}
-                </p>
-                <p className="text-sm">{event.location}</p>
-
-                <p className="text-xs mt-3">RSVP Progress</p>
-                <section className="bg-gray-300 h-1 rounded mt-1">
-                  <section
-                    className="bg-green-900 h-1 rounded"
-                    style={{
-                      width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
-                    }}
-                  ></section>
-                </section>
-                <p className="text-xs mt-1">
-                  {event.rsvpCurrent}/{event.rsvpTotal}
-                </p>
-
-                <section className="flex justify-between mt-3">
-                  {event.buttons.map((btn, i) => (
-                    <button
-                      key={i}
-                      className={`${btn.color} text-white px-6 py-1 rounded hover:opacity-90`}
-                    >
-                      {btn.text}
-                    </button>
-                  ))}
-                </section>
-              </section>
+              <EventCard key={index} event={event} />
             ))}
           </section>
         </section>
