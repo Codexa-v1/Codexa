@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import RSVPModal from "../components/RSVPModal";
+import EditEventModal from "../components/EditEventModal";
 import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
 import VendorsModal from "../components/VendorsModal";
@@ -54,7 +55,8 @@ const mockEvents = [
         notes: "Can accommodate vegan options."
       },
     ],
-    description: "Join us for a beautiful wedding celebration!",
+  description: "Join us for a beautiful wedding celebration!",
+  budget: 120000,
   },
   {
     type: "Conference",
@@ -89,7 +91,8 @@ const mockEvents = [
         notes: "Can accommodate vegan options."
       },
     ],
-    description: "Annual business conference for networking and learning.",
+  description: "Annual business conference for networking and learning.",
+  budget: 80000,
   },
   {
     type: "Birthday",
@@ -124,12 +127,18 @@ const mockEvents = [
         notes: "Has own sound equipment."
       },
     ],
-    description: "Celebrate John's milestone birthday by the sea!",
+  description: "Celebrate John's milestone birthday by the sea!",
+  budget: 25000,
   },
 ];
 
 
 export default function EventDetails() {
+  const [showEditEventModal, setShowEditEventModal] = useState(false);
+  function handleEditEventSave(updated) {
+    Object.assign(event, updated);
+    setShowEditEventModal(false);
+  }
   const { id } = useParams();
   const navigate = useNavigate();
   const event = mockEvents[id] || null;
@@ -192,11 +201,27 @@ export default function EventDetails() {
     <section className="min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
       <Navbar />
       <section className="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow mt-8">
-        <h2 className="text-3xl font-bold text-green-900 mb-2">{event.title}</h2>
-        <span className={`px-3 py-1 rounded-full text-xs mb-2 ${event.type === "Wedding" ? "bg-pink-500 text-white" : "bg-gray-300"}`}>{event.type}</span>
-        <p className="text-sm mb-1">{dayjs(event.date).format("DD MMM YYYY, HH:mm")}</p>
-        <p className="text-sm mb-2">Location: {event.location}</p>
-        <p className="mb-4 text-gray-700">{event.description}</p>
+        <section className="flex justify-end mb-2">
+          <button
+            className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 text-sm font-semibold shadow flex items-center gap-2"
+            type="button"
+            onClick={() => setShowEditEventModal(true)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213l-4 1 1-4 12.362-12.726z" />
+            </svg>
+            Edit Event
+          </button>
+        </section>
+      {showEditEventModal && (
+        <EditEventModal event={event} onClose={() => setShowEditEventModal(false)} onSave={handleEditEventSave} />
+      )}
+  <h2 className="text-3xl font-bold text-green-900 mb-2">{event.title}</h2>
+  <span className={`px-3 py-1 rounded-full text-xs mb-2 ${event.type === "Wedding" ? "bg-pink-500 text-white" : "bg-gray-300"}`}>{event.type}</span>
+  <p className="text-sm mb-2 font-semibold text-green-900">Date: {dayjs(event.date).format("DD MMM YYYY, HH:mm")}</p>
+  <p className="text-sm mb-2 font-semibold text-green-900">Location: {event.location}</p>
+  <p className="text-sm mb-2 font-semibold text-green-900">Budget: R{event.budget?.toLocaleString()}</p>
+  <p className="mb-4 text-gray-700">{event.description}</p>
         {/* Tiles */}
         <section className="grid grid-cols-2 gap-6 mb-8">
           <section className="bg-green-100 rounded-lg shadow p-6 cursor-pointer hover:bg-green-200 transition" onClick={() => setShowRSVPModal(true)}>
