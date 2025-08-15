@@ -19,10 +19,10 @@ connectDB();
 
 server.use(express.json());
 
-server.use('/guests', guestRouter);
-server.use('/events', eventRouter);
-server.use('/export', exportRouter);
-server.use('/vendors', vendorRouter);
+server.use('/api/guests', guestRouter);
+server.use('/api/events', eventRouter);
+server.use('/api/export', exportRouter);
+server.use('/api/vendors', vendorRouter);
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

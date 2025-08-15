@@ -24,6 +24,14 @@ const eventSchema = new mongoose.Schema({
     floorplan: { type: String, required: true }, // url to a picture of the floorplans
 }, {timestamps: true});
 
+// Capitalize first letter of category before saving
+eventSchema.pre('save', function(next) {
+    if (this.category && typeof this.category === 'string') {
+        this.category = this.category.charAt(0).toUpperCase() + this.category.slice(1).toLowerCase();
+    }
+    next();
+});
+
 const Event = mongoose.model("Event", eventSchema);
 
 export default Event;
