@@ -11,19 +11,25 @@ export default function VendorsModal({ vendors, onClose }) {
             <thead>
               <tr className="bg-blue-50">
                 <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Name</th>
-                <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Service</th>
+                <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Phone</th>
+                <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Email</th>
+                <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Address</th>
+                <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Location</th>
               </tr>
             </thead>
             <tbody>
               {vendors.length === 0 ? (
                 <tr>
-                  <td colSpan={2} className="py-4 text-center text-gray-500">No vendors found.</td>
+                  <td colSpan={5} className="py-4 text-center text-gray-500">No vendors found.</td>
                 </tr>
               ) : (
                 vendors.map((vendor, idx) => (
                   <tr key={idx} className="border-t border-gray-100">
                     <td className="py-2 px-3 text-sm font-medium border border-gray-200 align-middle text-left">{vendor.name}</td>
-                    <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.service}</td>
+                    <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.phone}</td>
+                    <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.email}</td>
+                    <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.address}</td>
+                    <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.location}</td>
                   </tr>
                 ))
               )}

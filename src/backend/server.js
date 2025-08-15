@@ -15,7 +15,7 @@ server.use(cors({
 }));
 
 //Database connection setup
-//connectDB();
+connectDB();
 
 server.use(express.json());
 
