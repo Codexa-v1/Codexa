@@ -40,7 +40,6 @@ router.post('/', async (req, res) => {
     const newEvent = new Event(req.body);
     try {
         const savedEvent = await newEvent.save();
-        console.log('New event created:', savedEvent);
         res.status(201).json(savedEvent);
     } catch (err) {
         console.error(err);
