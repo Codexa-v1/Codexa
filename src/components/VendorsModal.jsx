@@ -17,8 +17,19 @@ export default function VendorsModal({ vendors, onClose }) {
   });
 
   // Get unique vendor types for filter dropdown
-  // ...existing code...
   const vendorTypes = ["All", ...Array.from(new Set(vendorList.map(v => v.vendorType).filter(Boolean)))];
+
+  // Handler for removing a vendor
+  const handleRemoveVendor = idx => {
+    const updatedList = vendorList.filter((_, i) => i !== idx);
+    setVendorList(updatedList);
+  };
+
+  // Handler for editing a vendor (stub)
+  const handleEditVendor = idx => {
+    // Implement edit logic or open edit modal here
+    alert(`Edit vendor: ${vendorList[idx].name}`);
+  };
 
   return (
     <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -69,12 +80,13 @@ export default function VendorsModal({ vendors, onClose }) {
                 <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Address</th>
                 <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Rating</th>
                 <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Notes</th>
+                <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredVendors.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-4 text-center text-gray-500">No vendors found.</td>
+                  <td colSpan={10} className="py-4 text-center text-gray-500">No vendors found.</td>
                 </tr>
               ) : (
                 filteredVendors.map((vendor, idx) => (
@@ -90,6 +102,16 @@ export default function VendorsModal({ vendors, onClose }) {
                     <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.address}</td>
                     <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.rating ? `${vendor.rating}/5` : "-"}</td>
                     <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{vendor.notes || "-"}</td>
+                    <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left flex gap-2">
+                      <button
+                        className="bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded text-xs font-semibold"
+                        onClick={() => handleEditVendor(idx)}
+                      >Edit</button>
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold"
+                        onClick={() => handleRemoveVendor(idx)}
+                      >Remove</button>
+                    </td>
                   </tr>
                 ))
               )}
