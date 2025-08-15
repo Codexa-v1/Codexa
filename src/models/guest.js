@@ -10,4 +10,6 @@ const guest = new mongoose.Schema({
   dietaryPreferences: { type: String, default: '' },
 }, { timestamps: true});
 
-export default mongoose.model('Guest', guest);
+const Guest = mongoose.model('Guest', guest);
+
+export default Guest;
