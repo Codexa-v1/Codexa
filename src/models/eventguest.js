@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const eventGuestSchema = new mongoose.Schema({
     eventId: {
@@ -20,4 +20,6 @@ const eventGuestSchema = new mongoose.Schema({
     invitationSent: { type: Boolean, default: false }
 }, { timestamps: true });
 
-module.exports = mongoose.model('EventGuest', eventGuestSchema);
+const EventGuest = mongoose.model('EventGuest', eventGuestSchema);
+
+export default EventGuest;
