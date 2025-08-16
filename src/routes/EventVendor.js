@@ -30,8 +30,8 @@ router.get('/event/:eventId/vendors', async (req, res) => {
 
         res.status(200).json(vendors);
     } catch (error) {
-        console.error('Error retrieving guests:', error);
-        res.status(500).send('Error retrieving guests');
+        console.error('Error retrieving vendors:', error);
+        res.status(500).send('Error retrieving vendors');
     }
 });
 
