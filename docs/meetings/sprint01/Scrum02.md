@@ -1,4 +1,3 @@
-```markdown
 # Codexa: Scrum 2 Minutes
 
 **Date:** August 10, 2025  
@@ -53,4 +52,6 @@
 - **Date:** August 14, 2025  
 - **Time:** TBD  
 - **Location:** Online
-```
+
+
+---
