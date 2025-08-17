@@ -19,7 +19,8 @@ Codexa is an Event Planning platform that allows users to create and plan events
 - **Deployment:** Microsoft Azure
 - **Project Management:** Trello
 - **Documentation:** Markdown + GitHub Pages
-- [Our Tech Stack explained](./development/tech-stack.md)
+- [Our Tech Stack explained](./development/TechStack.md)
+- [Our backend Structure](./development/Backend.md)
 
 ## Methodologies
 We follow the Agile Scrum methodology:
@@ -34,7 +35,7 @@ We follow the Github Flow methodology:
 - Get peer review + approval
 - Merge to main
 - Deploy from main
-- [Project methodologies explained](./development/methodologies.md)
+- [Project methodologies explained](./development/Methodologies.md)
 
 ## Communication Tools
 - WhatsApp
@@ -42,17 +43,19 @@ We follow the Github Flow methodology:
 - Trello Board (link)
 - GitHub Issues and Pull Requests
 - Microsoft teams
-- [Team communication plan](./planning/communication.md)
+- [Team communication plan](./planning/Sprint01/Communication.md)
 
 
 ## Implementation 
 - Sprint one
-    - [Sprint one brief](./planning/sprint-1.md)
-    - [Team Roles](./planning/team-roles.md)
+    - [Sprint 1 brief](./planning/Sprint01/Sprint01Brief.md)
+    - [Sprint 1 User Stories](./planning/Sprint01/UserStories.md)
+    - [Team Roles](./planning/Sprint01/TeamRoles.md)
     - [First Meeting Notes](./meetings/sprint01/2025-08-07-first-meeting.md)
-    - [Mockups](./development/mockups.md)
-    - [Scrum 01](./meetings/sprint01/scrum01.md)
+    - [Mockups](./development/Mockups.md)
+    - [Scrum 01](./meetings/sprint01/Scrum01.md)
     - [Scrum 03](./meetings/sprint01/Scrum03.md)
+    - [Scrum 04](./meetings/sprint01/Scrum04.md)
 - Sprint two
 
 ---
