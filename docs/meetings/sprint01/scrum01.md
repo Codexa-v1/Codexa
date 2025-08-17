@@ -1,4 +1,4 @@
-# 🗓 Scrum 01: Agenda & Minutes
+# Scrum 01: Agenda & Minutes
 
 **Date:** August 10, 2025  
 **Time:** 20:00 – 20:22  
