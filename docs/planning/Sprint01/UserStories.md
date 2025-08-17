@@ -34,3 +34,5 @@
 - “Create Event” button is visible on the calendar page 
 - Clicking the button opens a form to enter event details (title, date, description)
 - Submit the form by clicking a submit button
+
+---

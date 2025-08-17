@@ -37,3 +37,5 @@
 - **Version Control:** Branching, pull requests, commit messages
 - **Planning & Methodology:** Clear backlog, sprint plan
 - **Implementation:** First features visible, even if partially functional
+
+---
