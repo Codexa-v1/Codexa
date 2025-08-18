@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
-const eventVendorSchema = new mongoose.Schema({
+const eventVenueSchema = new mongoose.Schema({
     eventId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Event',
         required: true
     },
-    vendorId: {
+    venueId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vendor',
+        ref: 'Venue',
         required: true
     },
     // Optional: Add fields for contract details, status, etc.
@@ -22,5 +22,5 @@ const eventVendorSchema = new mongoose.Schema({
     },
 }, {timestamps: true});
 
-const EventVendor = mongoose.model('EventVendor', eventVendorSchema);
-export default EventVendor;
+const EventVenue = mongoose.model('EventVenue', eventVenueSchema);
+export default EventVenue;
