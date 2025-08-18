@@ -3,6 +3,16 @@
 ## Overview
 Codexa is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning.
 
+## Documentation Folder Structure
+
+The `docs` folder is organized as follows:
+- `development/`: Technical documentation, methodologies, backend structure, and mockups.
+- `meetings/`: Notes and summaries from project meetings and sprints.
+- `planning/`: Sprint planning documents, team roles, user stories, and communication plans.
+- `assets/`: Images, videos, and mockups used throughout the documentation.
+
+This structure helps keep all project documentation organized and easy to navigate.
+
 ## Project Goals
 - Enable event creation and planning
 - Guest invitations (manual, RSVP, CSV import) and track invitations
