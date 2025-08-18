@@ -51,3 +51,10 @@ export function deleteVenue(eventId, venueId) {
             return response.json();
         });
 }
+
+export default {
+    getVenues,
+    addVenue,
+    updateVenue,
+    deleteVenue
+};

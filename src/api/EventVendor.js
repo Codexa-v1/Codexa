@@ -51,3 +51,10 @@ export function deleteVendor(eventId, vendorId) {
             return response.json();
         });
 }
+
+export default {
+    getVendors,
+    addVendor,
+    updateVendor,
+    deleteVendor
+};
