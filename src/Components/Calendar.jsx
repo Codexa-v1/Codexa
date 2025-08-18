@@ -1,8 +1,23 @@
 import React, { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import dayjs from "dayjs";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 const Calendar = () => {
+  // Color mapping for event categories
+  const eventColors = {
+    Wedding: "bg-pink-500",
+    Conference: "bg-yellow-700",
+    Birthday: "bg-blue-500",
+    Meeting: "bg-green-500",
+    Party: "bg-purple-500",
+    Other: "bg-gray-400"
+  };
+
+  // Helper to get color for event
+  function getBgColor(category) {
+    return eventColors[category] || eventColors["Other"];
+  }
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const monthsOfYear = [
     "January",
@@ -41,30 +56,26 @@ const Calendar = () => {
     );
   };
 
-  // Sample events data
-  const events = [
-    {
-      type: "Wedding",
-      title: "Emily & Jake’s Wedding",
-      date: "2025-08-18T09:00:00",
-      location: "Riverside Mansion",
-      bgColor: "bg-pink-500",
-    },
-    {
-      type: "Conference",
-      title: "Business Conference",
-      date: "2025-08-18T11:00:00",
-      location: "Wits Sport Conference Center",
-      bgColor: "bg-yellow-700",
-    },
-    {
-      type: "Birthday",
-      title: "John’s 30th Birthday",
-      date: "2025-08-26T15:00:00",
-      location: "The Beach",
-      bgColor: "bg-blue-500",
-    },
-  ];
+  const { user, isAuthenticated } = useAuth0();
+  const [events, setEvents] = useState([]);
+
+  React.useEffect(() => {
+    if (isAuthenticated && user) {
+      fetch(
+        `http://localhost:3000/api/events?userId=${encodeURIComponent(user.sub)}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          // Add bgColor property to each event
+          const mapped = data.map(ev => ({
+            ...ev,
+            bgColor: getBgColor(ev.category)
+          }));
+          setEvents(mapped);
+        })
+        .catch((err) => console.error("Failed to fetch events:", err));
+    }
+  }, [isAuthenticated, user]);
 
   return (
     <section className="w-full h-full">
@@ -122,8 +133,13 @@ const Calendar = () => {
               className="h-12 flex flex-col justify-center items-center text-gray-800 text-base sm:text-lg cursor-pointer hover:bg-gray-100 rounded border border-gray-400 relative group"
             >
               <span>{day + 1}</span>
+              {/* Show color dots for each event on this day */}
               {eventsForDay.length > 0 && (
-                <span className={`w-4 h-1 mt-1 rounded ${eventsForDay[0].bgColor}`}></span>
+                <span className="flex gap-1 mt-1">
+                  {eventsForDay.map((ev, idx) => (
+                    <span key={idx} className={`w-3 h-3 rounded-full ${ev.bgColor}`}></span>
+                  ))}
+                </span>
               )}
               {/* Tooltip for events */}
               {eventsForDay.length > 0 && (
@@ -133,7 +149,7 @@ const Calendar = () => {
                     {eventsForDay.map((ev, idx) => (
                       <li key={idx} className="mb-1">
                         <span className={`inline-block w-2 h-2 rounded-full mr-2 align-middle ${ev.bgColor}`}></span>
-                        <span className="font-semibold">{ev.title}</span> <span className="text-gray-500">({ev.type})</span>
+                        <span className="font-semibold">{ev.title}</span> <span className="text-gray-500">({ev.category || ev.type})</span>
                       </li>
                     ))}
                   </ul>
