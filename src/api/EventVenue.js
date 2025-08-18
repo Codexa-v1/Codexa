@@ -1,8 +1,8 @@
 // Manage venues, catering, and other services.
 const url = 'http://localhost:3000';
 
-export function getVendors(eventId) {
-    return fetch(`${url}/event/${eventId}/vendors`)
+export function getVenues(eventId) {
+    return fetch(`${url}/event/${eventId}/venues`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -10,13 +10,13 @@ export function getVendors(eventId) {
             return response.json();
         });
 }
-export function addVendor(eventId, vendor) {
-    return fetch(`${url}/event/${eventId}/vendors`, {
+export function addVenue(eventId, venue) {
+    return fetch(`${url}/event/${eventId}/venues`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(vendor),
+        body: JSON.stringify(venue),
     })
         .then(response => {
             if (!response.ok) {
@@ -25,13 +25,13 @@ export function addVendor(eventId, vendor) {
             return response.json();
         });
 }
-export function updateVendor(eventId, vendorId, vendor) {
-    return fetch(`${url}/event/${eventId}/vendors/${vendorId}`, {
+export function updateVenue(eventId, venueId, venue) {
+    return fetch(`${url}/event/${eventId}/venues/${venueId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(vendor),
+        body: JSON.stringify(venue),
     })
         .then(response => {
             if (!response.ok) {
@@ -40,8 +40,8 @@ export function updateVendor(eventId, vendorId, vendor) {
             return response.json();
         });
 }
-export function deleteVendor(eventId, vendorId) {
-    return fetch(`${url}/event/${eventId}/vendors/${vendorId}`, {
+export function deleteVenue(eventId, venueId) {
+    return fetch(`${url}/event/${eventId}/venues/${venueId}`, {
         method: 'DELETE',
     })
         .then(response => {
@@ -53,8 +53,8 @@ export function deleteVendor(eventId, vendorId) {
 }
 
 export default {
-    getVendors,
-    addVendor,
-    updateVendor,
-    deleteVendor
+    getVenues,
+    addVenue,
+    updateVenue,
+    deleteVenue
 };
