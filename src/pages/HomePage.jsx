@@ -1,6 +1,6 @@
 import { FaCalendarPlus } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
-import navbar from "../components/navbar";
+import Navbar from "../components/navbar";
 import Calendar from "../components/calendar";
 import EventPopup from "../components/eventPopup";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [events, setEvents] = useState([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const HomePage = () => {
 
   return (
     <section className="home-page min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
-  <navbar />
+      <Navbar />
       <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans">
         {/* Header */}
         <section className="flex justify-between items-center">
