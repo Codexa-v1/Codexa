@@ -19,6 +19,11 @@ connectDB();
 
 server.use(express.json());
 
+
+server.get('/', (req, res) => {
+  res.send('Codexa backend is running.');
+});
+
 server.use('/api/guests', guestRouter);
 server.use('/api/events', eventRouter);
 server.use('/api/export', exportRouter);
