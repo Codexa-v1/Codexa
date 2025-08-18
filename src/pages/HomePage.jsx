@@ -1,8 +1,8 @@
 import { FaCalendarPlus } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
-import Navbar from "../components/Navbar";
-import Calendar from "../components/Calendar";
-import EventPopup from "../components/EventPopup";
+import navbar from "../components/navbar";
+import Calendar from "../components/calendar";
+import EventPopup from "../components/eventPopup";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ const HomePage = () => {
 
   return (
     <section className="home-page min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
-      <Navbar />
+  <navbar />
       <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans">
         {/* Header */}
         <section className="flex justify-between items-center">
