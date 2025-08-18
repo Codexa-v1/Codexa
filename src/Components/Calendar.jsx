@@ -5,19 +5,20 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 const Calendar = () => {
   // Color mapping for event categories
-  const eventColors = {
+  const eventColors = React.useMemo(() => ({
     Wedding: "bg-pink-500",
     Conference: "bg-yellow-700",
     Birthday: "bg-blue-500",
     Meeting: "bg-green-500",
     Party: "bg-purple-500",
     Other: "bg-gray-400"
-  };
+  }), []);
 
   // Helper to get color for event
-  function getBgColor(category) {
-    return eventColors[category] || eventColors["Other"];
-  }
+  const getBgColor = React.useCallback(
+    (category) => eventColors[category] || eventColors["Other"],
+    [eventColors]
+  );
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const monthsOfYear = [
     "January",
@@ -75,7 +76,7 @@ const Calendar = () => {
         })
         .catch((err) => console.error("Failed to fetch events:", err));
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, getBgColor]);
 
   return (
     <section className="w-full h-full">
