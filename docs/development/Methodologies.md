@@ -8,6 +8,8 @@ We follow the Agile Scrum methodology to ensure adaptive planning, early deliver
 - **Sprint Retrospectives:** Conducted after every sprint to reflect on what went well and what can be improved.
 - **Role Rotation:** Team roles (e.g., Scrum Master, Product Owner) rotate every sprint to share responsibilities and perspectives.
 
+---
+
 ## GitHub Flow
 
 Our source control process follows the GitHub Flow to maintain code quality and smooth deployment:
@@ -18,3 +20,5 @@ Our source control process follows the GitHub Flow to maintain code quality and 
 - The PR undergoes **peer review** and must be **approved** before merging.
 - Once approved, the feature branch is **merged into main**.
 - The main branch triggers **deployment** to production.
+
+---
