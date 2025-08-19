@@ -89,7 +89,7 @@ export default function EventsPage() {
             <p className="col-span-3 text-center text-gray-600">No events found.</p>
           ) : (
             filteredEvents.map((event, index) => (
-              <section
+              <div
                 key={index}
                 className={`${event.bgColor} p-6 rounded-lg shadow flex flex-col justify-between`}
               >
@@ -103,22 +103,22 @@ export default function EventsPage() {
                   {dayjs(event.date).format("DD MMM YYYY, HH:mm")}
                 </p>
                 <p className="text-sm mb-2">{event.location}</p>
-                <section className="bg-gray-300 h-1 rounded mt-1 mb-2">
-                  <section
+                <div className="bg-gray-300 h-1 rounded mt-1 mb-2">
+                  <div
                     className="bg-green-900 h-1 rounded"
                     style={{
                       width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
                     }}
-                  ></section>
-                </section>
+                  ></div>
+                </div>
                 <p className="text-xs mb-2">
                   RSVP: {event.rsvpCurrent}/{event.rsvpTotal}
                 </p>
-                <section className="flex justify-between mt-3">
+                <div className="flex justify-between mt-3">
                   <button className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90" onClick={() => navigate(`/events/${index}`)}>View</button>
                   <button className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90">Delete</button>
-                </section>
-              </section>
+                </div>
+              </div>
             ))
           )}
         </section>
