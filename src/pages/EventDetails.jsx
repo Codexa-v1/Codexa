@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import RSVPModal from "../components/rsvpModal";
+import RSVPModal from "../components/RsvpModal";
 import EditEventModal from "../components/EditEventModal";
 import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
-import VendorsModal from "../components/vendorsModal";
+import VendorsModal from "../components/VendorsModal";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import dayjs from "dayjs";

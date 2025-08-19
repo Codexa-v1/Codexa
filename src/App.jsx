@@ -1,12 +1,12 @@
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import LandingPage from "./pages/landing"; // ✅ New landing page component
-import Home from "./pages/homePage"; // ✅ Home page component
-import Error from "./pages/error"; // ✅ Error page component
-import About from "./pages/about"; // ✅ About page component
-import EventsPage from "./pages/eventsPage"; // ✅ Events page component
-import EventDetails from "./pages/eventDetails"; // ✅ Event details page
+import LandingPage from "./pages/Landing.jsx"; // ✅ New landing page component
+import Home from "./pages/HomePage.jsx"; // ✅ Home page component
+import Error from "./pages/Error.jsx"; // ✅ Error page component
+import About from "./pages/About.jsx"; // ✅ About page component
+import EventsPage from "./pages/EventsPage.jsx"; // ✅ Events page component
+import EventDetails from "./pages/EventDetails.jsx"; // ✅ Event details page
 import './App.css'
 import "./index.css"
 

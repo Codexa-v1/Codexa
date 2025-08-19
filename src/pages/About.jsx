@@ -1,6 +1,6 @@
 import React from "react";
-import LandingNavbar from "../components/landingNavbar";
-import TeamCard from "../components/teamCard";
+import LandingNavbar from "../components/LandingNavbar";
+import TeamCard from "../components/TeamCard";
 
 const team = [
     {
