@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RSVPModal from "../components/RsvpModal";
+import RSVPModal from "../components/RSVPModal";
 import EditEventModal from "../components/EditEventModal";
 import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
