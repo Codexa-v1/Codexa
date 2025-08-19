@@ -1,7 +1,7 @@
-# Event Planner Project Documentation
+# Planit: Event Planner Project Documentation
 
 ## Overview
-Codexa is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning.
+Planit is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning.
 
 ## Documentation Folder Structure
 
