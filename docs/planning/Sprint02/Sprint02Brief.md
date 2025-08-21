@@ -1,4 +1,4 @@
-# 🚀 Sprint 2 Brief — Codexa Event Planning App
+# 🚀 Sprint 2 Brief: Codexa Event Planning App
  
 **Scrum Master:** Given  
 **Sprint Goal:** Deliver core functionality of the Event Planning system, while ensuring testing, feedback, and documentation processes are in place.  
