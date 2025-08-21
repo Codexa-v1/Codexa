@@ -69,5 +69,6 @@ We follow the Github Flow methodology:
     - [Scrum 04](./meetings/sprint01/Scrum04.md)
 - Sprint two
     - [Sprint 2 brief](./planning/Sprint02/Sprint02Brief.md)
-    - [Scrum 02](./meetings/Sprint02/Scrum01.md)
+    - [Scrum 01](./meetings/Sprint02/Scrum01.md)
+
 ---
