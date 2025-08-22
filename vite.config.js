@@ -9,6 +9,7 @@ export default defineConfig({
     environment: "jsdom",   // so RTL has a DOM
     coverage: {
       provider: "v8",
+      reporter: ['lcov', 'text'], // lcov is needed for Codecov
   },
     setupFiles: "./src/setupTests.js", // optional, for global setup
   },
