@@ -10,6 +10,8 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ['lcov', 'text'], // lcov is needed for Codecov
+      include: ['src/**/*.{js,jsx}'], // only source files, skip backend/config
+      exclude: ['**/*.test.{js,jsx}', 'src/setupTests.js'],
   },
     setupFiles: "./src/setupTests.js", // optional, for global setup
   },
