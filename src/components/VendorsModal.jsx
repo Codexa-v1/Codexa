@@ -79,7 +79,81 @@ export default function VendorsModal({ vendors, onClose }) {
         </button>
       </section>
       <section className="overflow-y-auto" style={{ maxHeight: "350px" }}>
-        <table className="w-full mb-4 border border-gray-200 rounded">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+          {filteredVendors.map((vendor, idx) => (
+            <div
+              key={idx}
+              className="border border-gray-200 rounded-2xl shadow-sm p-4 flex flex-col justify-between"
+            >
+              {/* Vendor Header */}
+              <div className="mb-2">
+                <section className="flex gap-4 items-center mb-1">
+                  <h3 className="text-lg font-semibold">{vendor.name}</h3>
+                  <p>
+                    <span className="font-semibold">Rating:</span>{" "}
+                    {vendor.rating ? `${vendor.rating}/5` : "-"}
+                  </p>
+                </section>
+                <p className="text-sm text-gray-500">{vendor.vendorType}</p>
+              </div>
+
+              {/* Vendor Info */}
+              <div className="space-y-1 text-sm text-gray-700">
+                <p>
+                  <span className="font-medium">Contact:</span>{" "}
+                  {vendor.contactPerson}
+                </p>
+                <p>
+                  <span className="font-medium">Phone:</span> {vendor.phone}
+                </p>
+                <p>
+                  <span className="font-medium">Email:</span> {vendor.email}
+                </p>
+                <p>
+                  <span className="font-medium">Website:</span>{" "}
+                  {vendor.website ? (
+                    <a
+                      href={vendor.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline"
+                    >
+                      {vendor.website}
+                    </a>
+                  ) : (
+                    <span className="text-gray-400">N/A</span>
+                  )}
+                </p>
+                <p>
+                  <span className="font-medium">Address:</span> {vendor.address}
+                </p>
+
+                <p>
+                  <span className="font-medium">Notes:</span>{" "}
+                  {vendor.notes || "-"}
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 mt-4">
+                <button
+                  className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-sm font-semibold"
+                  onClick={() => handleEditVendor(idx)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold"
+                  onClick={() => handleRemoveVendor(idx)}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* <table className="w-full mb-4 border border-gray-200 rounded">
           <thead>
             <tr className="bg-blue-50">
               <th className="py-2 px-3 text-left text-xs font-semibold text-blue-900 border border-gray-200 align-middle">
@@ -180,7 +254,7 @@ export default function VendorsModal({ vendors, onClose }) {
               ))
             )}
           </tbody>
-        </table>
+        </table> */}
       </section>
     </section>
   );
