@@ -1,8 +1,9 @@
 import { GrClose } from "react-icons/gr";
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import dayjs from "dayjs";
 
-export default function EventPopup({ onClose }) {
+export default function EventPopup({ onClose, selectedDate }) {
   const { user } = useAuth0();
   const [category, setCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
@@ -86,7 +87,10 @@ export default function EventPopup({ onClose }) {
 
           {/* Category */}
           <section>
-            <label htmlFor="category" className="block font-medium text-gray-700">
+            <label
+              htmlFor="category"
+              className="block font-medium text-gray-700"
+            >
               Category
             </label>
             <select
@@ -142,7 +146,11 @@ export default function EventPopup({ onClose }) {
                 type="date"
                 id="startDate"
                 className="w-full border border-gray-300 rounded-md p-2"
-                value={startDate}
+                value={
+                  selectedDate
+                    ? dayjs(selectedDate).format("YYYY-MM-DD")
+                    : startDate
+                }
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </section>
@@ -198,7 +206,10 @@ export default function EventPopup({ onClose }) {
           {/* Location & Capacity */}
           <section className="grid grid-cols-2 gap-4">
             <section>
-              <label htmlFor="location" className="block font-medium text-gray-700">
+              <label
+                htmlFor="location"
+                className="block font-medium text-gray-700"
+              >
                 Location
               </label>
               <input
@@ -211,7 +222,10 @@ export default function EventPopup({ onClose }) {
               />
             </section>
             <section>
-              <label htmlFor="capacity" className="block font-medium text-gray-700">
+              <label
+                htmlFor="capacity"
+                className="block font-medium text-gray-700"
+              >
                 Capacity
               </label>
               <input
@@ -294,7 +308,10 @@ export default function EventPopup({ onClose }) {
           </section>
           {/* Floorplan */}
           <section>
-            <label htmlFor="floorplan" className="block font-medium text-gray-700">
+            <label
+              htmlFor="floorplan"
+              className="block font-medium text-gray-700"
+            >
               Floorplan URL
             </label>
             <input
