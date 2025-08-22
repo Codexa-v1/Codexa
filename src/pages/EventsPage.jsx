@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import dayjs from "dayjs";
+import EventCard from "../components/EventCard";
 
 const mockEvents = [
   {
+    _id: "789",
     type: "Wedding",
     title: "Emily & Jake’s Wedding",
     date: "2025-08-18T09:00:00",
@@ -15,6 +17,7 @@ const mockEvents = [
     labelColor: "bg-pink-500",
   },
   {
+    _id: "456",
     type: "Conference",
     title: "Business Conference",
     date: "2025-08-18T11:00:00",
@@ -25,6 +28,7 @@ const mockEvents = [
     labelColor: "bg-yellow-700",
   },
   {
+    _id: "123",
     type: "Birthday",
     title: "John’s 30th Birthday",
     date: "2025-08-26T15:00:00",
@@ -34,8 +38,18 @@ const mockEvents = [
     bgColor: "bg-blue-200",
     labelColor: "bg-blue-500",
   },
+  {
+    _id: "446",
+    type: "Conference",
+    title: "Business Conference",
+    date: "2025-08-18T11:00:00",
+    location: "Wits Sport Conference Center",
+    rsvpCurrent: 24,
+    rsvpTotal: 46,
+    bgColor: "bg-yellow-200",
+    labelColor: "bg-yellow-700",
+  },
 ];
-
 
 export default function EventsPage() {
   const [events] = useState(mockEvents);
@@ -44,12 +58,17 @@ export default function EventsPage() {
   const navigate = useNavigate();
 
   // Get unique event types for filter dropdown
-  const eventTypes = ["All", ...Array.from(new Set(mockEvents.map(e => e.type)))];
+  const eventTypes = [
+    "All",
+    ...Array.from(new Set(mockEvents.map((e) => e.type))),
+  ];
 
   // Filter and search logic
-  const filteredEvents = events.filter(event => {
+  const filteredEvents = events.filter((event) => {
     const matchesType = filterType === "All" || event.type === filterType;
-    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) || event.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.location.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesType && matchesSearch;
   });
 
@@ -64,16 +83,18 @@ export default function EventsPage() {
               type="text"
               placeholder="Search events..."
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-700"
             />
             <select
               value={filterType}
-              onChange={e => setFilterType(e.target.value)}
+              onChange={(e) => setFilterType(e.target.value)}
               className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-700"
             >
-              {eventTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
+              {eventTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
               ))}
             </select>
             <button
@@ -86,39 +107,12 @@ export default function EventsPage() {
         </section>
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.length === 0 ? (
-            <p className="col-span-3 text-center text-gray-600">No events found.</p>
+            <p className="col-span-3 text-center text-gray-600">
+              No events found.
+            </p>
           ) : (
             filteredEvents.map((event, index) => (
-              <div
-                key={index}
-                className={`${event.bgColor} p-6 rounded-lg shadow flex flex-col justify-between`}
-              >
-                <span
-                  className={`${event.labelColor} text-white px-3 py-1 rounded-full text-xs w-fit mb-2`}
-                >
-                  {event.type}
-                </span>
-                <h4 className="text-lg font-bold mt-2 mb-1">{event.title}</h4>
-                <p className="text-sm mb-1">
-                  {dayjs(event.date).format("DD MMM YYYY, HH:mm")}
-                </p>
-                <p className="text-sm mb-2">{event.location}</p>
-                <div className="bg-gray-300 h-1 rounded mt-1 mb-2">
-                  <div
-                    className="bg-green-900 h-1 rounded"
-                    style={{
-                      width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
-                    }}
-                  ></div>
-                </div>
-                <p className="text-xs mb-2">
-                  RSVP: {event.rsvpCurrent}/{event.rsvpTotal}
-                </p>
-                <div className="flex justify-between mt-3">
-                  <button className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90" onClick={() => navigate(`/events/${index}`)}>View</button>
-                  <button className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90">Delete</button>
-                </div>
-              </div>
+              <EventCard key={index} event={event} />
             ))
           )}
         </section>
