@@ -5,12 +5,6 @@ import dayjs from "dayjs";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getAllEvents } from "../backend/api/EventData";
 
-import EventDetails from "./EventDetails";
-
-<Routes>
-  <Route path="/events/:id" element={<EventDetails />} />
-</Routes>
-
 export default function EventsPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [events, setEvents] = useState([]);

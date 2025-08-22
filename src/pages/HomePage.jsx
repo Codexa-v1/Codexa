@@ -18,7 +18,7 @@ const HomePage = () => {
     if (isAuthenticated && user) {
       // Fetch events for the logged in user from backend
       fetch(
-        `http://localhost:3000/api/events?userId=${encodeURIComponent(user.sub)}`
+        `http://localhost:3000/api/events/all/${user.sub}`
       )
         .then((res) => res.json())
         .then((data) => setEvents(data))
