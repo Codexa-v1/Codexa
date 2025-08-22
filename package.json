@@ -10,7 +10,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node src/server.js",
+    "start": "node src/backend/server.js",
     "check-imports": "node check-imports.js"
   },
   "dependencies": {

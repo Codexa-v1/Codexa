@@ -112,7 +112,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-cyan-50 via-teal-50 to-teal-100 min-h-screen flex items-center">
-  <div className="w-full px-0 mx-0">
+        <div className="w-full px-0 mx-0">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">

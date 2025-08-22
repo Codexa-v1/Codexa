@@ -1,8 +1,25 @@
 // Event metadata (theme, date, schedule, maps).
 const url = 'http://localhost:3000';
 
-export function getEventData(eventId) {
-    return fetch(`${url}/events/${eventId}`)
+export function createEvent(eventData) {
+    return fetch(`${url}/api/events`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventData),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            console.log('Event created successfully');
+            return response.json();
+        });
+}
+
+export function getEvent(eventId) {
+    return fetch(`${url}/api/events/${eventId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -11,8 +28,8 @@ export function getEventData(eventId) {
         });
 }
 
-export function updateEventData(eventId, eventData) {
-    return fetch(`${url}/events/${eventId}`, {
+export function updateEvent(eventId, eventData) {
+    return fetch(`${url}/api/events/${eventId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -27,8 +44,8 @@ export function updateEventData(eventId, eventData) {
         });
 }
 
-export function deleteEventData(eventId) {
-    return fetch(`${url}/events/${eventId}`, {
+export function deleteEvent(eventId) {
+    return fetch(`${url}/api/events/${eventId}`, {
         method: 'DELETE',
     })
         .then(response => {
@@ -39,14 +56,8 @@ export function deleteEventData(eventId) {
         });
 }
 
-export function createEventData(eventData) {
-    return fetch(`${url}/events`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(eventData),
-    })
+export function getAllEvents(id) {
+    return fetch(`${url}/api/events/all/${id}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -56,8 +67,8 @@ export function createEventData(eventData) {
 }
 
 export default {
-    getEventData,
-    updateEventData,
-    deleteEventData,
-    createEventData
+    getEvent,
+    updateEvent,
+    deleteEvent,
+    createEvent
 };
