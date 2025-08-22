@@ -7,6 +7,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",   // so RTL has a DOM
+    coverage: {
+      provider: "v8",
+  },
     setupFiles: "./src/setupTests.js", // optional, for global setup
   },
 })
