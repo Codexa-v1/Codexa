@@ -60,5 +60,18 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+// GET all events by userId (eventPlanner) via query param
+router.get('/', async (req, res) => {
+    try {
+        const { userId } = req.query;
+        if (!userId) {
+            return res.status(400).json({ error: 'Missing userId query parameter' });
+        }
+        const events = await Event.find({ eventPlanner: userId });
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 export default router;
