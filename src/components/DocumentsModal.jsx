@@ -9,6 +9,7 @@ import {
   FaFileExcel,
   FaFileImage,
 } from "react-icons/fa";
+import DocumentUpload from "./DocumentUpload";
 
 function getFileIcon(type) {
   if (type.includes("pdf"))
@@ -77,6 +78,7 @@ export default function DocumentsModal({ documents, onClose }) {
       ) : (
         <p className="text-gray-500">No documents available for this event.</p>
       )}
+      <DocumentUpload />
     </section>
   );
 }
