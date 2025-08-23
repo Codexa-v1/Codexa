@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { FaCalendarPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import EventPopup from "../components/EventPopup";
 import dayjs from "dayjs";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getAllEvents } from "../backend/api/EventData";
 
 export default function EventsPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("All");
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const navigate = useNavigate();
 
   // Fetch events once user is loaded
@@ -60,10 +64,24 @@ export default function EventsPage() {
             </select>
             <button
               className="bg-green-900 text-white px-4 py-2 flex items-center gap-2 rounded-md hover:bg-green-700"
+              onClick={() => setIsModalOpen(true)}
             >
-              + Add New Event
+              <FaCalendarPlus />
+              Add New Event
             </button>
           </section>
+          {/* Modal with overlay */}
+          {isModalOpen && (
+            <>
+              <section
+                className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
+                onClick={() => setIsModalOpen(false)}
+              ></section>
+              <section className="fixed inset-0 flex items-center justify-center z-50">
+                <EventPopup onClose={() => setIsModalOpen(false)} />
+              </section>
+            </>
+          )}
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -103,13 +121,49 @@ export default function EventsPage() {
                   >
                     View
                   </button>
-                  <button className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
+                  <button
+                      className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90"
+                      onClick={() => setConfirmDeleteId(event._id)}
+                    >
+                      Cancel
+                    </button>
+                    {confirmDeleteId && (
+                      <section className="fixed inset-0 flex items-center justify-center z-50">
+                        <div className="bg-white border border-red-600 rounded-lg shadow-lg p-6 text-center">
+                          <h3 className="text-red-700 text-xl font-bold mb-2">Cancel Event?</h3>
+                          <p className="mb-4">Are you sure you want to cancel this event? This action cannot be undone.</p>
+                          <button
+                            className="bg-red-600 text-white px-4 py-2 rounded mr-2"
+                            onClick={async () => {
+                              try {
+                                const res = await fetch(`http://localhost:3000/api/events/${confirmDeleteId}`, {
+                                  method: "DELETE",
+                                });
+                                if (!res.ok) throw new Error("Failed to delete event");
+                                setConfirmDeleteId(null);
+                                // Optionally refresh events list
+                                window.location.reload();
+                              } catch (err) {
+                                alert("Error cancelling event: " + err.message);
+                                setConfirmDeleteId(null);
+                              }
+                            }}
+                          >
+                            Yes, Cancel
+                          </button>
+                          <button
+                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                            onClick={() => setConfirmDeleteId(null)}
+                          >
+                            No, Go Back
+                          </button>
+                        </div>
+                      </section>
+                    )}
+                            </div>
+                          </div>
+                        ))
+                      )}
         </section>
       </section>
     </section>

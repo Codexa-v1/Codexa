@@ -102,7 +102,7 @@ const HomePage = () => {
                   <section className="flex justify-between mt-3">
                     <button
                       className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90"
-                      onClick={() => {/* TODO: handle view event */}}
+                      onClick={() => navigate(`/events/${event._id}`)}
                     >
                       View
                     </button>

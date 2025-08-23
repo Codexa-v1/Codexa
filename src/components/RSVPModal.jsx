@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
-export default function RSVPModal({ guests, onClose }) {
+export default function RSVPModal({ guests, onClose, eventId, onAddGuests }) {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
   const [exportType, setExportType] = useState("CSV");
@@ -47,10 +49,10 @@ export default function RSVPModal({ guests, onClose }) {
 
   return (
     <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-  <section className="bg-white rounded-lg shadow-lg p-12 max-w-7xl w-full relative">
-  <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={onClose}>&times;</button>
-  <h3 className="text-xl font-bold mb-4 text-green-900">Guest List</h3>
-  <section className="flex flex-col md:flex-row gap-2 mb-4">
+      <section className="bg-white rounded-lg shadow-lg p-12 max-w-7xl w-full relative">
+        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={onClose}>&times;</button>
+        <h3 className="text-xl font-bold mb-4 text-green-900">Guest List</h3>
+        <section className="flex flex-col md:flex-row gap-2 mb-4">
           <input
             type="text"
             placeholder="Search by Name, Email, or Mobile..."
@@ -77,6 +79,13 @@ export default function RSVPModal({ guests, onClose }) {
               <option value="CSV">CSV</option>
               <option value="JSON">JSON</option>
             </select>
+            <button
+              className="bg-green-700 text-white px-3 py-2 rounded hover:bg-green-800 text-xs"
+              onClick={onAddGuests}
+              type="button"
+            >
+              Add Guest(s)
+            </button>
             <button
               className="bg-green-700 text-white px-3 py-2 rounded hover:bg-green-800 text-xs"
               onClick={handleExport}
