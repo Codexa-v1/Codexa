@@ -9,11 +9,15 @@ export const eventColors = {
   },
   Conference: {
     bgColor: "bg-yellow-200",
-    labelColor: "bg-yellow-700",
+    labelColor: "bg-yellow-500",
   },
   Meeting: {
     bgColor: "bg-green-200",
     labelColor: "bg-green-500",
+  },
+  Sport: {
+    bgColor: "bg-purple-200",
+    labelColor: "bg-purple-500",
   },
   Other: {
     bgColor: "bg-gray-200",

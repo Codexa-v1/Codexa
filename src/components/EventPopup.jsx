@@ -2,6 +2,7 @@ import { GrClose } from "react-icons/gr";
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import dayjs from "dayjs";
+import { eventColors } from "../utils/eventColors";
 
 export default function EventPopup({ onClose, selectedDate }) {
   const { user } = useAuth0();
@@ -100,11 +101,11 @@ export default function EventPopup({ onClose, selectedDate }) {
               onChange={(e) => setCategory(e.target.value)}
             >
               <option value="">Select Category</option>
-              <option value="conference">Conference</option>
-              <option value="meeting">Meeting</option>
-              <option value="party">Party</option>
-              <option value="wedding">Wedding</option>
-              <option value="other">Other</option>
+              {Object.keys(eventColors).map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </option>
+              ))}
             </select>
             {category === "other" && (
               <input

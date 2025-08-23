@@ -13,8 +13,6 @@ const mockEvents = [
     location: "Riverside Mansion",
     rsvpCurrent: 34,
     rsvpTotal: 46,
-    bgColor: "bg-pink-200",
-    labelColor: "bg-pink-500",
   },
   {
     _id: "456",
@@ -24,8 +22,6 @@ const mockEvents = [
     location: "Wits Sport Conference Center",
     rsvpCurrent: 24,
     rsvpTotal: 46,
-    bgColor: "bg-yellow-200",
-    labelColor: "bg-yellow-700",
   },
   {
     _id: "123",
@@ -35,19 +31,15 @@ const mockEvents = [
     location: "The Beach",
     rsvpCurrent: 33,
     rsvpTotal: 36,
-    bgColor: "bg-blue-200",
-    labelColor: "bg-blue-500",
   },
   {
     _id: "446",
-    type: "Conference",
-    title: "Business Conference",
-    date: "2025-08-18T11:00:00",
-    location: "Wits Sport Conference Center",
-    rsvpCurrent: 24,
-    rsvpTotal: 46,
-    bgColor: "bg-yellow-200",
-    labelColor: "bg-yellow-700",
+    type: "Sport",
+    title: "World Cup Final",
+    date: "2025-12-11T18:30:00",
+    location: "Great hall",
+    rsvpCurrent: 86,
+    rsvpTotal: 120,
   },
 ];
 
@@ -75,7 +67,7 @@ export default function EventsPage() {
   return (
     <section className="min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
       <Navbar />
-      <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans w-full">
+      <section className="p-6 bg-gradient-to-b from-sky-100 from-[0%] to-green-900 to-[90%] min-h-screen font-sans w-full">
         <section className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
           <h2 className="text-3xl font-bold text-green-900">All Events</h2>
           <section className="flex flex-col md:flex-row gap-2 items-center">
