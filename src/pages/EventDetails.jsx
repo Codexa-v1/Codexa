@@ -156,14 +156,30 @@ export default function EventDetails() {
   const documents = [
     {
       name: "Venue Contract.pdf",
+      size: "850 KB",
+      date: "2025-02-10",
+      type: "DOCX",
       url: "https://example.com/venue-contract.pdf",
     },
     {
+      name: "Guest List",
+      size: "220 KB",
+      date: "2025-02-20",
+      type: "XLSX",
+      url: "#",
+    },
+    {
       name: "Catering Menu.docx",
+      size: "1.1 MB",
+      date: "2025-02-10",
+      type: "PDF",
       url: "https://example.com/catering-menu.docx",
     },
     {
       name: "Event Schedule.xlsx",
+      size: "650 KB",
+      date: "2025-02-10",
+      type: "PDF",
       url: "https://example.com/event-schedule.xlsx",
     },
   ];
