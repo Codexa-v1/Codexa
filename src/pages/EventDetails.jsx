@@ -178,7 +178,7 @@ export default function EventDetails() {
         )}
 
         {showFloorPlanModal && (
-          <FloorPlanModal floorPlanUrl={event.floorPlanUrl} onClose={() => setShowFloorPlanModal(false)}/>
+          <FloorPlanModal floorPlanUrl={event.floorplan} onClose={() => setShowFloorPlanModal(false)}/>
         )}
 
         {showDocumentsModal && (
