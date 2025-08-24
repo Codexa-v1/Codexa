@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { addGuest } from "../backend/api/EventGuest";
 
 export default function NewGuestModal({ onClose, onSave }) {
   const [form, setForm] = useState({
@@ -56,8 +57,11 @@ export default function NewGuestModal({ onClose, onSave }) {
     reader.readAsText(file);
   }
 
-  function handleSaveAll() {
+  async function handleSaveAll() { // Need to make this actually save to database
     if (guests.length === 0) return;
+
+    // Save each guest to the database
+    await Promise.all(guests.map(guest => addGuest(guest)));
     onSave(guests);
     onClose();
   }

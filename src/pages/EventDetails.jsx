@@ -5,6 +5,8 @@ import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
 import VendorsModal from "../components/VendorsModal";
 import NewGuestModal from "../components/AddGuestsModal"; // Your AddGuests modal
+import VenuesModal from "../components/VenuesModal";
+import ScheduleModal from "../components/ScheduleModal";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import dayjs from "dayjs";
@@ -183,6 +185,16 @@ export default function EventDetails() {
 
         {showDocumentsModal && (
           <DocumentsModal documents={documents} onClose={() => setShowDocumentsModal(false)}/>
+        )}
+
+        {/* Need to change event object to store multiple venues */}
+        {showVenuesModal && (
+          <VenuesModal venues={event.venues || []} onClose={() => setShowVenuesModal(false)}/>
+        )}
+
+        {/* Need to change event object to store schedule */}
+        {showScheduleModal && (
+          <ScheduleModal schedule={event.schedule || []} onClose={() => setShowScheduleModal(false)}/>
         )}
 
       </section>
