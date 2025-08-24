@@ -5,8 +5,8 @@ import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
 import VendorsModal from "../components/VendorsModal";
 import NewGuestModal from "../components/AddGuestsModal"; // Your AddGuests modal
-import VenuesModal from "../components/VenuesModal";
-import ScheduleModal from "../components/ScheduleModal";
+import VenuesModal from "../components/VenuesModal"
+import ScheduleModal from "../components/ScheduleModal"
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import dayjs from "dayjs";
@@ -30,6 +30,8 @@ export default function EventDetails() {
   const [showVendorsModal, setShowVendorsModal] = useState(false);
   const [showFloorPlanModal, setShowFloorPlanModal] = useState(false);
   const [showDocumentsModal, setShowDocumentsModal] = useState(false);
+  const [showVenuesModal, setShowVenuesModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   // Fetch events with vendors and guests
   useEffect(() => {
@@ -153,6 +155,28 @@ export default function EventDetails() {
             <p className="text-xs mb-2">View all event-related documents.</p>
             <p className="text-xs text-purple-900">Click to view documents</p>
           </section>
+
+          <section
+            className="bg-red-100 rounded-lg shadow p-6 cursor-pointer hover:bg-red-200 transition"
+            onClick={() => setShowVenuesModal(true)}
+          >
+            <h3 className="text-lg font-semibold mb-2">Venues</h3>
+            <p className="text-xs mb-2">Current Venue: {event.venue?.name || "Not Set"}</p>
+            <p className="text-xs text-red-900">Click to view venue details</p>
+          </section>
+
+          <section
+            className="bg-indigo-100 rounded-lg shadow p-6 cursor-pointer hover:bg-indigo-200 transition"
+            onClick={() => setShowScheduleModal(true)}
+          >
+            <h3 className="text-lg font-semibold mb-2">Schedule</h3>
+            <p className="text-xs mb-2">
+              {event.schedule?.length
+                ? `${event.schedule.length} items`
+                : "No schedule added"}
+            </p>
+            <p className="text-xs text-indigo-900">Click to view schedule</p>
+          </section>
         </section>
 
         {/* Modals */}
@@ -170,14 +194,19 @@ export default function EventDetails() {
 
         {showAddGuestsModal && (
           <NewGuestModal
+            eventId={event._id}   // ✅ Pass the event’s _id
             onClose={() => setShowAddGuestsModal(false)}
             onSave={handleAddGuestsSave}
           />
         )}
 
-        {showVendorsModal && (
-          <VendorsModal vendors={event.vendors || []} eventId={event.id} onClose={() => setShowVendorsModal(false)}/>
-        )}
+       {showVendorsModal && (
+        <VendorsModal
+          vendors={event.vendors || []}
+          eventId={event._id}   // ✅ Pass the event’s _id
+          onClose={() => setShowVendorsModal(false)}
+        />
+      )}
 
         {showFloorPlanModal && (
           <FloorPlanModal floorPlanUrl={event.floorplan} onClose={() => setShowFloorPlanModal(false)}/>
@@ -187,14 +216,12 @@ export default function EventDetails() {
           <DocumentsModal documents={documents} onClose={() => setShowDocumentsModal(false)}/>
         )}
 
-        {/* Need to change event object to store multiple venues */}
         {showVenuesModal && (
-          <VenuesModal venues={event.venues || []} onClose={() => setShowVenuesModal(false)}/>
+          <VenuesModal venue={event.venue} onClose={() => setShowVenuesModal(false)}/>
         )}
 
-        {/* Need to change event object to store schedule */}
         {showScheduleModal && (
-          <ScheduleModal schedule={event.schedule || []} onClose={() => setShowScheduleModal(false)}/>
+          <ScheduleModal schedule={event.schedule} onClose={() => setShowScheduleModal(false)}/>
         )}
 
       </section>
