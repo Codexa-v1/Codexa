@@ -8,6 +8,7 @@ import NewGuestModal from "../components/AddGuestsModal"; // Your AddGuests moda
 import VenuesModal from "../components/VenuesModal";
 import AddVenuesModal from "../components/AddVenuesModal"
 import ScheduleModal from "../components/ScheduleModal"
+import AddScheduleModal from "../components/AddScheduleModal";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import dayjs from "dayjs";
@@ -34,6 +35,8 @@ export default function EventDetails() {
   const [showDocumentsModal, setShowDocumentsModal] = useState(false);
   const [showVenuesModal, setShowVenuesModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showAddScheduleModal, setShowAddScheduleModal] = useState(false);
+
 
   // Fetch events with vendors and guests
   useEffect(() => {
@@ -248,7 +251,24 @@ export default function EventDetails() {
 
 
         {showScheduleModal && (
-          <ScheduleModal schedule={event.schedule} onClose={() => setShowScheduleModal(false)}/>
+          <ScheduleModal
+            schedule={event.schedule}
+            onClose={() => setShowScheduleModal(false)}
+            onAddSchedule={() => setShowAddScheduleModal(true)} // open add/edit modal
+          />
+        )}
+
+        {showAddScheduleModal && (
+          <AddScheduleModal
+            eventId={event._id}
+            onClose={() => setShowAddScheduleModal(false)}
+            onScheduleUpdated={(updatedSchedule) => {
+              setEvent(prev => ({
+                ...prev,
+                schedule: updatedSchedule
+              }));
+            }}
+          />
         )}
 
       </section>
