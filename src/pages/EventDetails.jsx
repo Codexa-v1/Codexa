@@ -174,7 +174,7 @@ export default function EventDetails() {
         )}
 
         {showVendorsModal && (
-          <VendorsModal vendors={event.vendors || []} onClose={() => setShowVendorsModal(false)}/>
+          <VendorsModal vendors={event.vendors || []} eventId={event.id} onClose={() => setShowVendorsModal(false)}/>
         )}
 
         {showFloorPlanModal && (

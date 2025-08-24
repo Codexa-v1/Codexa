@@ -29,8 +29,8 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
 
     try {
       // --- Save new vendor ---
-      const vendor = { ...form, eventId };
-      await addVendor(vendor);
+      const vendor = { ...form };
+      await addVendor(eventId, vendor);
       // --- Refresh vendor list ---
       const vendors = await getVendors();
 
