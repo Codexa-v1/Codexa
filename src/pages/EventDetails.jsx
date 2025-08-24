@@ -194,9 +194,15 @@ export default function EventDetails() {
 
         {showAddGuestsModal && (
           <NewGuestModal
-            eventId={event._id}   // ✅ Pass the event’s _id
-            onClose={() => setShowAddGuestsModal(false)}
-            onSave={handleAddGuestsSave}
+            eventId={event._id} // Pass the current event's ID
+            onClose={() => setShowAddGuestsModal(false)} // Close the modal
+            onGuestsUpdated={(updatedGuests) => {
+              // Update event state immediately
+              setEvent(prev => ({
+                ...prev,
+                guests: updatedGuests
+              }));
+            }}
           />
         )}
 

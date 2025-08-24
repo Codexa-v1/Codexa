@@ -38,13 +38,17 @@ export default function NewGuestModal({ onClose, onSave, eventId }) {
     });
 
     chain
-      .then(() => getGuests(eventId))
-      .then(fetchedGuests => {
-        setGuests(fetchedGuests);
-        onSave(fetchedGuests);
-        onClose();
-      })
-      .catch(err => console.error("Error saving guests:", err));
+    .then(() => getGuests(eventId))
+    .then(fetchedGuests => {
+      // Update parent
+      if (onGuestsUpdated) onGuestsUpdated(fetchedGuests);
+
+      // Optionally update local preview list
+      setGuests(fetchedGuests);
+      
+      onClose();
+    })
+    .catch(err => console.error("Error saving guests:", err));
   }
 
 

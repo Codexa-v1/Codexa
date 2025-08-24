@@ -2,7 +2,7 @@ import React from "react";
 import NewVendorModal from "./NewVendorModal";
 import e from "cors";
 
-export default function VendorsModal({ vendors, onClose }) {
+export default function VendorsModal({ vendors, onClose, eventId }) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filterType, setFilterType] = React.useState("All");
   const [showNewVendorModal, setShowNewVendorModal] = React.useState(false);
@@ -39,7 +39,7 @@ export default function VendorsModal({ vendors, onClose }) {
         <NewVendorModal
           eventId={eventId}
           onClose={() => setShowNewVendorModal(false)}
-          onSave={newVendor => setVendorList([...vendorList, newVendor])}
+          onVendorsUpdated={vendors => setVendorList(vendors)}
         />
       )}
         <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={onClose}>&times;</button>
