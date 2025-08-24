@@ -5,7 +5,8 @@ import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
 import VendorsModal from "../components/VendorsModal";
 import NewGuestModal from "../components/AddGuestsModal"; // Your AddGuests modal
-import VenuesModal from "../components/VenuesModal"
+import VenuesModal from "../components/VenuesModal";
+import AddVenuesModal from "../components/AddVenuesModal"
 import ScheduleModal from "../components/ScheduleModal"
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -25,6 +26,7 @@ export default function EventDetails() {
 
   // Modal state
   const [showEditEventModal, setShowEditEventModal] = useState(false);
+  const [showAddVenuesModal, setShowAddVenuesModal] = useState(false);
   const [showRSVPModal, setShowRSVPModal] = useState(false);
   const [showAddGuestsModal, setShowAddGuestsModal] = useState(false);
   const [showVendorsModal, setShowVendorsModal] = useState(false);
@@ -223,8 +225,27 @@ export default function EventDetails() {
         )}
 
         {showVenuesModal && (
-          <VenuesModal venue={event.venue} onClose={() => setShowVenuesModal(false)}/>
+          <VenuesModal
+            venues={event.venues || []}
+            eventId={event._id}
+            onClose={() => setShowVenuesModal(false)}
+            onAddVenues={() => setShowAddVenuesModal(true)} // open add modal on top
+          />
         )}
+
+        {showAddVenuesModal && (
+          <AddVenuesModal
+            eventId={event._id}
+            onClose={() => setShowAddVenuesModal(false)}
+            onVenuesUpdated={(updatedVenues) => {
+              setEvent(prev => ({
+                ...prev,
+                venues: updatedVenues
+              }));
+            }}
+          />
+        )}
+
 
         {showScheduleModal && (
           <ScheduleModal schedule={event.schedule} onClose={() => setShowScheduleModal(false)}/>
