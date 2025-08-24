@@ -1,27 +1,6 @@
 import React from "react";
-import {
-  DocumentTextIcon,
-  DocumentDuplicateIcon,
-} from "@heroicons/react/24/outline";
-import {
-  FaFilePdf,
-  FaFileWord,
-  FaFileExcel,
-  FaFileImage,
-} from "react-icons/fa";
+import { DocumentTextIcon } from "@heroicons/react/24/outline";
 import DocumentUpload from "./DocumentUpload";
-
-function getFileIcon(type) {
-  if (type.includes("pdf"))
-    return <FaFilePdf className="text-red-600 w-8 h-8" />;
-  if (type.includes("word"))
-    return <FaFileWord className="text-blue-600 w-8 h-8" />;
-  if (type.includes("excel"))
-    return <FaFileExcel className="text-green-600 w-8 h-8" />;
-  if (type.includes("image"))
-    return <FaFileImage className="text-yellow-500 w-8 h-8" />;
-  return <DocumentTextIcon className="text-gray-500 w-8 h-8" />;
-}
 
 export default function DocumentsModal({ documents, onClose }) {
   return (
@@ -42,8 +21,8 @@ export default function DocumentsModal({ documents, onClose }) {
               key={idx}
               className="border rounded-lg shadow p-4 flex flex-col justify-between relative bg-white"
             >
-              {/* Document Type Badge */}
-              {getFileIcon(doc.type)}
+              {/* Single Icon */}
+              <DocumentTextIcon className="text-gray-500 w-8 h-8 mb-2" />
 
               <h4 className="text-md font-semibold text-gray-800 mb-1">
                 {doc.name}
@@ -51,6 +30,7 @@ export default function DocumentsModal({ documents, onClose }) {
               <p className="text-sm text-gray-500">Size: {doc.size}</p>
               <p className="text-sm text-gray-500">Date: {doc.date}</p>
               <p className="text-sm text-gray-500">Type: {doc.type}</p>
+
               <a
                 href={doc.url}
                 target="_blank"
