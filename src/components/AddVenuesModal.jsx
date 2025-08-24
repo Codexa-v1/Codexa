@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { addVenue, getVenues } from "../backend/api/EventVenue"; // make sure you have these
+import { addVenue, getVenues } from "../backend/api/EventVenue";
 
 export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
   const [form, setForm] = useState({
     venueName: "",
-    contactPerson: "",
+    venueAddress: "",
     venueEmail: "",
-    status: "Pending",
+    venuePhone: "",
+    capacity: "",
+    venueStatus: "",
     venueImage: "",
   });
   const [venues, setVenues] = useState([]);
@@ -20,25 +22,30 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
 
   function handleAddVenue(e) {
     e.preventDefault();
-    if (!form.venueName || !form.venueEmail) return;
+    const { venueName, venueAddress, venueEmail, venuePhone, capacity, venueStatus } = form;
+    if (!venueName || !venueAddress || !venueEmail || !venuePhone || !capacity || !venueStatus) return;
 
     setVenues(prev => [
       ...prev,
       {
         ...form,
-        venueName: form.venueName.trim(),
-        contactPerson: form.contactPerson?.trim() || "",
-        venueEmail: form.venueEmail.trim(),
-        status: form.status || "Pending",
+        venueName: venueName.trim(),
+        venueAddress: venueAddress.trim(),
+        venueEmail: venueEmail.trim(),
+        venuePhone: venuePhone.trim(),
+        capacity: Number(capacity),
+        venueStatus,
         venueImage: form.venueImage?.trim() || "",
       },
     ]);
 
     setForm({
       venueName: "",
-      contactPerson: "",
+      venueAddress: "",
       venueEmail: "",
-      status: "Pending",
+      venuePhone: "",
+      capacity: "",
+      venueStatus: "",
       venueImage: "",
     });
   }
@@ -46,7 +53,10 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
   async function handleSaveAll() {
     if (venues.length === 0) return;
 
-    const validVenues = venues.filter(v => v.venueName && v.venueEmail);
+    const validVenues = venues.filter(v =>
+      v.venueName && v.venueAddress && v.venueEmail && v.venuePhone && v.capacity && v.venueStatus
+    );
+
     if (validVenues.length === 0) {
       alert("No valid venues to save.");
       return;
@@ -60,14 +70,13 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
         await addVenue(eventId, venue);
       }
 
-      // Update parent immediately
       if (onVenuesUpdated) {
         const updatedVenues = await getVenues(eventId);
         onVenuesUpdated(updatedVenues);
       }
 
-      setVenues([]); // clear preview
-      onClose();      // close modal
+      setVenues([]);
+      onClose();
     } catch (err) {
       setError(err.message || "Failed to save venues.");
       console.error(err);
@@ -85,13 +94,10 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
         >
           &times;
         </button>
-        <h3 className="text-xl font-bold mb-4 text-red-900">
-          Add New Venue(s)
-        </h3>
+        <h3 className="text-xl font-bold mb-4 text-red-900">Add New Venue(s)</h3>
 
         {error && <p className="text-red-600 mb-2">{error}</p>}
 
-        {/* Manual Venue Form */}
         <form onSubmit={handleAddVenue} className="space-y-4">
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
@@ -103,10 +109,11 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
               className="px-3 py-2 border rounded w-full"
             />
             <input
-              name="contactPerson"
-              value={form.contactPerson}
+              name="venueAddress"
+              value={form.venueAddress}
               onChange={handleChange}
-              placeholder="Contact Person"
+              required
+              placeholder="Venue Address"
               className="px-3 py-2 border rounded w-full"
             />
             <input
@@ -117,12 +124,30 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
               placeholder="Email"
               className="px-3 py-2 border rounded w-full"
             />
+            <input
+              name="venuePhone"
+              value={form.venuePhone}
+              onChange={handleChange}
+              required
+              placeholder="Phone"
+              className="px-3 py-2 border rounded w-full"
+            />
+            <input
+              name="capacity"
+              type="number"
+              value={form.capacity}
+              onChange={handleChange}
+              required
+              placeholder="Capacity"
+              className="px-3 py-2 border rounded w-full"
+            />
             <select
-              name="status"
-              value={form.status}
+              name="venueStatus"
+              value={form.venueStatus}
               onChange={handleChange}
               className="px-3 py-2 border rounded w-full"
             >
+              <option value="" disabled hidden>Venue Status</option>
               <option value="Pending">Pending</option>
               <option value="Accepted">Accepted</option>
               <option value="Declined">Declined</option>
@@ -132,7 +157,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
             name="venueImage"
             value={form.venueImage}
             onChange={handleChange}
-            placeholder="Venue Image URL"
+            placeholder="Venue Image URL (optional)"
             className="px-3 py-2 border rounded w-full"
           />
           <button
@@ -143,7 +168,6 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
           </button>
         </form>
 
-        {/* Venue Preview */}
         {venues.length > 0 && (
           <section className="mt-6">
             <h4 className="font-bold mb-2">Venue List Preview</h4>
@@ -151,8 +175,10 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="border px-2">Name</th>
-                  <th className="border px-2">Contact Person</th>
+                  <th className="border px-2">Address</th>
                   <th className="border px-2">Email</th>
+                  <th className="border px-2">Phone</th>
+                  <th className="border px-2">Capacity</th>
                   <th className="border px-2">Status</th>
                   <th className="border px-2">Image</th>
                 </tr>
@@ -161,9 +187,11 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                 {venues.map((v, i) => (
                   <tr key={i}>
                     <td className="border px-2">{v.venueName}</td>
-                    <td className="border px-2">{v.contactPerson}</td>
+                    <td className="border px-2">{v.venueAddress}</td>
                     <td className="border px-2">{v.venueEmail}</td>
-                    <td className="border px-2">{v.status}</td>
+                    <td className="border px-2">{v.venuePhone}</td>
+                    <td className="border px-2">{v.capacity}</td>
+                    <td className="border px-2">{v.venueStatus}</td>
                     <td className="border px-2">{v.venueImage}</td>
                   </tr>
                 ))}
@@ -172,7 +200,6 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
           </section>
         )}
 
-        {/* Actions */}
         <section className="flex justify-end gap-2 mt-6">
           <button
             type="button"

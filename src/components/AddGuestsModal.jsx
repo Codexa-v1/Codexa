@@ -6,7 +6,7 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
     name: "",
     phone: "",
     email: "",
-    rsvpStatus: "Pending",
+    rsvpStatus: "",
     dietaryPreferences: "",
   });
   const [guests, setGuests] = useState([]);
@@ -154,6 +154,9 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
               onChange={handleChange}
               className="px-3 py-2 border rounded w-full"
             >
+              <option value="" disabled hidden>
+                RSVP Status
+              </option>
               <option value="Pending">Pending</option>
               <option value="Accepted">Accepted</option>
               <option value="Declined">Declined</option>
