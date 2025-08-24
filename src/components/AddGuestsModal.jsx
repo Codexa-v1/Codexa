@@ -1,129 +1,126 @@
 import React, { useState } from "react";
-import { addGuest as saveGuestToDB } from "../backend/api/EventGuest"; // alias
-import { getGuests } from "../backend/api/EventGuest";
-import { get } from "mongoose";
+import { addGuest, getGuests } from "../backend/api/EventGuest";
 
-export default function NewGuestModal({ onClose, onSave, eventId }) {
+export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
   const [form, setForm] = useState({
     name: "",
     phone: "",
     email: "",
-    rsvpStatus: "",
+    rsvpStatus: "Pending",
     dietaryPreferences: "",
   });
   const [guests, setGuests] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
+    setForm(f => ({ ...f, [name]: value }));
   }
 
-  // Renamed to avoid conflict
-  function handleSaveAll() {
+  function handleAddGuest(e) {
+    e.preventDefault();
+    if (!form.name || !form.email) return;
+
+    setGuests(prev => [
+      ...prev,
+      {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone?.trim() || "",
+        rsvpStatus: form.rsvpStatus || "Pending",
+        dietaryPreferences: form.dietaryPreferences?.trim() || "",
+      }
+    ]);
+
+    setForm({
+      name: "",
+      phone: "",
+      email: "",
+      rsvpStatus: "Pending",
+      dietaryPreferences: "",
+    });
+  }
+
+  function handleCSVUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = event => {
+      const text = event.target.result;
+      const rows = text.split("\n").map(row => row.split(","));
+      const [header, ...dataRows] = rows;
+
+      const importedGuests = dataRows
+        .map(row => {
+          if (row.length < 5) return null;
+          const guest = {
+            name: row[0]?.trim(),
+            phone: row[1]?.trim(),
+            email: row[2]?.trim(),
+            rsvpStatus: row[3]?.trim() || "Pending",
+            dietaryPreferences: row[4]?.trim() || "",
+          };
+          return guest.name && guest.email ? guest : null;
+        })
+        .filter(Boolean);
+
+      setGuests(prev => [...prev, ...importedGuests]);
+    };
+    reader.readAsText(file);
+  }
+
+  async function handleSaveAll() {
     if (guests.length === 0) return;
 
-    const validGuests = guests.filter(
-      guest => guest && guest.name && guest.email
-    );
-
+    const validGuests = guests.filter(g => g && g.name && g.email);
     if (validGuests.length === 0) {
       alert("No valid guests to save.");
       return;
     }
 
-    // Save all guests sequentially using .then()
-    let chain = Promise.resolve();
-    validGuests.forEach(guest => {
-      chain = chain.then(() => saveGuestToDB(eventId, guest));
-    });
+    setLoading(true);
+    setError(null);
 
-    chain
-    .then(() => getGuests(eventId))
-    .then(fetchedGuests => {
-      // Update parent
-      if (onGuestsUpdated) onGuestsUpdated(fetchedGuests);
+    try {
+      // Save all guests sequentially
+      const savedGuests = [];
+      for (const guest of validGuests) {
+        const saved = await addGuest(eventId, guest);
+        savedGuests.push(saved);
+      }
 
-      // Optionally update local preview list
-      setGuests(fetchedGuests);
-      
-      onClose();
-    })
-    .catch(err => console.error("Error saving guests:", err));
-  }
+      // Immediately update parent with the new guests
+      if (onGuestsUpdated) {
+        const updatedGuests = await getGuests(eventId);
+        onGuestsUpdated(updatedGuests);
+      }
 
-
-// Also, when adding a guest manually
-function handleAddGuest(e) {
-  e.preventDefault();
-  // basic validation: must have name and email
-  if (!form.name || !form.email) return;
-
-  // Add only valid guests
-  setGuests(prev => [
-    ...prev,
-    {
-      name: form.name.trim(),
-      email: form.email.trim(),
-      phone: form.phone?.trim() || "",
-      rsvpStatus: form.rsvpStatus || "Pending",
-      dietaryPreferences: form.dietaryPreferences?.trim() || ""
+      // Clear local preview list
+      setGuests([]);
+      onClose(); // close modal after success
+    } catch (err) {
+      setError(err.message || "Failed to save guests.");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  ]);
-
-  setForm({
-    name: "",
-    phone: "",
-    email: "",
-    rsvpStatus: "",
-    dietaryPreferences: "",
-  });
-}
-
-// And when parsing CSV
-function handleCSVUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = event => {
-    const text = event.target.result;
-    const rows = text.split("\n").map(row => row.split(","));
-    const [header, ...dataRows] = rows;
-
-    const importedGuests = dataRows
-      .map(row => {
-        if (row.length < 5) return null;
-        const guest = {
-          name: row[0]?.trim(),
-          phone: row[1]?.trim(),
-          email: row[2]?.trim(),
-          rsvpStatus: row[3]?.trim() || "Pending",
-          dietaryPreferences: row[4]?.trim() || "",
-        };
-        return guest.name && guest.email ? guest : null;
-      })
-      .filter(Boolean);
-
-    setGuests(prev => [...prev, ...importedGuests]);
-  };
-  reader.readAsText(file);
-}
-
-
-
-
-  function downloadSampleCSV() {
-    const sample = `name,phone,email,rsvpstatus,dietarypreferences
-Alice,1234567890,alice@email.com,Pending,Vegan
-Bob,0987654321,bob@email.com,Declined,Gluten-free`;
-    const blob = new Blob([sample], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "guest_template.csv";
-    a.click();
-    URL.revokeObjectURL(url);
   }
+
+
+    function downloadSampleCSV() {
+      const sample = `name,phone,email,rsvpStatus,dietaryPreferences
+  Alice,1234567890,alice@email.com,Pending,Vegan
+  Bob,0987654321,bob@email.com,Declined,Gluten-free`;
+      const blob = new Blob([sample], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "guest_template.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
 
   return (
     <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -137,6 +134,8 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`;
         <h3 className="text-xl font-bold mb-4 text-green-900">
           Add New Guest(s)
         </h3>
+
+        {error && <p className="text-red-600 mb-2">{error}</p>}
 
         {/* Manual Guest Form */}
         <form onSubmit={handleAddGuest} className="space-y-4">
@@ -153,10 +152,8 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`;
               name="rsvpStatus"
               value={form.rsvpStatus}
               onChange={handleChange}
-              required
               className="px-3 py-2 border rounded w-full"
             >
-              <option value="">Select RSVP Status</option>
               <option value="Pending">Pending</option>
               <option value="Accepted">Accepted</option>
               <option value="Declined">Declined</option>
@@ -194,7 +191,6 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`;
 
         {/* CSV Upload */}
         <section className="mt-6">
-          <br />
           <label className="block font-medium mb-2">Or upload CSV file</label>
           <input type="file" accept=".csv" onChange={handleCSVUpload} />
           <p className="text-sm text-gray-500 mt-1">
@@ -243,6 +239,7 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`;
             type="button"
             className="px-4 py-2 rounded bg-gray-200 text-gray-700"
             onClick={onClose}
+            disabled={loading}
           >
             Cancel
           </button>
@@ -250,9 +247,9 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`;
             type="button"
             className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-800"
             onClick={handleSaveAll}
-            disabled={guests.length === 0}
+            disabled={loading || guests.length === 0}
           >
-            Save All Guests
+            {loading ? "Saving..." : "Save All Guests"}
           </button>
         </section>
       </section>
