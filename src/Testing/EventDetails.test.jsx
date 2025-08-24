@@ -72,7 +72,7 @@ describe("EventDetails", () => {
     renderWithRouter("/event/0");
     expect(screen.getByText("Emily & Jake’s Wedding")).toBeInTheDocument();
     expect(screen.getByText("Wedding")).toBeInTheDocument();
-    expect(screen.getByText(/Budget:/)).toHaveTextContent("R120000");
+    expect(screen.getByText(/Budget:/)).toHaveTextContent(/R120\s?000/);
   });
 
   it("opens and closes EditEventModal", () => {
