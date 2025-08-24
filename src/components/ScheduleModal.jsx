@@ -1,20 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import dayjs from "dayjs";
 
-export default function ScheduleModal({ schedule, onClose }) {
-  if (!schedule) return null;
-
+export default function ScheduleModal({ schedule = [], onClose, onAddSchedule }) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full">
-        <h2 className="text-xl font-semibold mb-4">Schedule</h2>
-        {/* Schedule details go here */}
+    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <section className="bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full relative">
         <button
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           onClick={onClose}
         >
-          Close
+          &times;
         </button>
-      </div>
-    </div>
+        <h3 className="text-xl font-bold mb-4 text-indigo-900">Event Schedule</h3>
+
+        <button
+          className="mb-4 px-3 py-2 bg-indigo-700 text-white rounded hover:bg-indigo-800"
+          onClick={onAddSchedule}
+        >
+          + Add Schedule Item
+        </button>
+
+        {schedule.length === 0 ? (
+          <p>No schedule items added yet.</p>
+        ) : (
+          <ul className="space-y-2">
+            {schedule.map((item, idx) => (
+              <li key={idx} className="border rounded p-2">
+                <p className="font-semibold">{item.title}</p>
+                <p className="text-sm text-gray-700">{item.description}</p>
+                <p className="text-xs text-gray-500">
+                  {dayjs(item.startTime).format("HH:mm")} - {dayjs(item.endTime).format("HH:mm")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </section>
   );
 }
