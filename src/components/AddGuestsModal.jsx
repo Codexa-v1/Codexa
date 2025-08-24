@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { addGuest } from "../backend/api/EventGuest";
+import { addGuest as saveGuestToDB } from "../backend/api/EventGuest"; // alias
 
-export default function NewGuestModal({ onClose, onSave }) {
+export default function NewGuestModal({ onClose, onSave, eventId }) {
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -16,7 +16,8 @@ export default function NewGuestModal({ onClose, onSave }) {
     setForm((f) => ({ ...f, [name]: value }));
   }
 
-  function addGuest(e) {
+  // Renamed to avoid conflict
+  function handleAddGuest(e) {
     e.preventDefault();
     if (!form.name || !form.email) return; // basic validation
     setGuests((prev) => [...prev, form]);
@@ -57,11 +58,11 @@ export default function NewGuestModal({ onClose, onSave }) {
     reader.readAsText(file);
   }
 
-  async function handleSaveAll() { // Need to make this actually save to database
+  async function handleSaveAll() {
     if (guests.length === 0) return;
 
-    // Save each guest to the database
-    await Promise.all(guests.map(guest => addGuest(guest)));
+    // Now actually saves to database
+    await Promise.all(guests.map((guest) => saveGuestToDB(eventId, guest)));
     onSave(guests);
     onClose();
   }
@@ -93,7 +94,7 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`;
         </h3>
 
         {/* Manual Guest Form */}
-        <form onSubmit={addGuest} className="space-y-4">
+        <form onSubmit={handleAddGuest} className="space-y-4">
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               name="name"
