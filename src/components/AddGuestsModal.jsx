@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { addGuest as saveGuestToDB } from "../backend/api/EventGuest"; // alias
+import { getGuests } from "../backend/api/EventGuest";
+import { get } from "mongoose";
 
 export default function NewGuestModal({ onClose, onSave, eventId }) {
   const [form, setForm] = useState({
@@ -17,60 +19,92 @@ export default function NewGuestModal({ onClose, onSave, eventId }) {
   }
 
   // Renamed to avoid conflict
-  function handleAddGuest(e) {
-    e.preventDefault();
-    if (!form.name || !form.email) return; // basic validation
-    setGuests((prev) => [...prev, form]);
-    setForm({
-      name: "",
-      phone: "",
-      email: "",
-      rsvpStatus: "",
-      dietaryPreferences: "",
-    });
-  }
-
-  function handleCSVUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target.result;
-      const rows = text.split("\n").map((row) => row.split(","));
-      const [header, ...dataRows] = rows;
-
-      const importedGuests = dataRows
-        .map((row) => {
-          if (row.length < 5) return null;
-          return {
-            name: row[0]?.trim(),
-            phone: row[1]?.trim(),
-            email: row[2]?.trim(),
-            rsvpStatus: row[3]?.trim(),
-            dietaryPreferences: row[4]?.trim(),
-          };
-        })
-        .filter(Boolean);
-
-      setGuests((prev) => [...prev, ...importedGuests]);
-    };
-    reader.readAsText(file);
-  }
-
   function handleSaveAll() {
     if (guests.length === 0) return;
 
-    // Wait until all guests are saved
-    Promise.all(guests.map(guest => saveGuestToDB(eventId, guest)))
-      .then(savedGuests => {
-          onSave(savedGuests);
-          onClose();
+    const validGuests = guests.filter(
+      guest => guest && guest.name && guest.email
+    );
+
+    if (validGuests.length === 0) {
+      alert("No valid guests to save.");
+      return;
+    }
+
+    // Save all guests sequentially using .then()
+    let chain = Promise.resolve();
+    validGuests.forEach(guest => {
+      chain = chain.then(() => saveGuestToDB(eventId, guest));
+    });
+
+    chain
+      .then(() => getGuests(eventId))
+      .then(fetchedGuests => {
+        setGuests(fetchedGuests);
+        onSave(fetchedGuests);
+        onClose();
       })
-      .catch(err => {
-          console.error("Error saving guests:", err);
-      });
+      .catch(err => console.error("Error saving guests:", err));
   }
+
+
+// Also, when adding a guest manually
+function handleAddGuest(e) {
+  e.preventDefault();
+  // basic validation: must have name and email
+  if (!form.name || !form.email) return;
+
+  // Add only valid guests
+  setGuests(prev => [
+    ...prev,
+    {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      phone: form.phone?.trim() || "",
+      rsvpStatus: form.rsvpStatus || "Pending",
+      dietaryPreferences: form.dietaryPreferences?.trim() || ""
+    }
+  ]);
+
+  setForm({
+    name: "",
+    phone: "",
+    email: "",
+    rsvpStatus: "",
+    dietaryPreferences: "",
+  });
+}
+
+// And when parsing CSV
+function handleCSVUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = event => {
+    const text = event.target.result;
+    const rows = text.split("\n").map(row => row.split(","));
+    const [header, ...dataRows] = rows;
+
+    const importedGuests = dataRows
+      .map(row => {
+        if (row.length < 5) return null;
+        const guest = {
+          name: row[0]?.trim(),
+          phone: row[1]?.trim(),
+          email: row[2]?.trim(),
+          rsvpStatus: row[3]?.trim() || "Pending",
+          dietaryPreferences: row[4]?.trim() || "",
+        };
+        return guest.name && guest.email ? guest : null;
+      })
+      .filter(Boolean);
+
+    setGuests(prev => [...prev, ...importedGuests]);
+  };
+  reader.readAsText(file);
+}
+
 
 
 

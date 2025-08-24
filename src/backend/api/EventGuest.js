@@ -1,38 +1,31 @@
 // Add, update, and retrieve guest details and RSVP status.
 const url = 'http://localhost:3000'; // Base URL for the API - the reason why this is the full address is because the frontend and the backend are running on different ports.
 
-export async function getGuests(eventId) {
-    fetch(url+'/event/'+eventId, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Guests:', data);
-    })
-    .catch(error => {
-        console.error('Error fetching guests:', error);
-    });
+export function getGuests(eventId) {
+    return fetch(`${url}/api/guests/event/${eventId}`)
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) return []; // treat "no guests" as empty array
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
 }
 
-export async function addGuest(eventId, guest) {
-    fetch(url+'/event/'+eventId+'/guest', {
+export function addGuest(eventId, guest) {
+    return fetch(`${url}/api/guests/event/${eventId}`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(guest)
+        body: JSON.stringify(guest),
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Guest added:', data);
-        return data;
-    })
-    .catch(error => {
-        console.error('Error adding guest:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
 }
 
 export async function updateGuest(eventId, guestId, guest) {

@@ -14,10 +14,11 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     async function fetchGuests() {
       if (!eventId) return;
       try {
-        const data = await getGuests(eventId);
-        setGuests(data);
-      } catch (err) {
-        console.error("Failed to fetch guests:", err);
+        getGuests(eventId)
+          .then(data => setGuests(data))
+          .catch(err => console.error(err));
+      } catch (error) {
+        console.error(error);
       }
     }
     fetchGuests();
@@ -137,7 +138,7 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                   Mobile Number
                 </th>
                 <th className="py-2 px-3 text-center text-xs font-semibold text-green-900 border border-gray-200 align-middle">
-                  Status
+                  RSVP Status
                 </th>
                 <th className="py-2 px-3 text-center text-xs font-semibold text-green-900 border border-gray-200 align-middle">
                   Actions
@@ -209,14 +210,14 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
               style={{
                 width: `${
                   guests.length > 0
-                    ? (guests.filter((g) => g.status === "Accepted").length / guests.length) * 100
+                    ? (guests.filter((g) => g.rsvpStatus === "Accepted").length / guests.length) * 100
                     : 0
                 }%`,
               }}
             ></section>
           </section>
           <p className="text-xs mt-1">
-            Accepted: {guests.filter((g) => g.status === "Accepted").length}/{guests.length}
+            Accepted: {guests.filter((g) => g.rsvpStatus === "Accepted").length}/{guests.length}
           </p>
         </section>
       </section>
