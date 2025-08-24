@@ -141,6 +141,29 @@ export default function EventDetails() {
     Object.assign(event, updated);
     setShowEditEventModal(false);
   }
+
+  const handleSendInvites = (eventId) => {
+    const shareData = {
+      title: event.title,
+      text: `You're invited to ${event.title} on ${dayjs(event.date).format(
+        "DD MMM YYYY, HH:mm"
+      )} at ${event.location}.
+      
+      Confirm attendance here: ${window.location.origin}/rsvp/${eventId}`,
+      url: `${window.location.origin}/rsvp/${eventId}`,
+    };
+
+    if (navigator.share) {
+      navigator
+        .share(shareData)
+        .catch((err) => console.error("Share failed:", err));
+    } else {
+      // fallback: copy link to clipboard
+      navigator.clipboard.writeText(shareData.url);
+      alert("Link copied to clipboard!");
+    }
+  };
+
   const { id } = useParams();
   const navigate = useNavigate();
   const event = mockEvents.find((e) => e._id === id) || null;
@@ -379,27 +402,44 @@ export default function EventDetails() {
               {dayjs(event.date).diff(dayjs(), "day")} days to go
             </span>
           </section>
-          <button
-            className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 text-sm font-semibold shadow flex items-center gap-2"
-            type="button"
-            onClick={() => setShowEditEventModal(true)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-4 h-4"
+          <section className="flex gap-2">
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm font-semibold shadow flex items-center gap-2"
+              type="button"
+              onClick={() => handleSendInvites(event._id)}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213l-4 1 1-4 12.362-12.726z"
-              />
-            </svg>
-            Edit Event
-          </button>
+              <svg
+                className="w-5 h-5 text-gray-600 hover:text-blue-600 cursor-pointer transform -rotate-45"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="white"
+              >
+                <path d="M2 21l21-9L2 3v7l15 2-15 2v7z" />
+              </svg>
+              Send Invite
+            </button>
+            <button
+              className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 text-sm font-semibold shadow flex items-center gap-2"
+              type="button"
+              onClick={() => setShowEditEventModal(true)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213l-4 1 1-4 12.362-12.726z"
+                />
+              </svg>
+              Edit Event
+            </button>
+          </section>
         </section>
         {showEditEventModal && (
           <EditEventModal
