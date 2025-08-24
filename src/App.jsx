@@ -13,6 +13,7 @@ import EventsPage from "./pages/EventsPage"; // ✅ Events page component
 import EventDetails from "./pages/EventDetails"; // ✅ Event details page
 import "./App.css";
 import "./index.css";
+import RSVPPage from "./pages/RSVPPage";
 
 function PrivateRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -55,6 +56,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/error" element={<Error />} />
         <Route path="/about" element={<About />} />
+        <Route path="/rsvp/:eventId" element={<RSVPPage />} />
       </Routes>
     </Router>
   );
