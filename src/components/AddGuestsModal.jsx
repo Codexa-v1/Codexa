@@ -58,14 +58,21 @@ export default function NewGuestModal({ onClose, onSave, eventId }) {
     reader.readAsText(file);
   }
 
-  async function handleSaveAll() {
+  function handleSaveAll() {
     if (guests.length === 0) return;
 
-    // Now actually saves to database
-    await Promise.all(guests.map((guest) => saveGuestToDB(eventId, guest)));
-    onSave(guests);
-    onClose();
+    // Wait until all guests are saved
+    Promise.all(guests.map(guest => saveGuestToDB(eventId, guest)))
+      .then(savedGuests => {
+          onSave(savedGuests);
+          onClose();
+      })
+      .catch(err => {
+          console.error("Error saving guests:", err);
+      });
   }
+
+
 
   function downloadSampleCSV() {
     const sample = `name,phone,email,rsvpstatus,dietarypreferences

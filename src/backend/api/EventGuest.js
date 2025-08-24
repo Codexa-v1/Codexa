@@ -28,6 +28,7 @@ export async function addGuest(eventId, guest) {
     .then(response => response.json())
     .then(data => {
         console.log('Guest added:', data);
+        return data;
     })
     .catch(error => {
         console.error('Error adding guest:', error);
