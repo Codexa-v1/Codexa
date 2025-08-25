@@ -143,14 +143,14 @@ export default function EventDetails() {
   }
 
   const handleSendInvites = (eventId) => {
+    const link = `${window.location.origin}/rsvp/${eventId}`;
+
     const shareData = {
       title: event.title,
       text: `You're invited to ${event.title} on ${dayjs(event.date).format(
         "DD MMM YYYY, HH:mm"
-      )} at ${event.location}.
-      
-      Confirm attendance here: ${window.location.origin}/rsvp/${eventId}`,
-      url: `${window.location.origin}/rsvp/${eventId}`,
+      )} at ${event.location}.\n\nConfirm attendance here:\n${link}`,
+      url: link,
     };
 
     if (navigator.share) {
@@ -158,8 +158,7 @@ export default function EventDetails() {
         .share(shareData)
         .catch((err) => console.error("Share failed:", err));
     } else {
-      // fallback: copy link to clipboard
-      navigator.clipboard.writeText(shareData.url);
+      navigator.clipboard.writeText(link);
       alert("Link copied to clipboard!");
     }
   };
