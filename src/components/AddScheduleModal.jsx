@@ -31,7 +31,7 @@ export default function AddScheduleModal({ eventId, onClose, onScheduleUpdated, 
         >
           &times;
         </button>
-        <h3 className="text-xl font-bold mb-4 text-indigo-900">
+        <h3 className="text-xl font-bold mb-4 text-yellow-900">
           {initialData ? "Edit" : "Add"} Schedule Item
         </h3>
 
@@ -68,7 +68,7 @@ export default function AddScheduleModal({ eventId, onClose, onScheduleUpdated, 
         </section>
 
         <button
-          className="mt-4 px-4 py-2 bg-indigo-700 text-white rounded hover:bg-indigo-800"
+          className="mt-4 px-4 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-800"
           onClick={handleSave}
         >
           Save

@@ -11,10 +11,10 @@ export default function ScheduleModal({ schedule = [], onClose, onAddSchedule })
         >
           &times;
         </button>
-        <h3 className="text-xl font-bold mb-4 text-indigo-900">Event Schedule</h3>
+        <h3 className="text-xl font-bold mb-4 text-yellow-900">Event Schedule</h3>
 
         <button
-          className="mb-4 px-3 py-2 bg-indigo-700 text-white rounded hover:bg-indigo-800"
+          className="mb-4 px-3 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-800"
           onClick={onAddSchedule}
         >
           + Add Schedule Item
