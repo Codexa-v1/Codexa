@@ -112,6 +112,21 @@ export default function VenuesModal({ eventId, onClose }) {
                   <p><span className="font-medium">Capacity:</span> {venue.capacity || "-"}</p>
                   <p><span className="font-medium">Status:</span> {venue.venueStatus || "-"}</p>
                 </div>
+                {/* Action Buttons */}
+                <div className="flex gap-2 mt-4">
+                  <button
+                    className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-sm font-semibold"
+                    onClick={() => handleEditVendor(idx)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold"
+                    onClick={() => handleRemoveVendor(idx)}
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
             ))}
           </div>
