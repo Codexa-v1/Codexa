@@ -52,7 +52,6 @@ export default function EventDetails() {
   const [showDocumentsModal, setShowDocumentsModal] = useState(false);
 
   // Demo floor plan and documents
-  const floorPlanUrl = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80";
   const documents = [
     { name: "Venue Contract.pdf", url: "https://example.com/venue-contract.pdf" },
     { name: "Catering Menu.docx", url: "https://example.com/catering-menu.docx" },
@@ -158,7 +157,7 @@ export default function EventDetails() {
 
         {/* Modals */}
         {showFloorPlanModal && (
-          <FloorPlanModal floorPlanUrl={floorPlanUrl} onClose={() => setShowFloorPlanModal(false)} />
+          <FloorPlanModal floorPlanUrl={event.floorPlanUrl} onClose={() => setShowFloorPlanModal(false)} />
         )}
 
         {showDocumentsModal && (
