@@ -37,5 +37,6 @@ export default function FloorPlanModal({ floorPlanUrl, onClose }) {
         <p className="text-gray-500">No floor plan available.</p>
       )}
     </section>
+  </section>
   );
 }

@@ -42,9 +42,6 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
         ...filteredGuests.map((g) => [g.name, g.email, g.mobile, g.status]),
       ];
       const csvContent = csvRows
-        .map((row) => row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(","))
-        .join("\n");
-      const csvContent = csvRows
         .map((row) =>
           row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")
         )
@@ -71,15 +68,6 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
       URL.revokeObjectURL(url);
     }
   };
-  // Filter and search logic
-  const filteredGuests = guests.filter(guest => {
-    const matchesStatus = filterStatus === "All" || guest.status === filterStatus;
-    const matchesSearch =
-      guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      guest.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      guest.mobile.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
 
   return (
     <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
