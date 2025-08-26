@@ -300,6 +300,7 @@ export default function EventDetails() {
         {showVenuesModal && (
           <div ref={venuesRef}>
             <VenuesModal
+              eventId={event._id}
               onClose={() => setShowVenuesModal(false)}
               onAddVenues={() => setShowAddVenuesModal(true)}
             />

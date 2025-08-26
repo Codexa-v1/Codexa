@@ -2,7 +2,6 @@ import React from "react";
 import NewVendorModal from "./NewVendorModal";
 import e from "cors";
 
-
 export default function VendorsModal({ vendors, onClose, eventId }) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filterType, setFilterType] = React.useState("All");
