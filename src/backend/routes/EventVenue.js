@@ -45,6 +45,10 @@ router.post('/event/:eventId', async (req, res) => {
             venueAddress: req.body.venueAddress,
             venueName: req.body.venueName,
             venueImage: req.body.venueImage,
+            venueEmail: req.body.venueEmail,
+            venuePhone: req.body.venuePhone,
+            capacity: req.body.capacity,
+            venueStatus: req.body.venueStatus
         });
 
         const savedVenue = await newVenue.save();
