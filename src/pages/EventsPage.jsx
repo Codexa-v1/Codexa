@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "@/components/Navbar";
 import dayjs from "dayjs";
 
 const mockEvents = [
@@ -38,7 +38,7 @@ const mockEvents = [
 
 
 export default function EventsPage() {
-  const [events, setEvents] = useState(mockEvents);
+  const [events] = useState(mockEvents);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("All");
   const navigate = useNavigate();

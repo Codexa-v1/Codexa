@@ -1,15 +1,15 @@
 import { FaCalendarPlus } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
-import Navbar from "../components/Navbar";
-import Calendar from "../components/Calendar";
-import EventPopup from "../components/EventPopup";
+import Navbar from "@/components/Navbar";
+import Calendar from "@/components/Calendar";
+import EventPopup from "@/components/EventPopup";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, logout, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [events, setEvents] = useState([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const navigate = useNavigate();

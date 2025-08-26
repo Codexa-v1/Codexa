@@ -1,5 +1,5 @@
 import React from "react";
-import NewVendorModal from "./NewVendorModal";
+import NewVendorModal from "@/components/NewVendorModal";
 
 export default function VendorsModal({ vendors, onClose }) {
   const [searchTerm, setSearchTerm] = React.useState("");
