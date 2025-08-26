@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FaUserCircle } from "react-icons/fa";
 import { HiChevronDown } from "react-icons/hi";
-import profile from "../assets/profile.png";
 
 // import { mockUser } from "../mockuser"; // Remove mock user import to use actual user data
 

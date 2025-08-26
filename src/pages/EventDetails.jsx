@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import RSVPModal from "../components/RSVPModal";
-import EditEventModal from "../components/EditEventModal";
-import FloorPlanModal from "../components/FloorPlanModal";
-import DocumentsModal from "../components/DocumentsModal";
-import VendorsModal from "../components/VendorsModal";
+import RSVPModal from "@/components/RSVPModal";
+import EditEventModal from "@/components/EditEventModal";
+import FloorPlanModal from "@/components/FloorPlanModal";
+import DocumentsModal from "@/components/DocumentsModal";
+import VendorsModal from "@/components/VendorsModal";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "@/components/Navbar";
 import dayjs from "dayjs";
 
 // Use same mockEvents as EventsPage for demo

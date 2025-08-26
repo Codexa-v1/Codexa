@@ -1,8 +1,8 @@
 import { FaCalendarPlus } from "react-icons/fa";
 import { useAuth0 } from "@auth0/auth0-react";
-import Navbar from "../components/Navbar";
-import Calendar from "../components/CalendarBox";
-import EventPopup from "../components/EventPopup";
+import Navbar from "@/components/Navbar";
+import Calendar from "@/components/CalendarBox";
+import EventPopup from "@/components/EventPopup";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
