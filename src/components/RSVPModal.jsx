@@ -164,10 +164,6 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
           </section>
           <p className="text-xs mt-1">Accepted: {guests.filter(g => g.status === 'Accepted').length}/{guests.length}</p>
         </section>
-        <p className="text-xs mt-1">
-          Accepted: {guests.filter((g) => g.status === "Accepted").length}/
-          {guests.length}
-        </p>
       </section>
     </section>
   );
