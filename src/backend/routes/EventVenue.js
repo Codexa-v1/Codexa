@@ -8,7 +8,7 @@ const router = express.Router();
 // Define your routes here
 
 // This is to get all venues for a particular event - if need be, we will implement a get request for a specific venue
-router.get('/event/:eventId/venues', async (req, res) => {
+router.get('/event/:eventId', async (req, res) => {
     try {
         // Step 1: Find all EventVenue entries for this event
         const eventVenues = await EventVenue.find({ eventId: req.params.eventId });
@@ -32,7 +32,7 @@ router.get('/event/:eventId/venues', async (req, res) => {
 
 // This is to create a new venue for a particular event - if need be, we will implement a post request to create a
 // venue with a specific id
-router.post('/event/:eventId/venues', async (req, res) => {
+router.post('/event/:eventId', async (req, res) => {
     try {
         const { eventId } = req.params;
 

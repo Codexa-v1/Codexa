@@ -191,13 +191,13 @@ export default function EventDetails() {
           >
             <h3 className="text-lg font-semibold mb-2">RSVP</h3>
             <p className="text-xs mb-2">
-              Progress: {event.rsvpCurrent}/{event.rsvpTotal}
+              Progress: {event.rsvpCurrent}/{guests.length}
             </p>
             <section className="bg-gray-300 h-2 rounded mb-2">
               <section
                 className="bg-green-900 h-2 rounded"
                 style={{
-                  width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
+                  width: `${(event.rsvpCurrent / guests.length) * 100}%`,
                 }}
               />
             </section>
@@ -301,7 +301,7 @@ export default function EventDetails() {
           <div ref={venuesRef}>
             <VenuesModal
               onClose={() => setShowVenuesModal(false)}
-              onAddVenue={() => setShowAddVenuesModal(true)}
+              onAddVenues={() => setShowAddVenuesModal(true)}
             />
           </div>
         )}

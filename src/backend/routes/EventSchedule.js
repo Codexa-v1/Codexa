@@ -1,4 +1,10 @@
 // routes/schedule.js
+
+// How this is going to work:
+// Every piece of information will be in the following format - the user will select a time range, and put in a description for that period
+// Then, we put this information in one object, and send it to the database
+// We send this information along with the eventId
+
 import express from "express";
 import Event from "../models/event.js";
 import EventSchedule from "../models/eventschedule.js";

@@ -2,7 +2,7 @@
 const url = 'http://localhost:3000';
 
 export function getVenues(eventId) {
-    return fetch(`${url}/event/${eventId}/venues`)
+    return fetch(`${url}/api/venues/event/${eventId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -11,7 +11,7 @@ export function getVenues(eventId) {
         });
 }
 export function addVenue(eventId, venue) {
-    return fetch(`${url}/event/${eventId}/venues`, {
+    return fetch(`${url}/api/venues/event/${eventId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export function addVenue(eventId, venue) {
         });
 }
 export function updateVenue(eventId, venueId, venue) {
-    return fetch(`${url}/event/${eventId}/venues/${venueId}`, {
+    return fetch(`${url}/api/venues/event/${eventId}/venue/${venueId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export function updateVenue(eventId, venueId, venue) {
         });
 }
 export function deleteVenue(eventId, venueId) {
-    return fetch(`${url}/event/${eventId}/venues/${venueId}`, {
+    return fetch(`${url}/api/venues/event/${eventId}/venue/${venueId}`, {
         method: 'DELETE',
     })
         .then(response => {
