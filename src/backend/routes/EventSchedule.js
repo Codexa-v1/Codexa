@@ -32,14 +32,13 @@ router.get("/event/:eventId", async (req, res) => {
 router.post("/event/:eventId", async (req, res) => {
     try {
         const { eventId } = req.params;
-        const { title, description, startTime, endTime } = req.body;
+        const { description, startTime, endTime } = req.body;
 
         const event = await Event.findById(eventId);
         if (!event) return res.status(404).send("Event not found");
 
         const newScheduleItem = new EventSchedule({
             eventId,
-            title,
             description,
             startTime,
             endTime

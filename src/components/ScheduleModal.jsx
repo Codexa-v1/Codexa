@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { getSchedule } from "../backend/api/EventSchedule";
 
@@ -19,15 +19,15 @@ export default function ScheduleModal({ eventId, onClose, onAddSchedule }) {
   }, [eventId]);
 
   return (
-    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <section className="bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full relative">
-        <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-          onClick={onClose}
-        >
+    <section className="bg-white rounded-lg shadow-lg p-12 max-w-7xl w-full relative">
+      <button
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+        onClick={onClose}
+      >
           &times;
         </button>
-        <h3 className="text-xl font-bold mb-4 text-yellow-900">Event Schedule</h3>
+
+        <h3 className="text-xl font-bold mb-4 text-green-900">Event Schedule</h3>
 
         <button
           className="mb-4 px-3 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-800"
@@ -52,6 +52,5 @@ export default function ScheduleModal({ eventId, onClose, onAddSchedule }) {
           </ul>
         )}
       </section>
-    </section>
   );
 }

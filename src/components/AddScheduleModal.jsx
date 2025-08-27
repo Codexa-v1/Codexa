@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createEventSchedule } from "../backend/api/EventSchedule";
 
 export default function AddScheduleModal({ eventId, onClose, onScheduleUpdated, initialData }) {
   const [form, setForm] = useState(initialData || {
-    title: "",
     description: "",
     startTime: "",
     endTime: ""
@@ -15,6 +15,7 @@ export default function AddScheduleModal({ eventId, onClose, onScheduleUpdated, 
 
   const handleSave = async () => {
     // call backend API to add or update schedule
+    const res = await createEventSchedule(eventId, form);
     // after saving:
     if (onScheduleUpdated) {
       onScheduleUpdated(); // fetch updated schedule
@@ -36,14 +37,6 @@ export default function AddScheduleModal({ eventId, onClose, onScheduleUpdated, 
         </h3>
 
         <section className="space-y-2">
-          <input
-            type="text"
-            name="title"
-            value={form.title}
-            onChange={handleChange}
-            placeholder="Title"
-            className="w-full border px-2 py-1 rounded"
-          />
           <textarea
             name="description"
             value={form.description}
