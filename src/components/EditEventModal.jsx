@@ -9,8 +9,10 @@ export default function EditEventModal({ event, onClose, onSave }) {
   const [form, setForm] = useState({
     title: event.title || "",
     category: event.category || "",
-    date: event.date || "",
-    time: event.startTime || "",
+    startDate: event.date || "",
+    endDate: event.endDate || "",
+    startTime: event.startTime || "",
+    endTime: event.endTime || "",
     location: event.location || "",
     budget: event.budget || "",
     description: event.description || ""
@@ -43,20 +45,25 @@ export default function EditEventModal({ event, onClose, onSave }) {
               <input name="category" value={form.category} onChange={handleChange} required placeholder={form.category ? "" : "Category"} className="px-3 py-2 border rounded w-full" />
             </section>
             <section className="relative">
-              {form.date && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Date</label>}
-              <input name="date" value={form.date} onChange={handleChange} required type="date" placeholder={form.date ? "" : "Date"} className="px-3 py-2 border rounded w-full" />
+              {form.startDate && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Start Date</label>}
+              <input name="startDate" value={form.date} onChange={handleChange} required type="date" placeholder={form.date ? "" : "Start Date"} className="px-3 py-2 border rounded w-full" />
             </section>
-
             <section className="relative">
-              {form.time && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Time</label>}
-              <input name="time" value={form.time} onChange={handleChange} required type="time" placeholder={form.time ? "" : "Time"} className="px-3 py-2 border rounded w-full" />
+              {form.endDate && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">End Date</label>}
+              <input name="endDate" value={form.endDate} onChange={handleChange} required type="date" placeholder={form.endDate ? "" : "End Date"} className="px-3 py-2 border rounded w-full" />
             </section>
-
+            <section className="relative">
+              {form.startTime && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Start Time</label>}
+              <input name="startTime" value={form.startTime} onChange={handleChange} required type="time" placeholder={form.startTime ? "" : "Start Time"} className="px-3 py-2 border rounded w-full" />
+            </section>
+            <section className="relative">
+              {form.endTime && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">End Time</label>}
+              <input name="endTime" value={form.endTime} onChange={handleChange} required type="time" placeholder={form.endTime ? "" : "End Time"} className="px-3 py-2 border rounded w-full" />
+            </section>
             <section className="relative">
               {form.location && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Location</label>}
               <input name="location" value={form.location} onChange={handleChange} required placeholder={form.location ? "" : "Location"} className="px-3 py-2 border rounded w-full" />
             </section>
-
             <section className="relative">
               {form.budget && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Budget</label>}
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">R</span>
