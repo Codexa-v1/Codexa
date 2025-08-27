@@ -15,15 +15,7 @@ export default function AddScheduleModal({ eventId, onClose, onScheduleUpdated, 
 
   const handleSave = async () => {
     // call backend API to add or update schedule
-    const url = "http://localhost:3000";
-    const res = await fetch(`${url}/api/schedule/event/${eventId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    const text = await res.text();
-    console.log("Backend returned:", text);
+    const res = await createEventSchedule(eventId, form);
 
     // after saving:
     if (onScheduleUpdated) {
