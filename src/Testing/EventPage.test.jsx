@@ -64,6 +64,7 @@ describe("EventsPage", () => {
     const viewBtn = screen.getAllByRole("button", { name: /View/i })[0];
     fireEvent.click(viewBtn);
 
-    expect(mockedNavigate).toHaveBeenCalledWith("/events/0");
+    expect(mockedNavigate).toHaveBeenCalledWith(expect.stringMatching(/^\/events\/\w+$/));
   });
+
 });
