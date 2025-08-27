@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
+const navigate = useNavigate();
+
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated } = useAuth0();

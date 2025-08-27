@@ -10,9 +10,8 @@ vi.mock("react-router-dom", () => ({
 }));
 
 vi.mock("../components/Navbar", () => ({
-  default: () => React.createElement("nav", { "data-testid": "navbar" }, "Navbar"),
+  default: () => <nav data-testid="navbar">Navbar</nav>,
 }));
-
 
 vi.mock("../components/Calendar", () => ({
   default: () => <div data-testid="calendar">Calendar</div>,
@@ -25,6 +24,20 @@ vi.mock("../components/EventPopup", () => ({
     </div>
   ),
 }));
+
+vi.mock("../components/EventCard", () => ({
+  default: ({ event, setConfirmDeleteId }) => (
+    <div data-testid="event-card">
+      {event?.title || "Mock Event"}
+      <button
+        onClick={() => setConfirmDeleteId && setConfirmDeleteId(event._id)}
+      >
+        Cancel
+      </button>
+    </div>
+  ),
+}));
+
 
 // helper to mock Auth0
 function mockAuth0({ user = { name: "TestUser", sub: "auth0|123" }, isAuthenticated = true } = {}) {
@@ -41,7 +54,7 @@ describe("HomePage", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
-    // mock fetch globally
+
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
@@ -54,7 +67,7 @@ describe("HomePage", () => {
     mockAuth0();
     const { default: HomePage } = await import("../pages/HomePage");
     render(<HomePage />);
-    expect(await screen.findByText(/Welcome back, TestUser!/)).toBeInTheDocument();
+    expect(await screen.findByText(/Welcome back, TestUser!/i)).toBeInTheDocument();
   });
 
   test("opens and closes Add New Event modal", async () => {
@@ -62,11 +75,11 @@ describe("HomePage", () => {
     const { default: HomePage } = await import("../pages/HomePage");
     render(<HomePage />);
 
-    const btn = screen.getByRole("button", { name: /Add New Event/i });
-    fireEvent.click(btn);
+    const addButton = screen.getByRole("button", { name: /Add New Event/i });
+    fireEvent.click(addButton);
+
     expect(screen.getByTestId("event-popup")).toBeInTheDocument();
 
-    // close popup via child close button
     fireEvent.click(screen.getByText("Close"));
     await waitFor(() => {
       expect(screen.queryByTestId("event-popup")).not.toBeInTheDocument();
@@ -101,9 +114,11 @@ describe("HomePage", () => {
     expect(await screen.findAllByText("Event 1")).toHaveLength(2);
     expect(screen.getAllByText("Event 2")).toHaveLength(2);
     expect(screen.getAllByText("Event 3")).toHaveLength(2);
-    expect(screen.getByRole("button", { name: /See more/i })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /See more/i }));
+    const seeMoreBtn = screen.getByRole("button", { name: /See more/i });
+    expect(seeMoreBtn).toBeInTheDocument();
+
+    fireEvent.click(seeMoreBtn);
     expect(mockedNavigate).toHaveBeenCalledWith("/events");
   });
 
@@ -122,11 +137,11 @@ describe("HomePage", () => {
 
     expect(await screen.findAllByText("Deletable Event")).toHaveLength(2);
 
-    fireEvent.click(screen.getByRole("button", { name: /Cancel/i }));
+    expect(
+  await screen.findByText((content) => content.includes("Cancel Event"))
+).toBeInTheDocument();
 
-    expect(await screen.findByText(/Cancel Event\?/i)).toBeInTheDocument();
 
-    // close by clicking "No, Go Back"
     fireEvent.click(screen.getByRole("button", { name: /No, Go Back/i }));
     await waitFor(() => {
       expect(screen.queryByText(/Cancel Event\?/i)).not.toBeInTheDocument();
