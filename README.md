@@ -27,7 +27,7 @@ The app allows users to:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/[your-org-or-username]/Codexa.git
+git clone https://github.com/Codexa-v1/Codexa.git
 cd Codexa
 ```
 
