@@ -18,9 +18,11 @@ jobs:
         run: npm install
 
       - name: Run tests
-        run: npx vitest run --coverage
+        run: npx vitest run --coverage --reporter=lcov
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
+          file: coverage/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
+          branch: Testing
