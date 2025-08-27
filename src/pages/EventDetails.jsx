@@ -160,7 +160,8 @@ export default function EventDetails() {
         )}
         <h2 className="text-3xl font-bold text-green-900 mb-2">{event.title}</h2>
         <section className="flex flex-wrap items-center gap-4 text-sm text-gray-700 mb-3">
-          <p>{dayjs(event.date).format("DD MMM YYYY, HH:mm")}</p>
+          <p>{dayjs(event.date).format("DD MMM YYYY")}</p>
+          <p>{event.startTime} - {event.endTime}</p>
           <p>{event.location}</p>
         </section>
         <p className="text-gray-600 mb-6">{event.description}</p>
