@@ -125,7 +125,7 @@ export default function EventDetails() {
         <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
           <section className="flex flex-wrap items-center gap-2">
             <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-              {event.type}
+              {event.category}
             </span>
             <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
               Active
