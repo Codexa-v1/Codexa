@@ -65,9 +65,9 @@ router.delete('/:id', async (req, res) => {
 });
 // GET all events by userId (eventPlanner) via request param
 // Here, we do not need to worry about eventId, since we are fetching all events for a specific user.
-router.get('/all', async (req, res) => {
+router.get('/all/:id', async (req, res) => {
     try {
-        const { userId } = req.query;
+        const userId = req.params.id;
         if (!userId) {
             return res.status(400).json({ error: 'Missing userId request parameter' });
         }

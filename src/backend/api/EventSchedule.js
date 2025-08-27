@@ -25,7 +25,7 @@ export function createEventSchedule(eventId, scheduleData) {
 }
 
 export function updateEventSchedule(eventId, scheduleId, updateData) {
-  return fetch(`${url}/api/schedule/event/${eventId}/schedule/${scheduleId}`, {
+  return fetch(`${url}/api/schedules/event/${eventId}/schedule/${scheduleId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export function updateEventSchedule(eventId, scheduleId, updateData) {
 }
 
 export function deleteEventSchedule(eventId, scheduleId) {
-  return fetch(`${url}/api/schedule/event/${eventId}/schedule/${scheduleId}`, {
+  return fetch(`${url}/api/schedules/event/${eventId}/schedule/${scheduleId}`, {
     method: "DELETE",
   })
     .then((response) => {

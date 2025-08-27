@@ -57,6 +57,7 @@ export function deleteEvent(eventId) {
 }
 
 export function getAllEvents(id) {
+    console.log(`Fetching all events for user: ${id}`);
     return fetch(`${url}/api/events/all/${id}`)
         .then(response => {
             if (!response.ok) {
