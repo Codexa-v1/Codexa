@@ -1,3 +1,4 @@
+import { time } from "framer-motion";
 import React, { useState } from "react";
 
 export default function EditEventModal({ event, onClose, onSave }) {
@@ -7,8 +8,9 @@ export default function EditEventModal({ event, onClose, onSave }) {
   }
   const [form, setForm] = useState({
     title: event.title || "",
-    type: event.type || "",
+    category: event.category || "",
     date: event.date || "",
+    time: event.startTime || "",
     location: event.location || "",
     budget: event.budget || "",
     description: event.description || ""
@@ -37,17 +39,24 @@ export default function EditEventModal({ event, onClose, onSave }) {
               <input name="title" value={form.title} onChange={handleChange} required placeholder={form.title ? "" : "Title"} className="px-3 py-2 border rounded w-full" />
             </section>
             <section className="relative">
-              {form.type && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Type</label>}
-              <input name="type" value={form.type} onChange={handleChange} required placeholder={form.type ? "" : "Type"} className="px-3 py-2 border rounded w-full" />
+              {form.category && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Category</label>}
+              <input name="category" value={form.category} onChange={handleChange} required placeholder={form.category ? "" : "Category"} className="px-3 py-2 border rounded w-full" />
             </section>
             <section className="relative">
               {form.date && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Date</label>}
-              <input name="date" value={form.date} onChange={handleChange} required type="datetime-local" placeholder={form.date ? "" : "Date"} className="px-3 py-2 border rounded w-full" />
+              <input name="date" value={form.date} onChange={handleChange} required type="date" placeholder={form.date ? "" : "Date"} className="px-3 py-2 border rounded w-full" />
             </section>
+
+            <section className="relative">
+              {form.time && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Time</label>}
+              <input name="time" value={form.time} onChange={handleChange} required type="time" placeholder={form.time ? "" : "Time"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
             <section className="relative">
               {form.location && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Location</label>}
               <input name="location" value={form.location} onChange={handleChange} required placeholder={form.location ? "" : "Location"} className="px-3 py-2 border rounded w-full" />
             </section>
+
             <section className="relative">
               {form.budget && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Budget</label>}
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">R</span>
