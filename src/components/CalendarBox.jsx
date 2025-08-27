@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import dayjs from "dayjs";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { getAllEvents } from "../backend/api/EventData";
 
 const Calendar = ({ onDayClick }) => {
   // Color mapping for event categories
@@ -65,12 +66,7 @@ const Calendar = ({ onDayClick }) => {
 
   React.useEffect(() => {
     if (isAuthenticated && user) {
-      fetch(
-        `http://localhost:3000/api/events?userId=${encodeURIComponent(
-          user.sub
-        )}`
-      )
-        .then((res) => res.json())
+      getAllEvents(user.sub)
         .then((data) => {
           // Add bgColor property to each event
           const mapped = data.map((ev) => ({

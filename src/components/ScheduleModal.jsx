@@ -45,7 +45,7 @@ export default function ScheduleModal({ eventId, onClose, onAddSchedule }) {
                 <p className="font-semibold">{item.title}</p>
                 <p className="text-sm text-gray-700">{item.description}</p>
                 <p className="text-xs text-gray-500">
-                  {dayjs(item.startTime).format("HH:mm")} - {dayjs(item.endTime).format("HH:mm")}
+                  {item.startTime} - {item.endTime}
                 </p>
               </li>
             ))}

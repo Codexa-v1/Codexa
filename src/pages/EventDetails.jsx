@@ -298,13 +298,14 @@ export default function EventDetails() {
               schedules={schedules}
               onClose={() => setActiveTab("overview")}
               onAddSchedule={() => setShowAddScheduleModal(true)}
+              eventId={event._id}
             />
           )}
           {showAddScheduleModal && (
             <AddScheduleModal eventId={event._id} onClose={() => setShowAddScheduleModal(false)} />
           )}
-          {activeTab === "floor" && <FloorPlanModal floorPlanUrl={event.floorPlanUrl} onClose={() => setActiveTab("overview")} />}
-          {activeTab === "documents" && <DocumentsModal documents={documents} onClose={() => setActiveTab("overview")} />}
+          {activeTab === "floor" && <FloorPlanModal eventId={event._id} floorPlanUrl={event.floorPlanUrl} onClose={() => setActiveTab("overview")} />}
+          {activeTab === "documents" && <DocumentsModal eventId={event._id} documents={documents} onClose={() => setActiveTab("overview")} />}
         </section>
       </section>
     </section>

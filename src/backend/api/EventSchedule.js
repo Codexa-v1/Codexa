@@ -10,7 +10,7 @@ export function getSchedule(eventId) {
 }
 
 export function createEventSchedule(eventId, scheduleData) {
-  return fetch(`${url}/api/schedule/event/${eventId}`, {
+  return fetch(`${url}/api/schedules/event/${eventId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
