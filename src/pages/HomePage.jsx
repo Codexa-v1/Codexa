@@ -81,7 +81,7 @@ const HomePage = () => {
             {Array.isArray(events) && events.length > 0 ? (
               events
                 .slice(0, 3)
-                .map((event, index) => <EventCard key={index} event={event} />)
+                .map((event, index) => <EventCard key={index} event={event} setConfirmDeleteId={setConfirmDeleteId} />)
             ) : (
               <p className="text-center text-gray-500">No events found.</p>
             )}
