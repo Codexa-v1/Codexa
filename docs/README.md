@@ -62,7 +62,11 @@ We follow the Github Flow methodology:
     - [Sprint 1 User Stories](./planning/Sprint01/UserStories.md)
     - [Team Roles](./planning/Sprint01/TeamRoles.md)
     - [Mockups](./development/Mockups.md)
+<<<<<<< HEAD
     - [First Meeting Notes](./meetings/sprint01/2025-08-07-first-meeting.md)
+=======
+    - [First Meeting Notes](./meetings/Sprint01/2025-08-07-first-meeting.md)
+>>>>>>> 6e81815c48af99da82d5ebcb65f628f773589e98
     - [Scrum 01](./meetings/sprint01/Scrum.md)
     - [Scrum 02](./meetings/sprint01/Scrum02.md)
     - [Scrum 03](./meetings/sprint01/Scrum03.md)
@@ -70,7 +74,10 @@ We follow the Github Flow methodology:
 - Sprint two
     - [Sprint 2 brief](./planning/sprint02/Sprint02Brief.md)
     - [Scrum 01](./meetings/sprint02/Scrum01.md)
+<<<<<<< HEAD
     - [Scrum 02](./meetings/sprint02/Scrum02.md)
     - [Scrum 03](./meetings/sprint02/Scrum03.md)
+=======
+>>>>>>> 6e81815c48af99da82d5ebcb65f628f773589e98
 
 ---
