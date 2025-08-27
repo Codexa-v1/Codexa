@@ -1,6 +1,7 @@
 import { GrClose } from "react-icons/gr";
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { createEvent } from "../backend/api/EventData.js";
 import dayjs from "dayjs";
 import { eventColors } from "../utils/eventColors";
 
@@ -14,6 +15,7 @@ export default function EventPopup({ onClose, selectedDate }) {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
+  const [budget, setBudget] = useState("");
   const [capacity, setCapacity] = useState("");
   const [description, setDescription] = useState("");
   const [organizerName, setOrganizerName] = useState("");
@@ -42,6 +44,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       date: startDateTime,
       endDate: endDateTime,
       location,
+      budget,
       description,
       status,
       capacity: capacity ? Number(capacity) : undefined,
@@ -239,6 +242,20 @@ export default function EventPopup({ onClose, selectedDate }) {
               />
             </section>
           </section>
+
+          <section>
+              <label htmlFor="budget" className="block font-medium text-gray-700">
+                Budget
+              </label>
+              <input
+                type="number"
+                id="budget"
+                placeholder="Budget"
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+              />
+            </section>
 
           {/* Description of Event */}
           <section>

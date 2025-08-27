@@ -5,6 +5,7 @@ import Calendar from "../components/CalendarBox";
 import EventPopup from "../components/EventPopup";
 import EventCard from "../components/EventCard";
 import { useEffect, useState } from "react";
+import { getAllEvents } from "../backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
@@ -18,12 +19,7 @@ const HomePage = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       // Fetch events for the logged in user from backend
-      fetch(
-        `http://localhost:3000/api/events?userId=${encodeURIComponent(
-          user.sub
-        )}`
-      )
-        .then((res) => res.json())
+      getAllEvents(user.sub)
         .then((data) => setEvents(data))
         .catch((err) => console.error("Failed to fetch events:", err));
     }
@@ -83,7 +79,7 @@ const HomePage = () => {
             {Array.isArray(events) && events.length > 0 ? (
               events
                 .slice(0, 3)
-                .map((event, index) => <EventCard key={index} event={event} />)
+                .map((event, index) => <EventCard key={index} event={event} setConfirmDeleteId={setConfirmDeleteId} />)
             ) : (
               <p className="text-center text-gray-500">No events found.</p>
             )}

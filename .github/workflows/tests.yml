@@ -1,28 +1,32 @@
-name: Run tests and upload coverage
+name: Test and Coverage
 
-on: 
-  push
+on:
+  push:
+    branches: [ main ]
+  pull_request:
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22 # your version
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Fix Jest permissions
-        run: chmod +x node_modules/.bin/jest
+      - name: Install deps
+        run: npm ci
 
       - name: Run tests with coverage
-        run: npm test || true
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }} # set this in repo secrets
+          files: ./coverage/lcov.info
+          flags: unittests
+          fail_ci_if_error: true

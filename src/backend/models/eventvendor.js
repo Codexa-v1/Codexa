@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const eventVendorSchema = new mongoose.Schema({
     eventId: {
@@ -17,13 +17,10 @@ const eventVendorSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'completed', 'cancelled'],
-        default: 'pending'
+        enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
+        default: 'Pending'
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-});
+}, {timestamps: true});
 
-module.exports = mongoose.model('EventVendor', eventVendorSchema);
+const EventVendor = mongoose.model('EventVendor', eventVendorSchema);
+export default EventVendor;

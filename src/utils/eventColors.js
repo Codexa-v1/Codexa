@@ -7,6 +7,10 @@ export const eventColors = {
     bgColor: "bg-blue-200",
     labelColor: "bg-blue-500",
   },
+  Party: {
+    bgColor: "bg-red-200",
+    labelColor: "bg-red-500",
+  },
   Conference: {
     bgColor: "bg-yellow-200",
     labelColor: "bg-yellow-500",
