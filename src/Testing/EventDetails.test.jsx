@@ -51,7 +51,7 @@ vi.mock("../components/DocumentsModal", () => ({
 }));
 
 // helper: render with router param
-function renderWithRouter(initialPath = "/event/0") {
+function renderWithRouter(initialPath = "/event/789") {
   return render(
     <MemoryRouter initialEntries={[initialPath]}>
       <Routes>
@@ -69,15 +69,16 @@ describe("EventDetails", () => {
   });
 
   it("renders event details for valid id", () => {
-    renderWithRouter("/event/0");
-    expect(screen.getByText("Emily & Jake’s Wedding")).toBeInTheDocument();
-    expect(screen.getByText("Wedding")).toBeInTheDocument();
-    expect(screen.getByText(/Budget:/)).toHaveTextContent(/R120(?:,|\s)?000/);
+  renderWithRouter("/event/789");
+  expect(screen.getByText("Emily & Jake’s Wedding")).toBeInTheDocument();
+  expect(screen.getByText("Wedding")).toBeInTheDocument();
+  expect(screen.getByText("Budget")).toBeInTheDocument();
+  expect(screen.getByText(/R\s?120000/)).toBeInTheDocument();
+});
 
-  });
 
   it("opens and closes EditEventModal", () => {
-    renderWithRouter("/event/0");
+    renderWithRouter("/event/789");
     fireEvent.click(screen.getByText("Edit Event"));
     expect(screen.getByTestId("edit-modal")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Close"));
@@ -85,34 +86,44 @@ describe("EventDetails", () => {
   });
 
   it("opens and closes RSVPModal", () => {
-    renderWithRouter("/event/0");
-    fireEvent.click(screen.getByText("RSVP"));
-    expect(screen.getByTestId("rsvp-modal")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Close"));
-    expect(screen.queryByTestId("rsvp-modal")).not.toBeInTheDocument();
-  });
+  renderWithRouter("/event/789");
+  fireEvent.click(screen.getByRole("button", { name: /view rsvp list/i }));
+  expect(screen.getByTestId("rsvp-modal")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("Close"));
+  expect(screen.queryByTestId("rsvp-modal")).not.toBeInTheDocument();
+});
+
 
   it("opens and closes VendorsModal", () => {
-    renderWithRouter("/event/0");
-    fireEvent.click(screen.getByText("Vendors"));
-    expect(screen.getByTestId("vendors-modal")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Close"));
-    expect(screen.queryByTestId("vendors-modal")).not.toBeInTheDocument();
-  });
+  renderWithRouter("/event/789");
+  fireEvent.click(screen.getByRole("button", { name: /view vendors/i }));
+  expect(screen.getByTestId("vendors-modal")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("Close"));
+  expect(screen.queryByTestId("vendors-modal")).not.toBeInTheDocument();
+});
+
+it("opens and closes DocumentsModal", () => {
+  renderWithRouter("/event/789");
+  fireEvent.click(screen.getByRole("button", { name: /view documents/i }));
+  expect(screen.getByTestId("documents-modal")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("Close"));
+  expect(screen.queryByTestId("documents-modal")).not.toBeInTheDocument();
+});
+
 
   it("opens and closes FloorPlanModal", () => {
-    renderWithRouter("/event/0");
-    fireEvent.click(screen.getByText("Floor Plan"));
+    renderWithRouter("/event/789");
+    fireEvent.click(screen.getByText("View Floor Plan"));
     expect(screen.getByTestId("floorplan-modal")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Close"));
     expect(screen.queryByTestId("floorplan-modal")).not.toBeInTheDocument();
   });
 
-  it("opens and closes DocumentsModal", () => {
-    renderWithRouter("/event/0");
-    fireEvent.click(screen.getByText("Documents"));
-    expect(screen.getByTestId("documents-modal")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Close"));
-    expect(screen.queryByTestId("documents-modal")).not.toBeInTheDocument();
-  });
+  // it("opens and closes DocumentsModal", () => {
+  //   renderWithRouter("/event/789");
+  //   fireEvent.click(screen.getByText(" View Documents"));
+  //   expect(screen.getByTestId("documents-modal")).toBeInTheDocument();
+  //   fireEvent.click(screen.getByText("Close"));
+  //   expect(screen.queryByTestId("documents-modal")).not.toBeInTheDocument();
+  // });
 });

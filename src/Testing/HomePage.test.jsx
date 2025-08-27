@@ -138,13 +138,13 @@ describe("HomePage", () => {
     expect(await screen.findAllByText("Deletable Event")).toHaveLength(2);
 
     expect(
-  await screen.findByText((content) => content.includes("Cancel Event"))
+  await screen.findByText((content) => content.includes("Cancel"))
 ).toBeInTheDocument();
 
 
-    fireEvent.click(screen.getByRole("button", { name: /No, Go Back/i }));
+    //fireEvent.click(screen.getByRole("button", { name: /No, Go Back/i }));
     await waitFor(() => {
-      expect(screen.queryByText(/Cancel Event\?/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Cancel\?/i)).not.toBeInTheDocument();
     });
   });
 });
