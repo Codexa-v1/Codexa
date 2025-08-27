@@ -29,3 +29,48 @@ The app allows users to:
 ```bash
 git clone https://github.com/[your-org-or-username]/Codexa.git
 cd Codexa
+```
+
+### 2. 📍 Install dependencies
+```bash
+npm install
+```
+
+### 3. 🏃‍♂️ Run the development servers
+```bash
+npm run dev         #Frontend
+npm run serve       #Backend
+```
+
+### 4. ✅ Testing
+- **Frontend (Unit & Integration):** Vitest + React Testing Library 
+```bash
+npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
+npx vitest      #Test
+```
+- **End-to-End (E2E):** Playwright
+```bash
+npm install --save-dev @playwright/test     #install
+npx playwright test     #test
+```
+- **Backend (API Tests):** Jest + Supertest
+```bash
+npm install --save-dev jest supertest     #install
+npx jest     #test
+```
+
+### 5. 📦 Deployment
+We deploy via Azure App Services:
+- https://victorious-ground-09423c310.1.azurestaticapps.net/
+
+### 6. 📖 Documentation
+Full documentation (meeting minutes, sprints, design decisions) is available on our GitHub Pages site:
+- 👉 https://codexa-v1.github.io/Codexa/
+
+### 7. 👥 Team Codexa
+- Given: Documentation + Scrum Master
+- Kutlwano: Backend, DevOps, Auth0, Deployment
+- Molemo: Full-Stack Development
+- Ntando: Testing + Frontend
+- Ntobeko: Frontend Development
+
