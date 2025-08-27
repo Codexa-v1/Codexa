@@ -57,13 +57,15 @@ export function deleteEvent(eventId) {
 }
 
 export function getAllEvents(id) {
-    return fetch(`${url}/api/events/all/${id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        });
+    return fetch(`${url}/api/events/all`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: id }),
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+    });
 }
 
 export default {
