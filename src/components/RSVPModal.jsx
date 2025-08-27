@@ -39,7 +39,7 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     if (exportType === "CSV") {
       const csvRows = [
         ["Name", "Email", "Mobile Number", "Status"],
-        ...filteredGuests.map((g) => [g.name, g.email, g.mobile, g.status]),
+        ...filteredGuests.map((g) => [g.name, g.email, g.phone, g.rsvpStatus]),
       ];
       const csvContent = csvRows
         .map((row) =>
@@ -133,17 +133,17 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                 <tr key={idx} className="border-t border-gray-100">
                   <td className="py-2 px-3 text-sm font-medium border border-gray-200 align-middle text-left">{guest.name}</td>
                   <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{guest.email}</td>
-                  <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{guest.mobile}</td>
+                  <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-left">{guest.phone}</td>
                   <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-center">
-                    <span className={`px-2 py-1 rounded text-xs ${guest.status === "Accepted" ? "bg-green-200 text-green-900" : guest.status === "Pending" ? "bg-yellow-200 text-yellow-900" : "bg-red-200 text-red-900"}`}>{guest.status}</span>
+                    <span className={`px-2 py-1 rounded text-xs ${guest.rsvpStatus === "Accepted" ? "bg-green-200 text-green-900" : guest.rsvpStatus === "Pending" ? "bg-yellow-200 text-yellow-900" : "bg-red-200 text-red-900"}`}>{guest.rsvpStatus}</span>
                   </td>
                   <td className="py-2 px-3 text-sm border border-gray-200 align-middle text-center">
                     <div className="flex gap-2 justify-center items-center">
                       <button className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200">Remove</button>
-                      {guest.status === "Pending" && (
+                      {guest.rsvpStatus === "Pending" && (
                         <button className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200">Remind</button>
                       )}
-                      {guest.status === "Declined" && (
+                      {guest.rsvpStatus === "Declined" && (
                         <button className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200">Re-invite</button>
                       )}
                     </div>
@@ -159,10 +159,10 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
           <section className="bg-gray-300 h-2 rounded">
             <section
               className="bg-green-900 h-2 rounded"
-              style={{ width: `${(guests.filter(g => g.status === 'Accepted').length / guests.length) * 100}%` }}
+              style={{ width: `${(guests.filter(g => g.rsvpStatus === 'Accepted').length / guests.length) * 100}%` }}
             ></section>
           </section>
-          <p className="text-xs mt-1">Accepted: {guests.filter(g => g.status === 'Accepted').length}/{guests.length}</p>
+          <p className="text-xs mt-1">Accepted: {guests.filter(g => g.rsvpStatus === 'Accepted').length}/{guests.length}</p>
         </section>
       </section>
     </section>
