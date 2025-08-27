@@ -15,6 +15,7 @@ import AddScheduleModal from "../components/AddScheduleModal";
 import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
 import AddGuestsModal from "../components/AddGuestsModal";
+import EditScheduleModal from "../components/EditScheduleModal";
 
 // Backend API
 import { getAllEvents } from "../backend/api/EventData";
@@ -39,6 +40,8 @@ export default function EventDetails() {
   const [showEditEventModal, setShowEditEventModal] = useState(false);
   const [showAddVenuesModal, setShowAddVenuesModal] = useState(false);
   const [showAddScheduleModal, setShowAddScheduleModal] = useState(false);
+  const [showEditScheduleModal, setShowEditScheduleModal] = useState(false);
+  const [editingSchedule, setEditingSchedule] = useState(null);
 
   // Fetch events and select current
   useEffect(() => {
@@ -298,11 +301,22 @@ export default function EventDetails() {
               schedules={schedules}
               onClose={() => setActiveTab("overview")}
               onAddSchedule={() => setShowAddScheduleModal(true)}
+              onEditSchedule={(item) => {
+                setEditingSchedule(item);
+                setShowEditScheduleModal(true);
+              }}
               eventId={event._id}
             />
           )}
           {showAddScheduleModal && (
             <AddScheduleModal eventId={event._id} onClose={() => setShowAddScheduleModal(false)} />
+          )}
+          {showEditScheduleModal && (
+            <EditScheduleModal
+              eventId={event._id}
+              schedule={editingSchedule}   // ✅ pass the item being edited
+              onClose={() => setShowEditScheduleModal(false)}
+            />
           )}
           {activeTab === "floor" && <FloorPlanModal eventId={event._id} floorPlanUrl={event.floorPlanUrl} onClose={() => setActiveTab("overview")} />}
           {activeTab === "documents" && <DocumentsModal eventId={event._id} documents={documents} onClose={() => setActiveTab("overview")} />}
