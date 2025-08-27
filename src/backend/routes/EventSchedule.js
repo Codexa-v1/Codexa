@@ -12,7 +12,7 @@ import EventSchedule from "../models/eventschedule.js";
 const router = express.Router();
 
 // Get all schedule items for a particular event
-router.get("/event/:eventId/schedule", async (req, res) => {
+router.get("/event/:eventId", async (req, res) => {
     try {
         const { eventId } = req.params;
 
@@ -29,7 +29,7 @@ router.get("/event/:eventId/schedule", async (req, res) => {
 });
 
 // Add a new schedule item for an event
-router.post("/event/:eventId/schedule", async (req, res) => {
+router.post("/event/:eventId", async (req, res) => {
     try {
         const { eventId } = req.params;
         const { title, description, startTime, endTime } = req.body;

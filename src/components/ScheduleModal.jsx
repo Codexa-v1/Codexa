@@ -1,7 +1,23 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
+import { getSchedule } from "../backend/api/EventSchedule";
 
-export default function ScheduleModal({ schedule = [], onClose, onAddSchedule }) {
+export default function ScheduleModal({ eventId, onClose, onAddSchedule }) {
+  const [schedule, setSchedule] = useState([]);
+
+  useEffect(() => {
+    const fetchSchedule = async () => {
+      try {
+        const data = await getSchedule(eventId);
+        setSchedule(data);
+      } catch (error) {
+        console.error("Error fetching schedule:", error);
+      }
+    };
+
+    fetchSchedule();
+  }, [eventId]);
+
   return (
     <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <section className="bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full relative">

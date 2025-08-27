@@ -8,6 +8,7 @@ import eventRouter from './routes/EventData.js';
 import exportRouter from './routes/EventExport.js';
 import vendorRouter from './routes/EventVendor.js';
 import venueRouter from './routes/EventVenue.js';
+import scheduleRouter from './routes/EventSchedule.js';
 const server = express();
 const port = process.env.PORT || 3000;
 
@@ -30,6 +31,7 @@ server.use('/api/events', eventRouter);
 server.use('/api/export', exportRouter);
 server.use('/api/vendors', vendorRouter);
 server.use('/api/venues', venueRouter);
+server.use('/api/schedules', scheduleRouter);
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
