@@ -39,9 +39,13 @@ export default function VenuesModal({ eventId, onClose, onEditVenue }) {
     return matchesCapacity && matchesSearch;
   });
 
-  const handleRemoveVenue = idx => {
-    const updated = venues.filter((_, i) => i !== idx);
-    setVenues(updated);
+  const handleRemoveVenue = async (venueId) => {
+    try {
+      await deleteVenue(eventId, venueId);
+      setVenues(prev => prev.filter(v => v._id !== venueId));
+    } catch (err) {
+      console.error("Failed to delete venue:", err);
+    }
   };
 
   return (
@@ -118,7 +122,7 @@ export default function VenuesModal({ eventId, onClose, onEditVenue }) {
                   </button>
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold"
-                    onClick={() => handleRemoveVenue(idx)}
+                    onClick={() => handleRemoveVenue(venue._id)}
                   >
                     Remove
                   </button>

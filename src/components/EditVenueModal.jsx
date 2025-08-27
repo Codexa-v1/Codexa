@@ -45,39 +45,20 @@ export default function EditVenueModal({ eventId, onClose, onVenuesUpdated, venu
     setForm(initialForm); // Reset form
   };
 
-  // Save all venues
-  const handleSaveAll = async () => {
-    if (venues.length === 0) return;
-
-    const validVenues = venues.filter(
-      (v) => v.venueName && v.venueAddress && v.venueEmail && v.venuePhone && v.capacity && v.venueStatus
-    );
-
-    if (validVenues.length === 0) {
-      alert("No valid venues to save.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      for (const venue of validVenues) {
-        await updateVenue(eventId, venue);
-      }
-
-      const updatedVenues = await getVenues(eventId);
-      if (onVenuesUpdated) onVenuesUpdated(updatedVenues);
-
-      setVenues([]);
-      onClose();
-    } catch (err) {
-      console.error(err);
-      setError(err.message || "Failed to save venues.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleSave = async () => {
+  setLoading(true);
+  setError(null);
+  try {
+    await updateVenue(eventId, form); // update the single venue
+    const updatedVenues = await getVenues(eventId);
+    if (onVenuesUpdated) onVenuesUpdated(updatedVenues);
+    onClose();
+  } catch (err) {
+    setError(err.message || "Failed to save venue.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -116,10 +97,6 @@ export default function EditVenueModal({ eventId, onClose, onVenuesUpdated, venu
             placeholder="Venue Image URL (optional)"
             className="px-3 py-2 border rounded w-full"
           />
-
-          <button type="submit" className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">
-            + Add Venue
-          </button>
         </form>
 
         {/* Venue preview table */}
@@ -164,10 +141,10 @@ export default function EditVenueModal({ eventId, onClose, onVenuesUpdated, venu
           <button
             type="button"
             className="px-4 py-2 rounded bg-red-700 text-white hover:bg-red-800"
-            onClick={handleSaveAll}
+            onClick={handleSave}
             disabled={loading || venues.length === 0}
           >
-            {loading ? "Saving..." : "Save All Venues"}
+            {loading ? "Saving..." : "Save Venue"}
           </button>
         </section>
       </section>
