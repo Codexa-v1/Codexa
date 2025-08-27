@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getGuests } from "../backend/api/EventGuest";
+import { getGuests, deleteGuest } from "../backend/api/EventGuest";
 import AddGuestsModal from "./AddGuestsModal"; // 👈 import your new modal
 
 export default function RSVPModal({ guests: initialGuests, onClose, eventId, onAddGuests }) {
@@ -25,6 +25,18 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     }
     fetchGuests();
   }, [eventId]);
+
+  // Remove guest
+  const handleRemoveGuest = async (guestId) => {
+    if (!eventId) return;
+    try {
+      await deleteGuest(eventId, guestId);
+      const updatedGuests = await getGuests(eventId);
+      setGuests(updatedGuests);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // Filtering
   const filteredGuests = guests.filter((guest) => {
@@ -185,7 +197,8 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                       </td>
                       <td className="py-2 px-3 text-sm border border-gray-200 text-center">
                         <div className="flex gap-2 justify-center items-center">
-                          <button className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200">
+                          <button className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200"
+                          onClick={() => handleRemoveGuest(guest.id)}>
                             Remove
                           </button>
                           {guest.rsvpStatus === "Pending" && (
