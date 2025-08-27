@@ -91,11 +91,10 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
         savedGuests.push(saved);
       }
 
-      // Immediately update parent with the new guests
-      if (onGuestsUpdated) {
-        const updatedGuests = await getGuests(eventId);
-        onGuestsUpdated(updatedGuests);
-      }
+      const guests = await getGuests(eventId);
+
+      // Pass back the updated guests list to the parent
+      if (onGuestsUpdated) onGuestsUpdated(guests);
 
       // Clear local preview list
       setGuests([]);

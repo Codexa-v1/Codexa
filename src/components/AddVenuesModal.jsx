@@ -70,10 +70,10 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
         await addVenue(eventId, venue);
       }
 
-      if (onVenuesUpdated) {
-        const updatedVenues = await getVenues(eventId);
-        onVenuesUpdated(updatedVenues);
-      }
+      const venues = await getVenues(eventId);
+
+      // Pass back the updated venues list to the parent
+      if (onVenuesUpdated) onVenuesUpdated(venues);
 
       setVenues([]);
       onClose();

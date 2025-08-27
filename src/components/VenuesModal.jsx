@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import NewVenueModal from "./AddVenuesModal"; // your add venue component
-import { getVenues } from "../backend/api/EventVenue";
+import { getVenues, deleteVenue } from "../backend/api/EventVenue";
 
-export default function VenuesModal({ eventId, onClose }) {
+export default function VenuesModal({ eventId, onClose, onEditVenue }) {
   const [venues, setVenues] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCapacity, setFilterCapacity] = useState("All");
   const [showNewVenueModal, setShowNewVenueModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Fetch venues whenever eventId changes or after adding a new venue
   useEffect(() => {
     if (!eventId) return;
     async function fetchVenues() {
@@ -26,8 +25,7 @@ export default function VenuesModal({ eventId, onClose }) {
     fetchVenues();
   }, [eventId, showNewVenueModal]);
 
-  // Filter venues based on capacity and search
-  const filteredVenues = venues.filter((venue) => {
+  const filteredVenues = venues.filter(venue => {
     const matchesCapacity =
       filterCapacity === "All" ||
       (filterCapacity === "Small" && venue.capacity < 50) ||
@@ -41,6 +39,11 @@ export default function VenuesModal({ eventId, onClose }) {
     return matchesCapacity && matchesSearch;
   });
 
+  const handleRemoveVenue = idx => {
+    const updated = venues.filter((_, i) => i !== idx);
+    setVenues(updated);
+  };
+
   return (
     <section className="bg-white rounded-lg shadow-lg p-12 max-w-7xl w-full relative">
       {showNewVenueModal && (
@@ -51,7 +54,6 @@ export default function VenuesModal({ eventId, onClose }) {
         />
       )}
 
-      {/* Close button */}
       <button
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
         onClick={onClose}
@@ -61,18 +63,17 @@ export default function VenuesModal({ eventId, onClose }) {
 
       <h3 className="text-xl font-bold mb-4 text-red-900">Venues</h3>
 
-      {/* Search & Filters */}
       <section className="flex flex-col md:flex-row gap-2 mb-4">
         <input
           type="text"
-          placeholder="Search by Name, Address, or Contact..."
+          placeholder="Search by Name or Address..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={e => setSearchTerm(e.target.value)}
           className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-700 w-full md:w-1/2"
         />
         <select
           value={filterCapacity}
-          onChange={(e) => setFilterCapacity(e.target.value)}
+          onChange={e => setFilterCapacity(e.target.value)}
           className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-700 w-full md:w-1/4"
         >
           <option value="All">All Capacities</option>
@@ -89,19 +90,15 @@ export default function VenuesModal({ eventId, onClose }) {
         </button>
       </section>
 
-      {/* Venue Cards */}
       <section className="overflow-y-auto" style={{ maxHeight: "350px" }}>
         {loading ? (
           <p className="text-gray-500 text-center py-4">Loading venues...</p>
         ) : filteredVenues.length === 0 ? (
           <p className="text-gray-500 text-center py-4">No venues for this event.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredVenues.map((venue, idx) => (
-              <div
-                key={idx}
-                className="border border-gray-200 rounded-2xl shadow-sm p-4 flex flex-col justify-between"
-              >
+              <div key={idx} className="border border-gray-200 rounded-2xl shadow-sm p-4 flex flex-col justify-between">
                 <div className="mb-2">
                   <h3 className="text-lg font-semibold">{venue.venueName}</h3>
                   <p className="text-sm text-gray-500">{venue.venueAddress}</p>
@@ -112,17 +109,16 @@ export default function VenuesModal({ eventId, onClose }) {
                   <p><span className="font-medium">Capacity:</span> {venue.capacity || "-"}</p>
                   <p><span className="font-medium">Status:</span> {venue.venueStatus || "-"}</p>
                 </div>
-                {/* Action Buttons */}
                 <div className="flex gap-2 mt-4">
                   <button
                     className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-sm font-semibold"
-                    onClick={() => handleEditVendor(idx)}
+                    onClick={() => onEditVenue(venue)}
                   >
                     Edit
                   </button>
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold"
-                    onClick={() => handleRemoveVendor(idx)}
+                    onClick={() => handleRemoveVenue(idx)}
                   >
                     Remove
                   </button>

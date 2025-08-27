@@ -12,10 +12,11 @@ import VenuesModal from "../components/VenuesModal";
 import AddVenuesModal from "../components/AddVenuesModal";
 import ScheduleModal from "../components/ScheduleModal";
 import AddScheduleModal from "../components/AddScheduleModal";
+import EditScheduleModal from "../components/EditScheduleModal";
+import EditVenueModal from "../components/EditVenueModal";
+import EditVendorModal from "../components/EditVendorModal";
 import FloorPlanModal from "../components/FloorPlanModal";
 import DocumentsModal from "../components/DocumentsModal";
-import AddGuestsModal from "../components/AddGuestsModal";
-import EditScheduleModal from "../components/EditScheduleModal";
 
 // Backend API
 import { getAllEvents } from "../backend/api/EventData";
@@ -34,20 +35,25 @@ export default function EventDetails() {
   const [vendors, setVendors] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [documents, setDocuments] = useState([]);
-  
+
   // Tabs & modals
   const [activeTab, setActiveTab] = useState("overview");
   const [showEditEventModal, setShowEditEventModal] = useState(false);
   const [showAddVenuesModal, setShowAddVenuesModal] = useState(false);
   const [showAddScheduleModal, setShowAddScheduleModal] = useState(false);
   const [showEditScheduleModal, setShowEditScheduleModal] = useState(false);
+  const [showEditVenueModal, setShowEditVenueModal] = useState(false);
+  const [showEditVendorModal, setShowEditVendorModal] = useState(false);
+
   const [editingSchedule, setEditingSchedule] = useState(null);
+  const [editingVenue, setEditingVenue] = useState(null);
+  const [editingVendor, setEditingVendor] = useState(null);
 
   // Fetch events and select current
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const allEvents = await getAllEvents(user.sub); // adjust if Auth0 user id needed
+        const allEvents = await getAllEvents(user.sub);
         setEvents(allEvents);
         const ev = allEvents.find((e) => e._id === id);
         if (ev) setEvent(ev);
@@ -284,18 +290,69 @@ export default function EventDetails() {
           )}
 
           {/* Tab Modals */}
-          {activeTab === "rsvp" && <RSVPModal eventId={event._id} guests={guests} onClose={() => setActiveTab("overview")} />}
-          {activeTab === "vendors" && <VendorsModal vendors={vendors} eventId={event._id} onClose={() => setActiveTab("overview")} />}
+          {activeTab === "rsvp" && (
+            <RSVPModal
+              eventId={event._id}
+              guests={guests}
+              onClose={() => setActiveTab("overview")}
+            />
+          )}
+
+          {/* Vendors */}
+          {activeTab === "vendors" && (
+            <VendorsModal
+              vendors={vendors}
+              eventId={event._id}
+              onClose={() => setActiveTab("overview")}
+              onEditVendor={(vendor) => {
+                setEditingVendor(vendor);
+                setShowEditVendorModal(true);
+              }}
+            />
+          )}
+          {showEditVendorModal && editingVendor && (
+            <EditVendorModal
+              eventId={event._id}
+              vendor={editingVendor}
+              onClose={() => {
+                setShowEditVendorModal(false);
+                setEditingVendor(null);
+              }}
+              onVendorsUpdated={(updated) => setVendors(updated)}
+            />
+          )}
+
+          {/* Venues */}
           {activeTab === "venues" && (
             <VenuesModal
               eventId={event._id}
               onClose={() => setActiveTab("overview")}
               onAddVenues={() => setShowAddVenuesModal(true)}
+              onEditVenue={(venue) => {
+                setEditingVenue(venue);
+                setShowEditVenueModal(true);
+              }}
             />
           )}
           {showAddVenuesModal && (
-            <AddVenuesModal eventId={event._id} onClose={() => setShowAddVenuesModal(false)} />
+            <AddVenuesModal
+              eventId={event._id}
+              onClose={() => setShowAddVenuesModal(false)}
+            />
           )}
+          {showEditVenueModal && editingVenue && (
+            <EditVenueModal
+              eventId={event._id}
+              venue={editingVenue}
+              onClose={() => {
+                setShowEditVenueModal(false);
+                setEditingVenue(null);
+              }}
+              onVenuesUpdated={(updated) => setVenues(updated)}
+            />
+          )}
+
+          {/* Schedule */}
           {activeTab === "schedule" && (
             <ScheduleModal
               schedules={schedules}
@@ -309,17 +366,36 @@ export default function EventDetails() {
             />
           )}
           {showAddScheduleModal && (
-            <AddScheduleModal eventId={event._id} onClose={() => setShowAddScheduleModal(false)} />
+            <AddScheduleModal
+              eventId={event._id}
+              onClose={() => setShowAddScheduleModal(false)}
+            />
           )}
-          {showEditScheduleModal && (
+          {showEditScheduleModal && editingSchedule && (
             <EditScheduleModal
               eventId={event._id}
-              schedule={editingSchedule}   // ✅ pass the item being edited
+              schedule={editingSchedule}
               onClose={() => setShowEditScheduleModal(false)}
             />
           )}
-          {activeTab === "floor" && <FloorPlanModal eventId={event._id} floorPlanUrl={event.floorPlanUrl} onClose={() => setActiveTab("overview")} />}
-          {activeTab === "documents" && <DocumentsModal eventId={event._id} documents={documents} onClose={() => setActiveTab("overview")} />}
+
+          {/* Floor Plan */}
+          {activeTab === "floor" && (
+            <FloorPlanModal
+              eventId={event._id}
+              floorPlanUrl={event.floorPlanUrl}
+              onClose={() => setActiveTab("overview")}
+            />
+          )}
+
+          {/* Documents */}
+          {activeTab === "documents" && (
+            <DocumentsModal
+              eventId={event._id}
+              documents={documents}
+              onClose={() => setActiveTab("overview")}
+            />
+          )}
         </section>
       </section>
     </section>
