@@ -57,7 +57,7 @@ export function deleteEvent(eventId) {
 }
 
 export function getAllEvents(id) {
-    return fetch(`${url}/api/events/all?userId=${encodeURIComponent(id)}`)
+    return fetch(`${url}/api/events/all/${id}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
