@@ -12,11 +12,11 @@ import EventSchedule from "../models/eventschedule.js";
 const router = express.Router();
 
 // Get all schedule items for a particular event
-router.get("/api/events", async (req, res) => {
-  const { userId } = req.query; // <-- get from query
+router.get("/event/:eventId", async (req, res) => {
+  const { eventId } = req.params;
   try {
-    const events = await Event.find({ userId }); // adjust according to your DB
-    res.json(events); // must be an array
+    const schedules = await EventSchedule.find({ eventId });
+    res.json(schedules);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch events" });

@@ -63,14 +63,12 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
-// GET all events by userId (eventPlanner) via request param
+// Get all events by userId (eventPlanner) via request param
 // Here, we do not need to worry about eventId, since we are fetching all events for a specific user.
-router.get('/all/:id', async (req, res) => {
+router.post('/all', async (req, res) => {
     try {
-        const userId = req.params.id;
-        if (!userId) {
-            return res.status(400).json({ error: 'Missing userId request parameter' });
-        }
+        const { userId } = req.body;
+        if (!userId) return res.status(400).json({ error: 'Missing userId in request body' });
         const events = await Event.find({ eventPlanner: userId });
         res.status(200).json(events);
     } catch (error) {
