@@ -281,7 +281,7 @@ export default function EventDetails() {
 
           {/* Tab Modals */}
           {activeTab === "rsvp" && <RSVPModal eventId={event._id} guests={guests} onClose={() => setActiveTab("overview")} />}
-          {activeTab === "vendors" && <VendorsModal vendors={vendors} onClose={() => setActiveTab("overview")} />}
+          {activeTab === "vendors" && <VendorsModal vendors={vendors} eventId={event._id} onClose={() => setActiveTab("overview")} />}
           {activeTab === "venues" && (
             <VenuesModal
               eventId={event._id}
