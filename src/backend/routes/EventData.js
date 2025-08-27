@@ -20,12 +20,15 @@ router.get('/:id', (req, res) => {
         });
 });
 
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
     const eventId = req.params.id;
     const updatedData = req.body;
 
     try {
-        const updatedEvent = await Event.findByIdAndUpdate(eventId, updatedData, { new: true });
+        const updatedEvent = await Event.findByIdAndUpdate(eventId, updatedData, {
+            new: true,
+            runValidators: true
+        });
         if (!updatedEvent) {
             return res.status(404).json({ message: 'Event not found' });
         }

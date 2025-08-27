@@ -1,5 +1,6 @@
 import { time } from "framer-motion";
 import React, { useState } from "react";
+import { updateEvent } from "../backend/api/EventData";
 
 export default function EditEventModal({ event, onClose, onSave }) {
   function formatBudget(val) {
@@ -23,10 +24,23 @@ export default function EditEventModal({ event, onClose, onSave }) {
     setForm(f => ({ ...f, [name]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    onSave(form);
-    onClose();
+
+    try {
+      // assuming your updateEvent takes (id, data)
+      await updateEvent(event._id, form);
+
+      // let parent component refresh state if needed
+      if (onSave) {
+        onSave(form);
+      }
+
+      onClose();
+    } catch (err) {
+      console.error("Error updating event:", err);
+      alert("Failed to update event. Please try again.");
+    }
   }
 
   return (
@@ -46,7 +60,7 @@ export default function EditEventModal({ event, onClose, onSave }) {
             </section>
             <section className="relative">
               {form.startDate && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Start Date</label>}
-              <input name="startDate" value={form.date} onChange={handleChange} required type="date" placeholder={form.date ? "" : "Start Date"} className="px-3 py-2 border rounded w-full" />
+              <input name="startDate" value={form.startDate} onChange={handleChange} required type="date" placeholder={form.startDate ? "" : "Start Date"} className="px-3 py-2 border rounded w-full" />
             </section>
             <section className="relative">
               {form.endDate && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">End Date</label>}

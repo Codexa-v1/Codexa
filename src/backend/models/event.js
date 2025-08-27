@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const eventSchema = new mongoose.Schema({
+    eventPlanner: { type: String, required: true }, // This is to keep track of the Auth0 token of the person who created the event
     title: { type: String, required: true },
     date: { type: Date, required: true },
     endDate: { type: Date, required: true },
@@ -20,7 +21,7 @@ const eventSchema = new mongoose.Schema({
     organizer: {
         name: String,
         contact: String,
-        email: String,
+        email: String
     },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },

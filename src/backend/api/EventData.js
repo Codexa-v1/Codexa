@@ -30,7 +30,7 @@ export function getEvent(eventId) {
 
 export function updateEvent(eventId, eventData) {
     return fetch(`${url}/api/events/${eventId}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -70,5 +70,6 @@ export default {
     getEvent,
     updateEvent,
     deleteEvent,
-    createEvent
+    createEvent,
+    getAllEvents
 };
