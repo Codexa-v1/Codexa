@@ -20,10 +20,10 @@
 ## 📌 Agenda Items
 
 ### 🔹 Team Updates
-- **Molemo** — working on frontend–backend integration (slowed due to CGV test).  
-- **Ntando** — focused on CGV test, limited contributions to web app.  
-- **Kutlwano** — worked on deployment of the site.  
-- **Ntobeko** — continued improving UI of the web app.  
+- **Molemo**: working on frontend–backend integration (slowed due to CGV test).  
+- **Ntando**: focused on CGV test, limited contributions to web app.  
+- **Kutlwano**: worked on deployment of the site.  
+- **Ntobeko**: continued improving UI of the web app.  
 
 ### 🔹 Moving Forward
 - Frequent **branch merging** required.  

@@ -1,12 +1,31 @@
-# React + Vite
+# 🎉 PlanIt: Event Planning App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PlanIt is a full-stack **Event Planning Web Application** built with the **MERN stack** (MongoDB, Express, React, Node.js), along with **Vite, Tailwind CSS, and Auth0** for authentication.  
 
-Currently, two official plugins are available:
+The app allows users to:  
+- Create and manage events  
+- Handle guest lists (upload/download)  
+- Manage vendors and compare options  
+- Schedule event activities (with export to PDF/CSV)  
+- Upload/download event-related documents  
+- Integrate with a calendar  
+- Share event details easily  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Tech Stack
+- **Frontend**: React 19 + Vite + Tailwind CSS + Framer Motion  
+- **Backend**: Node.js + Express.js  
+- **Database**: MongoDB Atlas + Mongoose  
+- **Authentication**: Auth0 (OAuth 2.0)  
+- **Deployment**: Microsoft Azure (Backend + Frontend)  
+- **CI/CD**: GitHub Actions  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠️ Getting Started
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/[your-org-or-username]/Codexa.git
+cd Codexa
