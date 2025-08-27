@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Building2, Users, Upload } from "lucide-react";
-import { useNavigate } from "react-router-dom"; 
-import { useAuth0 } from '@auth0/auth0-react';
+import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -16,10 +16,10 @@ export default function LandingPage() {
   };
 
   return (
-  <div className="min-h-screen bg-white w-full">
+    <div className="min-h-screen bg-white w-full pl-6 pr-6">
       {/* Header */}
       <header className="bg-white shadow-sm">
-  <div className="w-full px-0 mx-0">
+        <div className="w-full px-0 mx-0">
           <div className="flex justify-between items-center py-4">
             <h1 className="text-2xl font-bold text-gray-900">PlanIt</h1>
 
@@ -65,8 +65,19 @@ export default function LandingPage() {
               onClick={() => setMobileNavOpen((open) => !open)}
               aria-label="Open navigation menu"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
           </div>
@@ -76,20 +87,29 @@ export default function LandingPage() {
               <button
                 type="button"
                 className="text-gray-600 hover:text-gray-900 px-4 py-2 text-left"
-                onClick={() => { setMobileNavOpen(false); navigate("/about"); }}
+                onClick={() => {
+                  setMobileNavOpen(false);
+                  navigate("/about");
+                }}
               >
                 About
               </button>
               {isAuthenticated ? (
                 <>
                   <button
-                    onClick={() => { setMobileNavOpen(false); navigate("/home"); }}
+                    onClick={() => {
+                      setMobileNavOpen(false);
+                      navigate("/home");
+                    }}
                     className="bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800"
                   >
                     Go to Dashboard
                   </button>
                   <button
-                    onClick={() => { setMobileNavOpen(false); logout({ returnTo: window.location.origin }); }}
+                    onClick={() => {
+                      setMobileNavOpen(false);
+                      logout({ returnTo: window.location.origin });
+                    }}
                     className="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 mt-2"
                   >
                     Sign Out
@@ -98,7 +118,10 @@ export default function LandingPage() {
               ) : (
                 <>
                   <button
-                    onClick={() => { setMobileNavOpen(false); loginWithRedirect(); }}
+                    onClick={() => {
+                      setMobileNavOpen(false);
+                      loginWithRedirect();
+                    }}
                     className="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700"
                   >
                     Sign In
@@ -112,7 +135,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-cyan-50 via-teal-50 to-teal-100 min-h-screen flex items-center">
-  <div className="w-full px-0 mx-0">
+        <div className="w-full px-0 mx-0">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
