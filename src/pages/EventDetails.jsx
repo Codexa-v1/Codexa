@@ -30,6 +30,7 @@ export default function EventDetails() {
 
   // Event & related data
   const [events, setEvents] = useState([]);
+  const [venues, setVenues] = useState([]);
   const [event, setEvent] = useState(null);
   const [guests, setGuests] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -90,6 +91,10 @@ export default function EventDetails() {
     Object.assign(event, updated);
     setShowEditEventModal(false);
   };
+
+  function handleVenuesUpdated(updatedVenues) {
+    setVenues(updatedVenues);
+  }
 
   const handleSendInvites = (eventId) => {
     const link = `${window.location.origin}/rsvp/${eventId}`;
@@ -348,7 +353,7 @@ export default function EventDetails() {
                 setShowEditVenueModal(false);
                 setEditingVenue(null);
               }}
-              onVenuesUpdated={(updated) => setVenues(updated)}
+              onVenuesUpdated={handleVenuesUpdated}
             />
           )}
 

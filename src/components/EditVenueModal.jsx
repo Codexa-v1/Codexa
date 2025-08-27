@@ -26,7 +26,7 @@ export default function EditVenueModal({ eventId, venue, onClose, onVenuesUpdate
     setError(null);
 
     try {
-      await updateVenue(eventId, form);
+      await updateVenue(eventId, venue._id, form);
       const venues = await getVenues(eventId);
       if (onVenuesUpdated) onVenuesUpdated(venues);
       onClose();

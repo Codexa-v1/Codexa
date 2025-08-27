@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NewVendorModal from "./NewVendorModal";
+import { deleteVendor } from "../backend/api/EventVendor";
 
 export default function VendorsModal({ vendors, onClose, eventId, onEditVendor }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,10 +22,21 @@ export default function VendorsModal({ vendors, onClose, eventId, onEditVendor }
     return matchesType && matchesSearch;
   });
 
-  const handleRemoveVendor = idx => {
-    const updatedList = vendorList.filter((_, i) => i !== idx);
-    setVendorList(updatedList);
+  const handleRemoveVendor = async (vendorId) => {
+    if (!eventId) return;
+
+    try {
+      // 1. Delete from backend
+      await deleteVendor(eventId, vendorId);
+
+      // 2. Update local state
+      setVendorList(prev => prev.filter(v => v._id !== vendorId));
+    } catch (err) {
+      console.error("Error deleting vendor:", err);
+      alert("Failed to delete vendor. Please try again.");
+    }
   };
+
 
   return (
     <section className="bg-white rounded-lg shadow-lg p-12 max-w-7xl w-full relative">
@@ -93,7 +105,7 @@ export default function VendorsModal({ vendors, onClose, eventId, onEditVendor }
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold"
-                  onClick={() => handleRemoveVendor(idx)}
+                  onClick={() => handleRemoveVendor(vendor._id)}
                 >
                   Remove
                 </button>

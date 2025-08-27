@@ -12,13 +12,22 @@ export default function ScheduleModal({ eventId, onClose, onAddSchedule, onEditS
     const fetchSchedule = async () => {
       try {
         const data = await getSchedule(eventId);
-        setSchedule(data);
+
+        // Sort by startTime (HH:mm)
+        const sorted = data.sort((a, b) => {
+          const [aHour, aMin] = a.startTime.split(":").map(Number);
+          const [bHour, bMin] = b.startTime.split(":").map(Number);
+          return aHour !== bHour ? aHour - bHour : aMin - bMin;
+        });
+
+        setSchedule(sorted);
       } catch (error) {
         console.error("Error fetching schedule:", error);
       }
     };
     fetchSchedule();
   }, [eventId]);
+
 
   // --- Handlers ---
   const handleEditSchedule = (index) => {
@@ -67,7 +76,7 @@ export default function ScheduleModal({ eventId, onClose, onAddSchedule, onEditS
         &times;
       </button>
 
-      <h3 className="text-xl font-bold mb-4 text-green-900">Event Schedule</h3>
+      <h3 className="text-xl font-bold mb-4 text-yellow-900">Event Schedule</h3>
 
       <button
         className="mb-4 px-3 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-800"

@@ -27,7 +27,7 @@ export function addVenue(eventId, venue) {
 }
 export function updateVenue(eventId, venueId, venue) {
     return fetch(`${url}/api/venues/event/${eventId}/venue/${venueId}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -48,7 +48,7 @@ export function deleteVenue(eventId, venueId) {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json();
+            return;
         });
 }
 

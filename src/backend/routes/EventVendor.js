@@ -13,7 +13,7 @@ const router = express.Router();
 // Define your routes here
 
 // This is to get all vendors for a particular event - if need be, we will implement a get request for a specific vendor
-router.get('/event/:eventId/vendors', async (req, res) => {
+router.get('/event/:eventId', async (req, res) => {
     try {
         // Step 1: Find all EventVendor entries for this event
         const eventVendors = await EventVendor.find({ eventId: req.params.eventId });
@@ -37,7 +37,7 @@ router.get('/event/:eventId/vendors', async (req, res) => {
 
 // This is to create a new vendor for a particular event - if need be, we will implement a post request to create a
 // vendor with a specific id
-router.post('/event/:eventId/vendors', async (req, res) => {
+router.post('/event/:eventId', async (req, res) => {
     try {
         const { eventId } = req.params;
 

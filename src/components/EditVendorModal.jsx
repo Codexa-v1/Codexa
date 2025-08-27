@@ -28,7 +28,7 @@ export default function EditVendorModal({ eventId, onClose, onVendorsUpdated, ve
     setError(null);
 
     try {
-      await updateVendor(eventId, form);
+      await updateVendor(eventId, vendor._id, form);
       const vendors = await getVendors(eventId);
       if (onVendorsUpdated) onVendorsUpdated(vendors);
       onClose();

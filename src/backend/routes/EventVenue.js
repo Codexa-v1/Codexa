@@ -71,7 +71,7 @@ router.post('/event/:eventId', async (req, res) => {
 
 
 // This is to edit the details of a specific venue in a particular event
-router.patch('/event/:eventId/venues/:venueId', async (req, res) => {
+router.patch('/event/:eventId/venue/:venueId', async (req, res) => {
     try {
         const { eventId, venueId } = req.params;
         const updateFields = req.body;
@@ -107,7 +107,7 @@ router.patch('/event/:eventId/venues/:venueId', async (req, res) => {
 });
 
 // This is to delete a specific venue in a particular event
-router.delete('/event/:eventId/venues/:venueId', async (req, res) => {
+router.delete('/event/:eventId/venue/:venueId', async (req, res) => {
     try {
         const { eventId, venueId } = req.params;
 
