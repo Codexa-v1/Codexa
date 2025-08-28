@@ -1,7 +1,8 @@
 # Planit: Event Planner Project Documentation
 
 ## Overview
-Planit is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning.
+Planit is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning. Below is the link to our project repo.
+- https://github.com/Codexa-v1/Codexa.git
 
 ## Documentation Folder Structure
 
@@ -68,7 +69,8 @@ We follow the Github Flow methodology:
     - [Scrum 03](./meetings/sprint01/Scrum03.md)
     - [Scrum 04](./meetings/sprint01/Scrum04.md)
 - Sprint two
-    - [Sprint 2 brief](./planning/sprint02/Sprint02Brief.md)
+    - [Sprint 2 brief](./planning/Sprint02/Sprint02Brief.md)
+    - [Sprint timeline](./planning/Sprint02/Timeline.md)
     - [Scrum 01](./meetings/sprint02/Scrum01.md)
     - [Scrum 02](./meetings/sprint02/Scrum02.md)
     - [Scrum 03](./meetings/sprint02/Scrum03.md)
