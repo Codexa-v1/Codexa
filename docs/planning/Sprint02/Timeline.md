@@ -50,10 +50,10 @@
 # ⌛ Sprint Timeline
 
 - Our Trello board as of 20 August 2025:
-![alt text](/Codexa/docs/assets/meetings/Sprint02/20th.png)
+- ![alt text](/Codexa/docs/assets/meetings/Sprint02/20th.png)
 - Our Trello board as of 24 August 2025:
-![alt text](/Codexa/docs/assets/meetings/Sprint02/24th.png)
+- ![alt text](/Codexa/docs/assets/meetings/Sprint02/24th.png)
 - Our Trello board as of 26 August 2025:
-![alt text](/Codexa/docs/assets/meetings/Sprint02/26th.png)
+- ![alt text](/Codexa/docs/assets/meetings/Sprint02/26th.png)
 
 ---
