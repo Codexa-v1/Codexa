@@ -307,9 +307,9 @@ export default function EventDetails() {
                 <p className="text-xs mb-2">View event documents</p>
                 <p className="text-xs text-purple-900">Click to view</p>
               </section>
+              <WeatherCard eventDate={event.date} location={event.location} />
             </section>
           )}
-          <WeatherCard eventDate={event.date} location={event.location} />
 
           {/* Tab Modals */}
           {activeTab === "rsvp" && (
