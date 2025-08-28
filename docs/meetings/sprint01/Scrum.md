@@ -85,8 +85,8 @@ Each member answers:
 ---
 
 ## Meeting proof:
-![Scrum 01 Image](../assets/meetings/scrum01/scrum01.jpg)
-[Watch Scrum 01 Video](../assets/meetings/scrum01/scrum01.mp4)
+![Scrum 01 Image](../../assets/meetings/scrum01/scrum01.jpg)
+[Watch Scrum 01 Video](../../assets/meetings/scrum01/scrum01.mp4)
 
 ---
 

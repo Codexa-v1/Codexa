@@ -48,8 +48,8 @@
 ---
 
 ## Meeting proof
-![alt text](../assets/meetings/scrum03/scrum03.jpg)
-[alt video](../assets/meetings/scrum03/scrum03.jpg)
+![alt text](../../assets/meetings/scrum03/scrum03.jpg)
+[alt video](../../assets/meetings/scrum03/scrum03.jpg)
 
 ---
 
