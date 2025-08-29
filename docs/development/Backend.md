@@ -48,7 +48,23 @@ We are using **Auth0** for authentication and authorization. This ensures secure
 ---
 
 ## Testing
-We plan to implement both **unit tests** (for models and API endpoints) and **integration tests** to ensure the backend interacts properly with the database. Postman is currently used for manual testing of routes.
+We implement both **unit tests** (for models and API endpoints) and **integration tests** to ensure the backend interacts properly with the database. 
+
+- **Frontend (Unit & Integration):** Vitest + React Testing Library 
+```bash
+npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
+npx vitest      #Test
+```
+- **End-to-End (E2E):** Playwright
+```bash
+npm install --save-dev @playwright/test     #install
+npx playwright test     #test
+```
+- **Backend (API Tests):** Jest + Supertest
+```bash
+npm install --save-dev jest supertest     #install
+npx jest     #test
+```
 
 ---
 
