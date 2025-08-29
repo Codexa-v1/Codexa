@@ -53,33 +53,20 @@ We are implementing testing at three levels: frontend, backend, and end-to-end.
 ---
 
 ### 1. Frontend Unit & Integration Tests → Vitest + React Testing Library
-
-**Install:**
 ```bash
-npm install --save-dev vitest @testing-library/react @testing-library/jest-dom
-```
-**Run Tests**
-```bash
-npx vitest
+npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
+npx vitest      #test
 ```
 ### 2. End-to-End (E2E) Tests → Playwright
-**Install:**
 ```bash
-npm install --save-dev @playwright/test
-```
-**Run Tests**
-```bash
-npx playwright test
+npm install --save-dev @playwright/test #install
+npx playwright test         #test
 ```
 ### 3. Backend Tests → Jest + Supertest
 **Install:**
 ```bash
-npm install --save-dev jest supertest
-
-```
-**Run Tests**
-```bash
-npx jest
+npm install --save-dev jest supertest       #install
+npx jest        #test
 ```
 
 ## Deployment

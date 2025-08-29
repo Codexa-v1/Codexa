@@ -5,7 +5,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 
 ## 2. Tasks / Features with Responsibilities
 
-### 🧑‍🏫 Scrum Master – Given
+### 🧑‍🏫 Scrum Master: Given
 **Responsibilities & Tasks:**
 - Facilitate standups and sprint retrospectives
 - Ensure Scrum principles are followed
@@ -15,7 +15,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 
 ---
 
-### 📃 Documentation Specialist – Given
+### 📃 Documentation Specialist: Given
 **Responsibilities & Tasks:**
 - Maintain project documentation in Markdown
 - Publish documentation via GitHub Pages
@@ -24,7 +24,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 
 ---
 
-### 🧑‍💻 Backend Developers – Molemo & Kutlwano
+### 🧑‍💻 Backend Developers: Molemo & Kutlwano
 **Responsibilities & Tasks:**
 - Set up server and database (Node.js, Express, MongoDB)
 - Implement API endpoints
@@ -40,7 +40,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 
 ---
 
-### 🧑‍💻 Frontend Developers – Ntando, Ntobeko, Kutlwano
+### 🧑‍💻 Frontend Developers: Ntando, Ntobeko, Kutlwano
 **Responsibilities & Tasks:**
 - Build UI components with React, Vite, Tailwind CSS
 - Integrate Material Tailwind & Framer Motion
@@ -52,7 +52,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 
 ---
 
-### 🧪 Code Tester / QA – Ntando
+### 🧪 Code Tester / QA: Ntando
 **Responsibilities & Tasks:**
 - Write and run test cases
 - Ensure features work as expected before deployment
@@ -62,7 +62,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 
 ---
 
-### 🚀 DevOps Engineer – Kutlwano
+### 🚀 DevOps Engineer: Kutlwano
 **Responsibilities & Tasks:**
 - Set up CI/CD pipelines
 - Deploy web app to Microsoft Azure
