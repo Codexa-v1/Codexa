@@ -23,13 +23,14 @@ This structure helps keep all project documentation organized and easy to naviga
 - Easy-to-use dashboard for managing events
 
 ## Tech Stack
-- [Tech Stack explained](./development/TechStack.md):
 - **Frontend:** React 19, Vite, Tailwind CSS
 - **[Backend](./development/Backend.md):** Node.js, Express.js, MongoDB
 - **Authentication:** OAuth
 - **Deployment:** Microsoft Azure
 - **Project Management:** Trello
 - **Documentation:** Markdown + GitHub Pages
+
+[Tech Stack explained](./development/TechStack.md)
 
 
 

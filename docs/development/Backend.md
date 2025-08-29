@@ -50,8 +50,6 @@ We are using **Auth0** for authentication and authorization. This ensures secure
 ## Testing
 We are implementing testing at three levels: frontend, backend, and end-to-end.
 
----
-
 ### 1. Frontend Unit & Integration Tests → Vitest + React Testing Library
 ```bash
 npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
@@ -68,6 +66,8 @@ npx playwright test         #test
 npm install --save-dev jest supertest       #install
 npx jest        #test
 ```
+
+---
 
 ## Deployment
 We deploy the system in two parts:
