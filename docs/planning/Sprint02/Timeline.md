@@ -48,6 +48,7 @@
 ---
 
 # ⌛ Sprint Timeline
+- Below are snapshots of our Trello board as we progress through the entire sprint. The trello board can be accessed via this [Link](https://trello.com/invite/b/688926a06672f847b26eadd8/ATTI44809ab9733ae3526b4a7133a7e97f41E5E6470D/codexa)
 
 - Our Trello board as of 20 August 2025:
 ![alt text](../../assets/meetings/Sprint02/TrelloBoard/20th.png)

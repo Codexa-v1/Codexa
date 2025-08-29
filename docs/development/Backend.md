@@ -31,8 +31,19 @@ Our routes, built with **Express.js**, define how data is sent and retrieved fro
 
 ---
 
-## Authentication and Authorization
-We are using **Auth0** for authentication and authorization. This allows secure login and role-based access management across the application.
+## Authentication 
+We are using **Auth0** for authentication and authorization. This ensures secure login, token-based authentication, and role-based access control.
+
+- **SPA (Frontend)** → Uses `@auth0/auth0-react` for handling login/logout, token retrieval, and redirects.
+- **Backend (API)** → Uses Auth0-issued JWT tokens to verify requests, with audience and issuer checks enabled.
+- **Allowed URLs** → Auth0 configured with callback, logout, and web origins for both localhost (development) and Azure production domains.
+- **Environment variables**:
+  - Frontend: `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`  
+    → injected at build time via GitHub Secrets.
+  - Backend: `AUTH0_DOMAIN`, `AUTH0_AUDIENCE`  
+    → stored securely in Azure App Service Configuration.
+
+🔐 **Security note:** Secrets are never stored in the repo. SPA keys are safe to expose (domain, clientId, audience) but API secrets remain on the server side.
 
 ---
 
@@ -42,4 +53,26 @@ We plan to implement both **unit tests** (for models and API endpoints) and **in
 ---
 
 ## Deployment
-The backend will be deployed on **Microsoft Azure**, integrated into our CI/CD pipeline using **GitHub Actions** for automated builds, testing, and deployment.
+We deploy the system in two parts:
+
+- **Frontend (Vite + React SPA)** → Hosted on **Azure Static Web Apps**  
+  - Deployed via GitHub Actions workflow.  
+  - Handles SPA routing with `staticwebapp.config.json` to redirect all paths to `index.html`.  
+  - Uses environment variables (`VITE_*`) injected at build time.
+
+- **Backend (Node/Express API)** → Hosted on **Azure App Service (Linux)**  
+  - Deployed via a separate GitHub Actions workflow using an App Service publish profile.  
+  - Configured with environment variables (Auth0, DB connection, CORS origins).  
+  - CORS enabled to allow only requests from the SPA domain.
+
+- **CI/CD (GitHub Actions)**  
+  - Automated build and deploy pipelines for both frontend and backend.  
+  - Workflows fetch environment variables from GitHub Secrets.  
+  - Any push to `main` triggers deployment.
+
+⚠️ **Issues faced & resolutions**:
+1. **GitHub Actions build failed** due to relative path imports → fixed using Vite `@` alias pointing to `src/`.  
+2. **Handling Auth0 secrets safely** → moved SPA config to GitHub Secrets (`VITE_*`) and API secrets into Azure App Service settings.
+
+---
+
