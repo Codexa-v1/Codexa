@@ -48,25 +48,39 @@ We are using **Auth0** for authentication and authorization. This ensures secure
 ---
 
 ## Testing
-We implement both **unit tests** (for models and API endpoints) and **integration tests** to ensure the backend interacts properly with the database. 
-
-- **Frontend (Unit & Integration):** Vitest + React Testing Library 
-```bash
-npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
-npx vitest      #Test
-```
-- **End-to-End (E2E):** Playwright
-```bash
-npm install --save-dev @playwright/test     #install
-npx playwright test     #test
-```
-- **Backend (API Tests):** Jest + Supertest
-```bash
-npm install --save-dev jest supertest     #install
-npx jest     #test
-```
+We are implementing testing at three levels: frontend, backend, and end-to-end.
 
 ---
+
+### 1. Frontend Unit & Integration Tests → Vitest + React Testing Library
+
+**Install:**
+```bash
+npm install --save-dev vitest @testing-library/react @testing-library/jest-dom
+```
+**Run Tests**
+```bash
+npx vitest
+```
+### 2. End-to-End (E2E) Tests → Playwright
+**Install:**
+```bash
+npm install --save-dev @playwright/test
+```
+**Run Tests**
+```bash
+npx playwright test
+```
+### 3. Backend Tests → Jest + Supertest
+**Install:**
+```bash
+npm install --save-dev jest supertest
+
+```
+**Run Tests**
+```bash
+npx jest
+```
 
 ## Deployment
 We deploy the system in two parts:
