@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { eventColors } from "../utils/eventColors";
+import { eventColors } from "@/utils/eventColors";
 import { FaCalendarPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import EventPopup from "../components/EventPopup";
+import Navbar from "@/components/Navbar";
+import EventPopup from "@/components/EventPopup";
 import dayjs from "dayjs";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getAllEvents } from "../backend/api/EventData";
+import { getAllEvents } from "@/backend/api/EventData";
 
 export default function EventsPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
