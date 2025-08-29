@@ -13,7 +13,7 @@ import wind from "../assets/weatherIcons/wind.png";
 import searchIcon from "../assets/weatherIcons/search.png";
 
 export default function WeatherCard({ eventDate, location }) {
-  const apiKey = "c4a23937b30023227056d520a20252db";
+  const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
   const [city, setCity] = useState(location || "");
