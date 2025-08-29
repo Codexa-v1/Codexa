@@ -74,5 +74,7 @@ We deploy the system in two parts:
 1. **GitHub Actions build failed** due to relative path imports → fixed using Vite `@` alias pointing to `src/`.  
 2. **Handling Auth0 secrets safely** → moved SPA config to GitHub Secrets (`VITE_*`) and API secrets into Azure App Service settings.
 
+
+
 ---
 

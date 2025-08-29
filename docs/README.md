@@ -23,14 +23,14 @@ This structure helps keep all project documentation organized and easy to naviga
 - Easy-to-use dashboard for managing events
 
 ## Tech Stack
-- **Frontend:** React 19, Vite, Tailwind CSS
-- **Backend:** Node.js, Express.js, MongoDB
+- **[Frontend](./development/TechStack.md):** React 19, Vite, Tailwind CSS
+- **[Backend](./development/Backend.md):** Node.js, Express.js, MongoDB
 - **Authentication:** OAuth
 - **Deployment:** Microsoft Azure
 - **Project Management:** Trello
 - **Documentation:** Markdown + GitHub Pages
-- [Our Tech Stack explained](./development/TechStack.md)
-- [Our backend Structure](./development/Backend.md)
+
+
 
 ## Methodologies
 We follow the Agile Scrum methodology:
@@ -45,7 +45,8 @@ We follow the Github Flow methodology:
 - Get peer review + approval
 - Merge to main
 - Deploy from main
-- [Project methodologies explained](./development/Methodologies.md)
+
+[Project methodologies explained](./development/Methodologies.md)
 
 ## Communication Tools
 - WhatsApp
@@ -69,7 +70,7 @@ We follow the Github Flow methodology:
     - [Scrum 04](./meetings/sprint01/Scrum04.md)
 - Sprint two
     - [Sprint 2 brief](./planning/Sprint02/Sprint02Brief.md)
-    - [Sprint timeline](./planning/Sprint02/Timeline.md)
+    - [Sprint Development Plan](./planning/Sprint02/DevelopmentPlan.md)
     - [Scrum 01](./meetings/sprint02/Scrum01.md)
     - [Scrum 02](./meetings/sprint02/Scrum02.md)
     - [Scrum 03](./meetings/sprint02/Scrum03.md)
