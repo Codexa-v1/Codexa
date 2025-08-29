@@ -252,6 +252,7 @@ export default function EventDetails() {
                   Click to view guest list
                 </p>
               </section>
+              <WeatherCard eventDate={event.date} location={event.location} />
 
               {/* Vendors Card */}
               <section
@@ -307,7 +308,6 @@ export default function EventDetails() {
                 <p className="text-xs mb-2">View event documents</p>
                 <p className="text-xs text-purple-900">Click to view</p>
               </section>
-              <WeatherCard eventDate={event.date} location={event.location} />
             </section>
           )}
 
