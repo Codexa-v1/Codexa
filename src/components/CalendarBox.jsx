@@ -2,17 +2,21 @@ import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import dayjs from "dayjs";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { getAllEvents } from "../backend/api/EventData";
 
-const Calendar = () => {
+const Calendar = ({ onDayClick }) => {
   // Color mapping for event categories
-  const eventColors = React.useMemo(() => ({
-    Wedding: "bg-pink-500",
-    Conference: "bg-yellow-700",
-    Birthday: "bg-blue-500",
-    Meeting: "bg-green-500",
-    Party: "bg-purple-500",
-    Other: "bg-gray-400"
-  }), []);
+  const eventColors = React.useMemo(
+    () => ({
+      Wedding: "bg-pink-500",
+      Conference: "bg-yellow-700",
+      Birthday: "bg-blue-500",
+      Meeting: "bg-green-500",
+      Party: "bg-purple-500",
+      Other: "bg-gray-400",
+    }),
+    []
+  );
 
   // Helper to get color for event
   const getBgColor = React.useCallback(
@@ -62,15 +66,12 @@ const Calendar = () => {
 
   React.useEffect(() => {
     if (isAuthenticated && user) {
-      fetch(
-        `http://localhost:3000/api/events?userId=${encodeURIComponent(user.sub)}`
-      )
-        .then((res) => res.json())
+      getAllEvents(user.sub)
         .then((data) => {
           // Add bgColor property to each event
-          const mapped = data.map(ev => ({
+          const mapped = data.map((ev) => ({
             ...ev,
-            bgColor: getBgColor(ev.category)
+            bgColor: getBgColor(ev.category),
           }));
           setEvents(mapped);
         })
@@ -126,11 +127,17 @@ const Calendar = () => {
           />
         ))}
         {[...Array(daysInMonth).keys()].map((day) => {
-          const dateStr = dayjs(new Date(currentYear, currentMonth, day + 1)).format("YYYY-MM-DD");
-          const eventsForDay = events.filter(ev => dayjs(ev.date).format("YYYY-MM-DD") === dateStr);
+          const dateObj = new Date(currentYear, currentMonth, day + 1);
+          const dateStr = dayjs(
+            new Date(currentYear, currentMonth, day + 1)
+          ).format("YYYY-MM-DD");
+          const eventsForDay = events.filter(
+            (ev) => dayjs(ev.date).format("YYYY-MM-DD") === dateStr
+          );
           return (
             <span
               key={day + 1}
+              onClick={() => onDayClick && onDayClick(dateObj)}
               className="h-12 flex flex-col justify-center items-center text-gray-800 text-base sm:text-lg cursor-pointer hover:bg-gray-100 rounded border border-gray-400 relative group"
             >
               <span>{day + 1}</span>
@@ -138,7 +145,10 @@ const Calendar = () => {
               {eventsForDay.length > 0 && (
                 <span className="flex gap-1 mt-1">
                   {eventsForDay.map((ev, idx) => (
-                    <span key={idx} className={`w-3 h-3 rounded-full ${ev.bgColor}`}></span>
+                    <span
+                      key={idx}
+                      className={`w-3 h-3 rounded-full ${ev.bgColor}`}
+                    ></span>
                   ))}
                 </span>
               )}
@@ -149,8 +159,13 @@ const Calendar = () => {
                   <ul>
                     {eventsForDay.map((ev, idx) => (
                       <li key={idx} className="mb-1">
-                        <span className={`inline-block w-2 h-2 rounded-full mr-2 align-middle ${ev.bgColor}`}></span>
-                        <span className="font-semibold">{ev.title}</span> <span className="text-gray-500">({ev.category || ev.type})</span>
+                        <span
+                          className={`inline-block w-2 h-2 rounded-full mr-2 align-middle ${ev.bgColor}`}
+                        ></span>
+                        <span className="font-semibold">{ev.title}</span>{" "}
+                        <span className="text-gray-500">
+                          ({ev.category || ev.type})
+                        </span>
                       </li>
                     ))}
                   </ul>

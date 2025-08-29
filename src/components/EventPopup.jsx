@@ -1,8 +1,11 @@
 import { GrClose } from "react-icons/gr";
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { createEvent } from "../backend/api/EventData.js";
+import dayjs from "dayjs";
+import { eventColors } from "../utils/eventColors";
 
-export default function EventPopup({ onClose }) {
+export default function EventPopup({ onClose, selectedDate }) {
   const { user } = useAuth0();
   const [category, setCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
@@ -12,6 +15,7 @@ export default function EventPopup({ onClose }) {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
+  const [budget, setBudget] = useState("");
   const [capacity, setCapacity] = useState("");
   const [description, setDescription] = useState("");
   const [organizerName, setOrganizerName] = useState("");
@@ -40,6 +44,7 @@ export default function EventPopup({ onClose }) {
       date: startDateTime,
       endDate: endDateTime,
       location,
+      budget,
       description,
       status,
       capacity: capacity ? Number(capacity) : undefined,
@@ -86,7 +91,10 @@ export default function EventPopup({ onClose }) {
 
           {/* Category */}
           <section>
-            <label htmlFor="category" className="block font-medium text-gray-700">
+            <label
+              htmlFor="category"
+              className="block font-medium text-gray-700"
+            >
               Category
             </label>
             <select
@@ -96,11 +104,11 @@ export default function EventPopup({ onClose }) {
               onChange={(e) => setCategory(e.target.value)}
             >
               <option value="">Select Category</option>
-              <option value="conference">Conference</option>
-              <option value="meeting">Meeting</option>
-              <option value="party">Party</option>
-              <option value="wedding">Wedding</option>
-              <option value="other">Other</option>
+              {Object.keys(eventColors).map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </option>
+              ))}
             </select>
             {category === "other" && (
               <input
@@ -142,7 +150,11 @@ export default function EventPopup({ onClose }) {
                 type="date"
                 id="startDate"
                 className="w-full border border-gray-300 rounded-md p-2"
-                value={startDate}
+                value={
+                  selectedDate
+                    ? dayjs(selectedDate).format("YYYY-MM-DD")
+                    : startDate
+                }
                 onChange={(e) => setStartDate(e.target.value)}
               />
             </section>
@@ -198,7 +210,10 @@ export default function EventPopup({ onClose }) {
           {/* Location & Capacity */}
           <section className="grid grid-cols-2 gap-4">
             <section>
-              <label htmlFor="location" className="block font-medium text-gray-700">
+              <label
+                htmlFor="location"
+                className="block font-medium text-gray-700"
+              >
                 Location
               </label>
               <input
@@ -211,7 +226,10 @@ export default function EventPopup({ onClose }) {
               />
             </section>
             <section>
-              <label htmlFor="capacity" className="block font-medium text-gray-700">
+              <label
+                htmlFor="capacity"
+                className="block font-medium text-gray-700"
+              >
                 Capacity
               </label>
               <input
@@ -224,6 +242,20 @@ export default function EventPopup({ onClose }) {
               />
             </section>
           </section>
+
+          <section>
+              <label htmlFor="budget" className="block font-medium text-gray-700">
+                Budget
+              </label>
+              <input
+                type="number"
+                id="budget"
+                placeholder="Budget"
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+              />
+            </section>
 
           {/* Description of Event */}
           <section>
@@ -294,7 +326,10 @@ export default function EventPopup({ onClose }) {
           </section>
           {/* Floorplan */}
           <section>
-            <label htmlFor="floorplan" className="block font-medium text-gray-700">
+            <label
+              htmlFor="floorplan"
+              className="block font-medium text-gray-700"
+            >
               Floorplan URL
             </label>
             <input

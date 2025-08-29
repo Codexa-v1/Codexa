@@ -8,7 +8,7 @@ const router = express.Router();
 // Define your routes here
 
 // This is to get all venues for a particular event - if need be, we will implement a get request for a specific venue
-router.get('/event/:eventId/venues', async (req, res) => {
+router.get('/event/:eventId', async (req, res) => {
     try {
         // Step 1: Find all EventVenue entries for this event
         const eventVenues = await EventVenue.find({ eventId: req.params.eventId });
@@ -32,7 +32,7 @@ router.get('/event/:eventId/venues', async (req, res) => {
 
 // This is to create a new venue for a particular event - if need be, we will implement a post request to create a
 // venue with a specific id
-router.post('/event/:eventId/venues', async (req, res) => {
+router.post('/event/:eventId', async (req, res) => {
     try {
         const { eventId } = req.params;
 
@@ -45,6 +45,10 @@ router.post('/event/:eventId/venues', async (req, res) => {
             venueAddress: req.body.venueAddress,
             venueName: req.body.venueName,
             venueImage: req.body.venueImage,
+            venueEmail: req.body.venueEmail,
+            venuePhone: req.body.venuePhone,
+            capacity: req.body.capacity,
+            venueStatus: req.body.venueStatus
         });
 
         const savedVenue = await newVenue.save();
@@ -67,7 +71,7 @@ router.post('/event/:eventId/venues', async (req, res) => {
 
 
 // This is to edit the details of a specific venue in a particular event
-router.patch('/event/:eventId/venues/:venueId', async (req, res) => {
+router.patch('/event/:eventId/venue/:venueId', async (req, res) => {
     try {
         const { eventId, venueId } = req.params;
         const updateFields = req.body;
@@ -103,7 +107,7 @@ router.patch('/event/:eventId/venues/:venueId', async (req, res) => {
 });
 
 // This is to delete a specific venue in a particular event
-router.delete('/event/:eventId/venues/:venueId', async (req, res) => {
+router.delete('/event/:eventId/venue/:venueId', async (req, res) => {
     try {
         const { eventId, venueId } = req.params;
 

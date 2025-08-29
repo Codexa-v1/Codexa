@@ -20,12 +20,15 @@ router.get('/:id', (req, res) => {
         });
 });
 
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
     const eventId = req.params.id;
     const updatedData = req.body;
 
     try {
-        const updatedEvent = await Event.findByIdAndUpdate(eventId, updatedData, { new: true });
+        const updatedEvent = await Event.findByIdAndUpdate(eventId, updatedData, {
+            new: true,
+            runValidators: true
+        });
         if (!updatedEvent) {
             return res.status(404).json({ message: 'Event not found' });
         }
@@ -60,13 +63,12 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
-// GET all events by userId (eventPlanner) via query param
-router.get('/', async (req, res) => {
+// Get all events by userId (eventPlanner) via request param
+// Here, we do not need to worry about eventId, since we are fetching all events for a specific user.
+router.post('/all', async (req, res) => {
     try {
-        const { userId } = req.query;
-        if (!userId) {
-            return res.status(400).json({ error: 'Missing userId query parameter' });
-        }
+        const { userId } = req.body;
+        if (!userId) return res.status(400).json({ error: 'Missing userId in request body' });
         const events = await Event.find({ eventPlanner: userId });
         res.status(200).json(events);
     } catch (error) {

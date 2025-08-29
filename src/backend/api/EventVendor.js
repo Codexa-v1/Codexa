@@ -2,16 +2,18 @@
 const url = 'http://localhost:3000';
 
 export function getVendors(eventId) {
-    return fetch(`${url}/event/${eventId}/vendors`)
+    return fetch(`${url}/api/vendors/event/${eventId}`)
         .then(response => {
             if (!response.ok) {
+                if (response.status === 404) return []; // treat "no vendors" as empty array
                 throw new Error('Network response was not ok');
             }
             return response.json();
         });
 }
+
 export function addVendor(eventId, vendor) {
-    return fetch(`${url}/event/${eventId}/vendors`, {
+    return fetch(`${url}/api/vendors/event/${eventId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -25,9 +27,10 @@ export function addVendor(eventId, vendor) {
             return response.json();
         });
 }
+
 export function updateVendor(eventId, vendorId, vendor) {
-    return fetch(`${url}/event/${eventId}/vendors/${vendorId}`, {
-        method: 'PUT',
+    return fetch(`${url}/api/vendors/event/${eventId}/vendors/${vendorId}`, {
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -40,15 +43,16 @@ export function updateVendor(eventId, vendorId, vendor) {
             return response.json();
         });
 }
+
 export function deleteVendor(eventId, vendorId) {
-    return fetch(`${url}/event/${eventId}/vendors/${vendorId}`, {
+    return fetch(`${url}/api/vendors/event/${eventId}/vendors/${vendorId}`, {
         method: 'DELETE',
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json();
+            return;
         });
 }
 

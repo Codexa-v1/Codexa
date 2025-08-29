@@ -1,4 +1,6 @@
+import { time } from "framer-motion";
 import React, { useState } from "react";
+import { updateEvent } from "../backend/api/EventData";
 
 export default function EditEventModal({ event, onClose, onSave }) {
   function formatBudget(val) {
@@ -7,8 +9,11 @@ export default function EditEventModal({ event, onClose, onSave }) {
   }
   const [form, setForm] = useState({
     title: event.title || "",
-    type: event.type || "",
+    category: event.category || "",
     date: event.date || "",
+    endDate: event.endDate || "",
+    startTime: event.startTime || "",
+    endTime: event.endTime || "",
     location: event.location || "",
     budget: event.budget || "",
     description: event.description || ""
@@ -19,10 +24,23 @@ export default function EditEventModal({ event, onClose, onSave }) {
     setForm(f => ({ ...f, [name]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    onSave(form);
-    onClose();
+
+    try {
+      // assuming your updateEvent takes (id, data)
+      await updateEvent(event._id, form);
+
+      // let parent component refresh state if needed
+      if (onSave) {
+        onSave(form);
+      }
+
+      onClose();
+    } catch (err) {
+      console.error("Error updating event:", err);
+      alert("Failed to update event. Please try again.");
+    }
   }
 
   return (
@@ -37,12 +55,24 @@ export default function EditEventModal({ event, onClose, onSave }) {
               <input name="title" value={form.title} onChange={handleChange} required placeholder={form.title ? "" : "Title"} className="px-3 py-2 border rounded w-full" />
             </section>
             <section className="relative">
-              {form.type && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Type</label>}
-              <input name="type" value={form.type} onChange={handleChange} required placeholder={form.type ? "" : "Type"} className="px-3 py-2 border rounded w-full" />
+              {form.category && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Category</label>}
+              <input name="category" value={form.category} onChange={handleChange} required placeholder={form.category ? "" : "Category"} className="px-3 py-2 border rounded w-full" />
             </section>
             <section className="relative">
               {form.date && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Date</label>}
-              <input name="date" value={form.date} onChange={handleChange} required type="datetime-local" placeholder={form.date ? "" : "Date"} className="px-3 py-2 border rounded w-full" />
+              <input name="date" value={form.date} onChange={handleChange} required type="date" placeholder={form.date ? "" : "Date"} className="px-3 py-2 border rounded w-full" />
+            </section>
+            <section className="relative">
+              {form.endDate && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">End Date</label>}
+              <input name="endDate" value={form.endDate} onChange={handleChange} required type="date" placeholder={form.endDate ? "" : "End Date"} className="px-3 py-2 border rounded w-full" />
+            </section>
+            <section className="relative">
+              {form.startTime && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Start Time</label>}
+              <input name="startTime" value={form.startTime} onChange={handleChange} required type="time" placeholder={form.startTime ? "" : "Start Time"} className="px-3 py-2 border rounded w-full" />
+            </section>
+            <section className="relative">
+              {form.endTime && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">End Time</label>}
+              <input name="endTime" value={form.endTime} onChange={handleChange} required type="time" placeholder={form.endTime ? "" : "End Time"} className="px-3 py-2 border rounded w-full" />
             </section>
             <section className="relative">
               {form.location && <label className="absolute left-3 -top-5 text-xs font-semibold text-green-900 bg-white px-1">Location</label>}

@@ -11,7 +11,7 @@ import EventGuest from "../models/eventguest.js";
 const router = express.Router();
 
 // This is to get all the guests in an event - if need be, we will implement the get request for a single guest
-router.get('/event/:eventId/guest', async (req, res) => {
+router.get('/event/:eventId', async (req, res) => {
     try {
         // Step 1: Find all EventGuest entries for this event
         const eventGuests = await EventGuest.find({ eventId: req.params.eventId });
@@ -35,7 +35,7 @@ router.get('/event/:eventId/guest', async (req, res) => {
 
 // This is to create a guest for an event - if need be, we will implement the post request to add a guest with a
 // specific id
-router.post('/event/:eventId/guest', async (req, res) => {
+router.post('/event/:eventId', async (req, res) => {
     try {
         // Step 1: Verify the event exists
         const event = await Event.findById(req.params.eventId);
