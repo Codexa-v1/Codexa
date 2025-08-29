@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getGuests, deleteGuest } from "../backend/api/EventGuest";
-import AddGuestsModal from "./AddGuestsModal"; // 👈 import your new modal
+import { getGuests, deleteGuest } from "@/backend/api/EventGuest";
+import AddGuestsModal from "@/components/AddGuestsModal"; // 👈 import your new modal
 
 export default function RSVPModal({ guests: initialGuests, onClose, eventId, onAddGuests }) {
   const navigate = useNavigate();

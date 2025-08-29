@@ -1,4 +1,4 @@
-import { eventColors } from "../utils/eventColors";
+import { eventColors } from "@/utils/eventColors";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 

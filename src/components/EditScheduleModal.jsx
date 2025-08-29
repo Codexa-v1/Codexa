@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { updateEventSchedule } from "../backend/api/EventSchedule";
+import { updateEventSchedule } from "@/backend/api/EventSchedule";
 
 export default function EditScheduleModal({ eventId, onClose, onScheduleUpdated, initialData }) {
   const [form, setForm] = useState(initialData || {

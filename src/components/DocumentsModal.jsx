@@ -1,6 +1,6 @@
 import React from "react";
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
-import DocumentUpload from "./DocumentUpload";
+import DocumentUpload from "@/components/DocumentUpload";
 
 export default function DocumentsModal({ documents, onClose }) {
   return (

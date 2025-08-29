@@ -1,9 +1,9 @@
 import { GrClose } from "react-icons/gr";
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { createEvent } from "../backend/api/EventData.js";
+import { createEvent } from "@/backend/api/EventData.js";
 import dayjs from "dayjs";
-import { eventColors } from "../utils/eventColors";
+import { eventColors } from "@/utils/eventColors";
 
 export default function EventPopup({ onClose, selectedDate }) {
   const { user } = useAuth0();

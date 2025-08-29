@@ -1,7 +1,7 @@
 import React from "react";
 import { DocumentTextIcon } from "@heroicons/react/24/outline";
-import DocumentUpload from "./DocumentUpload";
-import floorPlans from "../assets/floorPlans/floorPlans";
+import DocumentUpload from "@/components/DocumentUpload";
+import floorPlans from "@/assets/floorPlans/floorPlans";
 
 export default function FloorPlanModal() {
   return (
