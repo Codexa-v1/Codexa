@@ -23,6 +23,5 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
-          file: coverage/lcov.info
+          files: coverage/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
-          branch: Testing
