@@ -1,5 +1,5 @@
 // Manage venues, catering, and other services.
-const url = 'http://localhost:3000';
+const url = import.meta.env.VITE_BACKEND_URL;
 
 export function getVendors(eventId) {
     return fetch(`${url}/api/vendors/event/${eventId}`)

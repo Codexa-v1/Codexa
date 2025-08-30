@@ -1,4 +1,4 @@
-const url = "http://localhost:3000";
+const url = import.meta.env.VITE_BACKEND_URL;
 
 export function getSchedule(eventId) {
   return fetch(`${url}/api/schedules/event/${eventId}`)

@@ -1,6 +1,6 @@
 // Provide downloadable event packages for other apps.
 
-const url = 'http://localhost:3000';
+const url = import.meta.env.VITE_BACKEND_URL;
 
 export function getEvent(eventId) {
     return fetch(`${url}/event/${eventId}`)

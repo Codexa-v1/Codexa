@@ -1,5 +1,5 @@
 // Event metadata (theme, date, schedule, maps).
-const url = 'http://localhost:3000';
+const url = import.meta.env.VITE_BACKEND_URL;
 
 export function createEvent(eventData) {
     return fetch(`${url}/api/events`, {
