@@ -55,21 +55,36 @@ We are implementing testing at three levels: frontend, backend, and end-to-end.
 npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
 npx vitest      #test
 ```
+- Software Used
+  - Vitest → Chosen because it is optimized for Vite projects, fast
+  - React Testing Library → Helps ensure UI components work as expected from a user perspective.
+  - @testing-library/jest-dom → Provides expressive matchers for DOM node assertions.
 ### 2. End-to-End (E2E) Tests → Playwright
 ```bash
 npm install --save-dev @playwright/test #install
 npx playwright test         #test
 ```
+- Software Used
+  - Playwright → Chosen for cross-browser testing (Chromium, Firefox, WebKit). Provides automated testing that simulates real user interactions across multiple devices and screen sizes.
 ### 3. Backend Tests → Jest + Supertest
 **Install:**
 ```bash
 npm install --save-dev jest supertest       #install
 npx jest        #test
 ```
-
+- Software Used
+  - Jest → A widely adopted JavaScript testing framework, simple configuration, good for asynchronous tests.
+  - Supertest → Specialized for testing HTTP APIs in Node.js, making it easy to assert responses from Express routes
 ---
 
 ## Deployment
+We chose **Microsoft Azure** for deployment because:  
+- **Seamless GitHub Integration** → Built-in GitHub Actions support makes CI/CD pipelines easier to set up and maintain.  
+- **Free/Student-friendly Tiers** → Azure provides free hosting credits and student benefits (via GitHub Student Developer Pack), reducing deployment costs.  
+- **Separation of Concerns** → Azure allows us to host the **frontend (Static Web Apps)** and **backend (App Service)** independently, ensuring scalability and clear architecture.  
+- **Environment Variables & Secrets Management** → Azure App Service configuration ensures sensitive data (DB connections, Auth0 secrets) remain secure and out of source control.   
+- **Scalability** → Both Static Web Apps and App Service can scale automatically as traffic increases, ensuring reliability.  
+
 We deploy the system in two parts:
 
 - **Frontend (Vite + React SPA)** → Hosted on **Azure Static Web Apps**  
