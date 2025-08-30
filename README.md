@@ -39,7 +39,7 @@ npm install
 ### 3. 🏃‍♂️ Run the development servers
 ```bash
 npm run dev         #Frontend
-npm run serve       #Backend
+npm run server       #Backend
 ```
 
 ### 4. ✅ Testing

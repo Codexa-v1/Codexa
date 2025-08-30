@@ -1,6 +1,6 @@
 # Backend Explained
 
-## Overview
+## 🔬 Overview
 Our backend is built with **Node.js** and **Express.js**, which provides routing capabilities. The backend forms one of the three main parts of our project:
 - **Frontend** → where users interact with the application.
 - **API Layer** → defines functions that connect the frontend to the backend.
@@ -11,7 +11,7 @@ When a request is made, the flow looks like this:
 
 ---
 
-## Database and Models
+## 📈 Database and Models
 We use **MongoDB Atlas** as our database, connected via **Mongoose**, which allows us to define schemas and models. Schemas enforce structure on the data stored in collections, ensuring uniformity across entries. Models are the building blocks of the data we query, create, update, and delete.
 
 Currently, we have five main collections (subject to change as development progresses):
@@ -31,7 +31,7 @@ Our routes, built with **Express.js**, define how data is sent and retrieved fro
 
 ---
 
-## Authentication 
+## 🔒 Authentication 
 We are using **Auth0** for authentication and authorization. This ensures secure login, token-based authentication, and role-based access control.
 
 - **SPA (Frontend)** → Uses `@auth0/auth0-react` for handling login/logout, token retrieval, and redirects.
@@ -47,7 +47,7 @@ We are using **Auth0** for authentication and authorization. This ensures secure
 
 ---
 
-## Testing
+## 🧪 Testing
 We are implementing testing at three levels: frontend, backend, and end-to-end.
 
 ### 1. Frontend Unit & Integration Tests → Vitest + React Testing Library
@@ -55,29 +55,29 @@ We are implementing testing at three levels: frontend, backend, and end-to-end.
 npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
 npx vitest      #test
 ```
-- Software Used
-  - Vitest → Chosen because it is optimized for Vite projects, fast
-  - React Testing Library → Helps ensure UI components work as expected from a user perspective.
-  - @testing-library/jest-dom → Provides expressive matchers for DOM node assertions.
+- Vitest → Chosen because it is optimized for Vite projects, fast
+- React Testing Library → Helps ensure UI components work as expected from a user perspective.
+- @testing-library/jest-dom → Provides expressive matchers for DOM node assertions.
+
 ### 2. End-to-End (E2E) Tests → Playwright
 ```bash
 npm install --save-dev @playwright/test #install
 npx playwright test         #test
 ```
-- Software Used
-  - Playwright → Chosen for cross-browser testing (Chromium, Firefox, WebKit). Provides automated testing that simulates real user interactions across multiple devices and screen sizes.
+- Playwright → Chosen for cross-browser testing (Chromium, Firefox, WebKit). Provides automated testing that simulates real user interactions across multiple devices and screen sizes.
+
 ### 3. Backend Tests → Jest + Supertest
 **Install:**
 ```bash
 npm install --save-dev jest supertest       #install
 npx jest        #test
 ```
-- Software Used
-  - Jest → A widely adopted JavaScript testing framework, simple configuration, good for asynchronous tests.
-  - Supertest → Specialized for testing HTTP APIs in Node.js, making it easy to assert responses from Express routes
+- Jest → A widely adopted JavaScript testing framework, simple configuration, good for asynchronous tests.
+- Supertest → Specialized for testing HTTP APIs in Node.js, making it easy to assert responses from Express routes
+
 ---
 
-## Deployment
+## 🚀 Deployment
 We chose **Microsoft Azure** for deployment because:  
 - **Seamless GitHub Integration** → Built-in GitHub Actions support makes CI/CD pipelines easier to set up and maintain.  
 - **Free/Student-friendly Tiers** → Azure provides free hosting credits and student benefits (via GitHub Student Developer Pack), reducing deployment costs.  
@@ -105,6 +105,25 @@ We deploy the system in two parts:
 ⚠️ **Issues faced & resolutions**:
 1. **GitHub Actions build failed** due to relative path imports → fixed using Vite `@` alias pointing to `src/`.  
 2. **Handling Auth0 secrets safely** → moved SPA config to GitHub Secrets (`VITE_*`) and API secrets into Azure App Service settings.
+
+## 🏃‍♂️ Running web app locally
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/[your-org-or-username]/Codexa.git
+cd Codexa
+```
+
+### 2. 📍 Install dependencies
+```bash
+npm install
+```
+
+### 3. 🏃‍♂️ Run the development servers
+```bash
+npm run dev         #Frontend
+npm run server       #Backend
+```
 
 
 
