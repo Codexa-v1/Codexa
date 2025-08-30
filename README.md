@@ -27,20 +27,23 @@ The app allows users to:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Codexa-v1/Codexa.git
+git clone https://github.com/[your-org-or-username]/Codexa.git
 cd Codexa
 ```
 
 ### 2. 📍 Install dependencies
 ```bash
 npm install
+npm install @auth0/auth0-react   #Auth0
 ```
 
 ### 3. 🏃‍♂️ Run the development servers
 ```bash
 npm run dev         #Frontend
 npm run server       #Backend
-```
+cd api 
+npm run start         #Api
+```     
 
 ### 4. ✅ Testing
 - **Frontend (Unit & Integration):** Vitest + React Testing Library 
