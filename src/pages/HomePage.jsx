@@ -110,7 +110,7 @@ const HomePage = () => {
                 onClick={async () => {
                   try {
                     const res = await fetch(
-                      `http://localhost:3000/api/events/${confirmDeleteId}`,
+                      `${import.meta.env.VITE_BACKEND_URL}/api/events/${confirmDeleteId}`,
                       {
                         method: "DELETE",
                       }

@@ -159,7 +159,7 @@ export default function EventsPage() {
                           onClick={async () => {
                             try {
                               const res = await fetch(
-                                `http://localhost:3000/api/events/${confirmDeleteId}`,
+                                `${import.meta.env.VITE_BACKEND_URL}/api/events/${confirmDeleteId}`,
                                 { method: "DELETE" }
                               );
                               if (!res.ok) throw new Error("Failed to delete event");
