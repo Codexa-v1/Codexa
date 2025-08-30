@@ -117,12 +117,15 @@ cd Codexa
 ### 2. 📍 Install dependencies
 ```bash
 npm install
+npm install @auth0/auth0-react   #Auth0
 ```
 
 ### 3. 🏃‍♂️ Run the development servers
 ```bash
 npm run dev         #Frontend
 npm run server       #Backend
+cd api 
+npm run start         #Api
 ```
 
 
