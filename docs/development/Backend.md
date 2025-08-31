@@ -110,7 +110,7 @@ We deploy the system in two parts:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/[your-org-or-username]/Codexa.git
+git clone https://github.com/Codexa-v1/Codexa.git
 cd Codexa
 ```
 
