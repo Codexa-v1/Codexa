@@ -93,7 +93,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 ---
 
 **User Story 3: Guest Management**  
-**As an** event planner, **I want to** send RSVP to my guests **so that** they can accept or decline my invitation
+**As an** event planner, **I want to** send RSVP to my guests **so that** they can revieve my invitation
 
 **Acceptance Criteria:**    
 - Users can see the list of all invitations sent out
@@ -102,23 +102,23 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 ---
 
 **User Story 4: Vendor Management**  
-**As an** event planner, **I want to** browse, compare, and select vendors based on availability and affordability **so that** I can choose the best options for my events.
+**As an** event planner, **I want to** browse, compare, and select vendors based on affordability **so that** I can choose the best options for my events.
 
 **Acceptance Criteria:**  
-- Users can view a list of vendors with details (name, services, cost, availability).  
-- Vendors can be filtered by cost, availability, or other category.  
+- Users can view a list of vendors with details (name, services, cost).  
+- Vendors can be filtered by cost, or other category.  
 - Users can select and link vendors to specific events.  
 - Selected vendors appear in the event details page.  
 
 ---
 
-**User Story 5: File Uploads & Downloads**  
-**As an** event planner, **I want to** upload and download documents such as floorplans **so that** all event-related files are stored and accessible in one place.
+**User Story 5: Event Management**  
+**As an** event planner, **I want to** be able to click on an "Edit Event" button in an event **so that** I can edit/manage an event that have created.
 
 **Acceptance Criteria:**  
-- Users can upload supported file types (PDF, PNG, JPG, etc.).  
-- Uploaded files are linked to the correct event in the database.  
-- Users can download files from the event details page.    
+- Users can change date and time of an event
+- Users can change the location of an event
+
 
 ---
 
