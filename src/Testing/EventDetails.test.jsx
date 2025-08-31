@@ -1,5 +1,5 @@
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import EventDetails from "../pages/EventDetails"; 
+import EventDetails from "@/pages/EventDetails"; 
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getGuests } from "@/backend/api/EventGuest";
@@ -21,33 +21,33 @@ vi.mock("@auth0/auth0-react", () => ({
 }));
 
 // Backend API mocks
-vi.mock("../backend/api/EventData", () => ({
+vi.mock("@/backend/api/EventData", () => ({
   getAllEvents: vi.fn(),
 }));
-vi.mock("../backend/api/EventVendor", () => ({
+vi.mock("@/backend/api/EventVendor", () => ({
   getVendors: vi.fn(),
 }));
-vi.mock("../backend/api/EventGuest", () => ({
+vi.mock("@/backend/api/EventGuest", () => ({
   getGuests: vi.fn(),
 }));
 
 // Mock modals & child components 
-vi.mock("../components/Navbar", () => ({
+vi.mock("@/components/Navbar", () => ({
   default: () => <div>Mock Navbar</div>,
 }));
-vi.mock("../components/RSVPModal", () => ({
+vi.mock("@/components/RSVPModal", () => ({
   default: (props) => <div>Mock RSVPModal {props.eventId}</div>,
 }));
-vi.mock("../components/VendorsModal", () => ({
+vi.mock("@/components/VendorsModal", () => ({
   default: () => <div>Mock VendorsModal</div>,
 }));
-vi.mock("../components/VenuesModal", () => ({
+vi.mock("@/components/VenuesModal", () => ({
   default: () => <div>Mock VenuesModal</div>,
 }));
-vi.mock("../components/EditEventModal", () => ({
+vi.mock("@/components/EditEventModal", () => ({
   default: () => <div>Mock EditEventModal</div>,
 }));
-vi.mock("../components/WeatherCard", () => ({
+vi.mock("@/components/WeatherCard", () => ({
   default: () => <div>Mock WeatherCard</div>,
 }));
 
@@ -143,4 +143,104 @@ describe("EventDetails", () => {
     fireEvent.click(vendorsTab);
     expect(await screen.findByText("Mock VendorsModal")).toBeInTheDocument();
   });
+  it("calls navigator.share with correct data when available", async () => {
+  render(<EventDetails />);
+
+  const btn = await screen.findByRole("button", { name: /Send Invite/i });
+  fireEvent.click(btn);
+
+  await waitFor(() => {
+    expect(navigator.share).toHaveBeenCalledTimes(1);
+  });
+
+  const shareArgs = navigator.share.mock.calls[0][0];
+  expect(shareArgs.title).toBe(fakeEvent.title);
+  expect(shareArgs.text).toContain(fakeEvent.title);
+  expect(shareArgs.text).toContain(fakeEvent.location);
+  expect(shareArgs.url).toContain(`/rsvp/${fakeEvent._id}`);
+});
+
+it("falls back to clipboard and alert if navigator.share is not available", async () => {
+  delete navigator.share; // simulate old browser
+  render(<EventDetails />);
+
+  const btn = await screen.findByRole("button", { name: /Send Invite/i });
+  fireEvent.click(btn);
+
+  await waitFor(() => {
+    expect(navigator.clipboard.writeText).toHaveBeenCalledTimes(1);
+    expect(window.alert).toHaveBeenCalledWith("Link copied to clipboard!");
+  });
+
+  const copiedLink = navigator.clipboard.writeText.mock.calls[0][0];
+  expect(copiedLink).toContain(`/rsvp/${fakeEvent._id}`);
+});
+it("opens EditVendorModal when onEditVendor is triggered", async () => {
+  render(<EventDetails />);
+
+  // Go to Vendors tab
+  fireEvent.click(await screen.findByRole("button", { name: /Vendors/i }));
+
+  // VendorsModal is visible
+  expect(await screen.findByText("Mock VendorsModal")).toBeInTheDocument();
+
+  // Trigger EditVendor (mock calls props.onEditVendor)
+  fireEvent.click(screen.getByText("Trigger EditVendor"));
+
+  // Now EditVendorModal should render with vendor name
+  expect(await screen.findByText("Mock EditVendorModal Caterer")).toBeInTheDocument();
+
+  // Close the modal
+  fireEvent.click(screen.getByText("Close EditVendor"));
+  await waitFor(() => {
+    expect(screen.queryByText(/Mock EditVendorModal/)).not.toBeInTheDocument();
+  });
+});
+it("opens AddVenuesModal and EditVenueModal", async () => {
+  render(<EventDetails />);
+
+  // Go to Venues tab
+  fireEvent.click(await screen.findByRole("button", { name: /Venues/i }));
+  expect(await screen.findByText("Mock VenuesModal")).toBeInTheDocument();
+
+  // Trigger AddVenues
+  fireEvent.click(screen.getByText("Trigger AddVenues"));
+  expect(await screen.findByText("Mock AddVenuesModal")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("Close AddVenues"));
+  await waitFor(() => {
+    expect(screen.queryByText(/Mock AddVenuesModal/)).not.toBeInTheDocument();
+  });
+
+  // Trigger EditVenue
+  fireEvent.click(screen.getByText("Trigger EditVenue"));
+  expect(await screen.findByText("Mock EditVenueModal Hall")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("Close EditVenue"));
+  await waitFor(() => {
+    expect(screen.queryByText(/Mock EditVenueModal/)).not.toBeInTheDocument();
+  });
+});
+it("opens AddScheduleModal and EditScheduleModal via ScheduleModal", async () => {
+  render(<EventDetails />);
+
+  // Go to Schedule tab
+  fireEvent.click(await screen.findByRole("button", { name: /Schedule/i }));
+  expect(await screen.findByText("Mock ScheduleModal")).toBeInTheDocument();
+
+  // Trigger AddSchedule
+  fireEvent.click(screen.getByText("AddSchedule"));
+  expect(await screen.findByText("Mock AddScheduleModal")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("Close AddSchedule"));
+  await waitFor(() => {
+    expect(screen.queryByText(/Mock AddScheduleModal/)).not.toBeInTheDocument();
+  });
+
+  // Trigger EditSchedule
+  fireEvent.click(screen.getByText("EditSchedule"));
+  expect(await screen.findByText("Mock EditScheduleModal Test Schedule")).toBeInTheDocument();
+  fireEvent.click(screen.getByText("Close EditSchedule"));
+  await waitFor(() => {
+    expect(screen.queryByText(/Mock EditScheduleModal/)).not.toBeInTheDocument();
+  });
+});
+
 });
