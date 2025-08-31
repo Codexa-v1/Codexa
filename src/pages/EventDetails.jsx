@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import Navbar from "@/components/Navbar";
+import Navbar from "../components/Navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 
+
+
 // Modals
-import RSVPModal from "@/components/RSVPModal";
-import EditEventModal from "@/components/EditEventModal";
-import VendorsModal from "@/components/VendorsModal";
-import VenuesModal from "@/components/VenuesModal";
-import AddVenuesModal from "@/components/AddVenuesModal";
-import ScheduleModal from "@/components/ScheduleModal";
-import AddScheduleModal from "@/components/AddScheduleModal";
-import EditScheduleModal from "@/components/EditScheduleModal";
-import EditVenueModal from "@/components/EditVenueModal";
-import EditVendorModal from "@/components/EditVendorModal";
-import FloorPlanModal from "@/components/FloorPlanModal";
-import DocumentsModal from "@/components/DocumentsModal";
+import RSVPModal from "../components/RSVPModal";
+import EditEventModal from "../components/EditEventModal";
+import VendorsModal from "../components/VendorsModal";
+import VenuesModal from "../components/VenuesModal";
+import AddVenuesModal from "../components/AddVenuesModal";
+import ScheduleModal from "../components/ScheduleModal";
+import AddScheduleModal from "../components/AddScheduleModal";
+import FloorPlanModal from "../components/FloorPlanModal";
+import DocumentsModal from "../components/DocumentsModal";
+import AddGuestsModal from "../components/AddGuestsModal";
 
 // Backend API
-import { getAllEvents } from "@/backend/api/EventData";
-import { getVendors } from "@/backend/api/EventVendor";
-import { getGuests } from "@/backend/api/EventGuest";
+import { getAllEvents } from "../backend/api/EventData";
+import { getVendors } from "../backend/api/EventVendor";
+import { getGuests } from "../backend/api/EventGuest";
+import WeatherCard from "../components/WeatherCard";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -30,7 +31,6 @@ export default function EventDetails() {
 
   // Event & related data
   const [events, setEvents] = useState([]);
-  const [venues, setVenues] = useState([]);
   const [event, setEvent] = useState(null);
   const [guests, setGuests] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -42,19 +42,12 @@ export default function EventDetails() {
   const [showEditEventModal, setShowEditEventModal] = useState(false);
   const [showAddVenuesModal, setShowAddVenuesModal] = useState(false);
   const [showAddScheduleModal, setShowAddScheduleModal] = useState(false);
-  const [showEditScheduleModal, setShowEditScheduleModal] = useState(false);
-  const [showEditVenueModal, setShowEditVenueModal] = useState(false);
-  const [showEditVendorModal, setShowEditVendorModal] = useState(false);
-
-  const [editingSchedule, setEditingSchedule] = useState(null);
-  const [editingVenue, setEditingVenue] = useState(null);
-  const [editingVendor, setEditingVendor] = useState(null);
 
   // Fetch events and select current
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const allEvents = await getAllEvents(user.sub);
+        const allEvents = await getAllEvents(user.sub); // adjust if Auth0 user id needed
         setEvents(allEvents);
         const ev = allEvents.find((e) => e._id === id);
         if (ev) setEvent(ev);
@@ -92,10 +85,6 @@ export default function EventDetails() {
     setShowEditEventModal(false);
   };
 
-  function handleVenuesUpdated(updatedVenues) {
-    setVenues(updatedVenues);
-  }
-
   const handleSendInvites = (eventId) => {
     const link = `${window.location.origin}/rsvp/${eventId}`;
     const shareData = {
@@ -106,7 +95,9 @@ export default function EventDetails() {
       url: link,
     };
     if (navigator.share) {
-      navigator.share(shareData).catch((err) => console.error("Share failed:", err));
+      navigator
+        .share(shareData)
+        .catch((err) => console.error("Share failed:", err));
     } else {
       navigator.clipboard.writeText(link);
       alert("Link copied to clipboard!");
@@ -118,7 +109,9 @@ export default function EventDetails() {
       <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 to-green-900">
         <Navbar />
         <section className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow mt-8 text-center">
-          <h2 className="text-2xl font-bold text-red-700 mb-2">Event Not Found</h2>
+          <h2 className="text-2xl font-bold text-red-700 mb-2">
+            Event Not Found
+          </h2>
           <button
             className="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-700"
             onClick={() => navigate("/events")}
@@ -172,10 +165,14 @@ export default function EventDetails() {
             onSave={handleEditEventSave}
           />
         )}
-        <h2 className="text-3xl font-bold text-green-900 mb-2">{event.title}</h2>
+        <h2 className="text-3xl font-bold text-green-900 mb-2">
+          {event.title}
+        </h2>
         <section className="flex flex-wrap items-center gap-4 text-sm text-gray-700 mb-3">
           <p>{dayjs(event.date).format("DD MMM YYYY")}</p>
-          <p>{event.startTime} - {event.endTime}</p>
+          <p>
+            {event.startTime} - {event.endTime}
+          </p>
           <p>{event.location}</p>
         </section>
         <p className="text-gray-600 mb-6">{event.description}</p>
@@ -185,7 +182,9 @@ export default function EventDetails() {
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
             <h4 className="font-semibold">Total Guests</h4>
             <p className="text-2xl font-bold">{event.rsvpTotal}</p>
-            <p className="text-sm text-gray-500">{event.rsvpCurrent} confirmed</p>
+            <p className="text-sm text-gray-500">
+              {event.rsvpCurrent} confirmed
+            </p>
           </div>
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
             <h4 className="font-semibold">Vendors</h4>
@@ -208,7 +207,15 @@ export default function EventDetails() {
       {/* Tabs Navigation */}
       <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
         <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
-          {["overview","rsvp","vendors","venues","schedule","floor","documents"].map((tab) => (
+          {[
+            "overview",
+            "rsvp",
+            "vendors",
+            "venues",
+            "schedule",
+            "floor",
+            "documents",
+          ].map((tab) => (
             <button
               key={tab}
               className={`px-4 py-2 ${
@@ -216,7 +223,8 @@ export default function EventDetails() {
               }`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1).replace(/([A-Z])/g, " $1")}
+              {tab.charAt(0).toUpperCase() +
+                tab.slice(1).replace(/([A-Z])/g, " $1")}
             </button>
           ))}
         </section>
@@ -237,11 +245,16 @@ export default function EventDetails() {
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section
                     className="bg-green-900 h-2 rounded"
-                    style={{ width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%` }}
+                    style={{
+                      width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
+                    }}
                   ></section>
                 </section>
-                <p className="text-xs text-green-900">Click to view guest list</p>
+                <p className="text-xs text-green-900">
+                  Click to view guest list
+                </p>
               </section>
+              <WeatherCard eventDate={event.date} location={event.location} />
 
               {/* Vendors Card */}
               <section
@@ -250,7 +263,9 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">Vendors</h3>
                 <p className="text-xs mb-2">Total Vendors: {vendors.length}</p>
-                <p className="text-xs text-blue-900 mt-2">Click to view vendor details</p>
+                <p className="text-xs text-blue-900 mt-2">
+                  Click to view vendor details
+                </p>
               </section>
 
               {/* Venues Card */}
@@ -269,7 +284,9 @@ export default function EventDetails() {
                 onClick={() => setActiveTab("schedule")}
               >
                 <h3 className="text-lg font-semibold mb-2">Schedule</h3>
-                <p className="text-xs text-yellow-900">Click to view schedule</p>
+                <p className="text-xs text-yellow-900">
+                  Click to view schedule
+                </p>
               </section>
 
               {/* Floor Plan Card */}
@@ -278,7 +295,9 @@ export default function EventDetails() {
                 onClick={() => setActiveTab("floor")}
               >
                 <h3 className="text-lg font-semibold mb-2">Floor Plan</h3>
-                <p className="text-xs mb-2">Venue layout and seating arrangement</p>
+                <p className="text-xs mb-2">
+                  Venue layout and seating arrangement
+                </p>
                 <p className="text-xs text-pink-900">Click to view</p>
               </section>
 
@@ -302,41 +321,18 @@ export default function EventDetails() {
               onClose={() => setActiveTab("overview")}
             />
           )}
-
-          {/* Vendors */}
           {activeTab === "vendors" && (
             <VendorsModal
               vendors={vendors}
               eventId={event._id}
               onClose={() => setActiveTab("overview")}
-              onEditVendor={(vendor) => {
-                setEditingVendor(vendor);
-                setShowEditVendorModal(true);
-              }}
             />
           )}
-          {showEditVendorModal && editingVendor && (
-            <EditVendorModal
-              eventId={event._id}
-              vendor={editingVendor}
-              onClose={() => {
-                setShowEditVendorModal(false);
-                setEditingVendor(null);
-              }}
-              onVendorsUpdated={(updated) => setVendors(updated)}
-            />
-          )}
-
-          {/* Venues */}
           {activeTab === "venues" && (
             <VenuesModal
               eventId={event._id}
               onClose={() => setActiveTab("overview")}
               onAddVenues={() => setShowAddVenuesModal(true)}
-              onEditVenue={(venue) => {
-                setEditingVenue(venue);
-                setShowEditVenueModal(true);
-              }}
             />
           )}
           {showAddVenuesModal && (
@@ -345,28 +341,11 @@ export default function EventDetails() {
               onClose={() => setShowAddVenuesModal(false)}
             />
           )}
-          {showEditVenueModal && editingVenue && (
-            <EditVenueModal
-              eventId={event._id}
-              venue={editingVenue}
-              onClose={() => {
-                setShowEditVenueModal(false);
-                setEditingVenue(null);
-              }}
-              onVenuesUpdated={handleVenuesUpdated}
-            />
-          )}
-
-          {/* Schedule */}
           {activeTab === "schedule" && (
             <ScheduleModal
               schedules={schedules}
               onClose={() => setActiveTab("overview")}
               onAddSchedule={() => setShowAddScheduleModal(true)}
-              onEditSchedule={(item) => {
-                setEditingSchedule(item);
-                setShowEditScheduleModal(true);
-              }}
               eventId={event._id}
             />
           )}
@@ -376,15 +355,6 @@ export default function EventDetails() {
               onClose={() => setShowAddScheduleModal(false)}
             />
           )}
-          {showEditScheduleModal && editingSchedule && (
-            <EditScheduleModal
-              eventId={event._id}
-              schedule={editingSchedule}
-              onClose={() => setShowEditScheduleModal(false)}
-            />
-          )}
-
-          {/* Floor Plan */}
           {activeTab === "floor" && (
             <FloorPlanModal
               eventId={event._id}
@@ -392,8 +362,6 @@ export default function EventDetails() {
               onClose={() => setActiveTab("overview")}
             />
           )}
-
-          {/* Documents */}
           {activeTab === "documents" && (
             <DocumentsModal
               eventId={event._id}

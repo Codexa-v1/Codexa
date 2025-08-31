@@ -9,6 +9,7 @@ import { getAllEvents } from "@/backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
+
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated } = useAuth0();

@@ -1,6 +1,8 @@
 import { eventColors } from "@/utils/eventColors";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import React from "react";
+
 
 const EventCard = ({ event, setConfirmDeleteId }) => {
   const { bgColor, labelColor } = eventColors[event.category] || eventColors.Other;
