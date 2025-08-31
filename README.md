@@ -65,6 +65,7 @@ npx jest     #test
 ### 5. 📦 Deployment
 We deploy via Azure App Services:
 - https://victorious-ground-09423c310.1.azurestaticapps.net/
+- VITE_BACKEND_URL=https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net 
 
 ### 6. 📖 Documentation
 Full documentation (meeting minutes, sprints, design decisions) is available on our GitHub Pages site:
