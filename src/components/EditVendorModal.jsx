@@ -11,6 +11,7 @@ export default function EditVendorModal({ eventId, onClose, onVendorsUpdated, ve
     website: vendor.website || "",
     address: vendor.address || "",
     rating: vendor.rating || "",
+    cost: vendor.cost || "",
     notes: vendor.notes || ""
   });
 
@@ -89,6 +90,11 @@ export default function EditVendorModal({ eventId, onClose, onVendorsUpdated, ve
             <section className="relative">
               {form.rating && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Rating (1-5)</label>}
               <input name="rating" value={form.rating} onChange={handleChange} type="number" min="1" max="5" placeholder={form.rating ? "" : "Rating (1-5)"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.cost && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Cost</label>}
+              <input name="cost" value={form.cost} onChange={handleChange} required placeholder={form.cost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
             </section>
           </section>
 

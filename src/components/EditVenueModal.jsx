@@ -9,6 +9,8 @@ export default function EditVenueModal({ eventId, venue, onClose, onVenuesUpdate
     venuePhone: venue.venuePhone || "",
     capacity: venue.capacity || "",
     venueStatus: venue.venueStatus || "",
+    venueAvailability: venue.venueAvailability || "",
+    venueCost: venue.venueCost || "",
     venueImage: venue.venueImage || "",
   });
 
@@ -77,12 +79,26 @@ export default function EditVenueModal({ eventId, venue, onClose, onVenuesUpdate
             </section>
 
             <section className="relative">
+              {form.venueCost && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Cost</label>}
+              <input name="venueCost" value={form.venueCost} onChange={handleChange} required type="number" min="0" placeholder={form.venueCost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
               {form.venueStatus && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Status</label>}
               <select name="venueStatus" value={form.venueStatus} onChange={handleChange} required className="px-3 py-2 border rounded w-full">
                 <option value="" disabled hidden>Select Status</option>
                 <option value="Pending">Pending</option>
                 <option value="Accepted">Accepted</option>
                 <option value="Declined">Declined</option>
+              </select>
+            </section>
+
+            <section className="relative">
+              {form.venueAvailability && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Availability</label>}
+              <select name="venueAvailability" value={form.venueAvailability} onChange={handleChange} required className="px-3 py-2 border rounded w-full">
+                <option value="" disabled hidden>Select Availability</option>
+                <option value="Available">Available</option>
+                <option value="Unavailable">Unavailable</option>
               </select>
             </section>
           </section>

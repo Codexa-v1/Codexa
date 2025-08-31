@@ -11,6 +11,7 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
     website: "",
     address: "",
     rating: "",
+    cost: "",
     notes: ""
   });
 
@@ -59,15 +60,51 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
         {error && <p className="text-red-600 mb-3">{error}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input name="name" value={form.name} onChange={handleChange} required placeholder="Name" className="px-3 py-2 border rounded w-full" />
-            <input name="vendorType" value={form.vendorType} onChange={handleChange} required placeholder="Type" className="px-3 py-2 border rounded w-full" />
-            <input name="contactPerson" value={form.contactPerson} onChange={handleChange} required placeholder="Contact Person" className="px-3 py-2 border rounded w-full" />
-            <input name="phone" value={form.phone} onChange={handleChange} required placeholder="Phone" className="px-3 py-2 border rounded w-full" />
-            <input name="email" value={form.email} onChange={handleChange} required placeholder="Email" className="px-3 py-2 border rounded w-full" />
-            <input name="website" value={form.website} onChange={handleChange} placeholder="Website" className="px-3 py-2 border rounded w-full" />
-            <input name="address" value={form.address} onChange={handleChange} required placeholder="Address" className="px-3 py-2 border rounded w-full" />
-            <input name="rating" value={form.rating} onChange={handleChange} type="number" min="1" max="5" placeholder="Rating (1-5)" className="px-3 py-2 border rounded w-full" />
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-7">
+            <section className="relative">
+              {form.name && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Name</label>}
+              <input name="name" value={form.name} onChange={handleChange} required placeholder={form.name ? "" : "Name"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.vendorType && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Type</label>}
+              <input name="vendorType" value={form.vendorType} onChange={handleChange} required placeholder={form.vendorType ? "" : "Type"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.contactPerson && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Contact Person</label>}
+              <input name="contactPerson" value={form.contactPerson} onChange={handleChange} required placeholder={form.contactPerson ? "" : "Contact Person"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.phone && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Phone</label>}
+              <input name="phone" value={form.phone} onChange={handleChange} required placeholder={form.phone ? "" : "Phone"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.email && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Email</label>}
+              <input name="email" value={form.email} onChange={handleChange} required placeholder={form.email ? "" : "Email"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.website && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Website</label>}
+              <input name="website" value={form.website} onChange={handleChange} placeholder={form.website ? "" : "Website"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.address && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Address</label>}
+              <input name="address" value={form.address} onChange={handleChange} required placeholder={form.address ? "" : "Address"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.rating && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Rating (1-5)</label>}
+              <input name="rating" value={form.rating} onChange={handleChange} type="number" min="1" max="5" placeholder={form.rating ? "" : "Rating (1-5)"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">
+              {form.cost && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Cost</label>}
+              <input name="cost" value={form.cost} onChange={handleChange} required placeholder={form.cost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
+            </section>
           </section>
 
           <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Notes" className="px-3 py-2 border rounded w-full" />
