@@ -3,6 +3,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Calendar from "../components/CalendarBox.jsx";
 import { useAuth0 } from "@auth0/auth0-react";
+import dayjs from "dayjs";
 
 // Mock Auth0
 vi.mock("@auth0/auth0-react", () => ({
@@ -76,16 +77,28 @@ describe("Calendar Component", () => {
       screen.getByText(/September|October|January/i)
     ).toBeInTheDocument();
   });
+  
 
-  it("navigates to previous month when left arrow clicked", () => {
-    render(<Calendar />);
-    const buttons = screen.getAllByRole("button");
-    const leftButton = buttons[0];
-    fireEvent.click(leftButton);
-    expect(
-      screen.getByText(/July|June|December/i)
-    ).toBeInTheDocument();
-  });
+it("navigates to previous month when left arrow clicked", () => {
+  render(<Calendar />);
+
+  // Get current month before click
+  let [monthHeading] = screen.getAllByRole("heading", { level: 2 });
+  const currentMonth = monthHeading.textContent.replace(",", "").trim();
+
+  // Click left arrow
+  const [leftButton] = screen.getAllByRole("button");
+  fireEvent.click(leftButton);
+
+  // Compute expected previous month
+  const expected = dayjs().month(dayjs().month() - 1).format("MMMM");
+
+  // Re-read heading after click
+  [monthHeading] = screen.getAllByRole("heading", { level: 2 });
+  expect(monthHeading).toHaveTextContent(expected);
+});
+
+
 
 
 });
