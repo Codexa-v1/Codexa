@@ -6,6 +6,7 @@ export function getVendors(eventId) {
         .then(response => {
             if (!response.ok) {
                 if (response.status === 404) return []; // treat "no vendors" as empty array
+                throw new Error('Network response was not ok');
             }
             return response.json();
         });
