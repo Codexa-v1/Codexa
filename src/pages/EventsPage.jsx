@@ -43,7 +43,7 @@ export default function EventsPage() {
   return (
     <section className="min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
       <Navbar />
-      <section className="p-6 bg-gradient-to-b from-sky-100 from-[0%] to-green-900 to-[90%] min-h-screen font-sans w-full">
+      <section className="p-6 max-w-screen-xl mx-auto min-h-screen font-sans w-full">
         {/* Header and Controls */}
         <section className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
           <h2 className="text-3xl font-bold text-green-900">All Events</h2>

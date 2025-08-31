@@ -9,7 +9,7 @@ import { deleteEvent, getAllEvents } from "../backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
-const HomePage = () => {
+const HomePage = ({ onSeeMore }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated } = useAuth0();
   const [events, setEvents] = useState([]);
@@ -34,7 +34,7 @@ const HomePage = () => {
   return (
     <section className="home-page min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
       <Navbar />
-      <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans">
+      <section className="p-6 max-w-screen-xl mx-auto min-h-screen font-sans">
         {/* Header */}
         <section className="flex justify-between items-center">
           <h2 className="text-3xl font-bold text-green-900">
@@ -86,7 +86,11 @@ const HomePage = () => {
             {Array.isArray(events) && events.length > 3 && (
               <button
                 className="mt-2 w-full bg-green-700 text-white py-2 rounded hover:bg-green-900 font-semibold"
-                onClick={() => navigate("/events")}
+                onClick={() => {
+                  if (onSeeMore) {
+                    onSeeMore();
+                  }
+                }}
               >
                 See more...
               </button>
