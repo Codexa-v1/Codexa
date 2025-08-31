@@ -1,6 +1,6 @@
 import { time } from "framer-motion";
 import React, { useState } from "react";
-import { updateEvent } from "../backend/api/EventData";
+import { updateEvent } from "@/backend/api/EventData";
 
 export default function EditEventModal({ event, onClose, onSave }) {
   function formatBudget(val) {

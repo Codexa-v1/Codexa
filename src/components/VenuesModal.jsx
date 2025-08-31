@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import NewVenueModal from "./AddVenuesModal"; // your add venue component
-import { getVenues, deleteVenue } from "../backend/api/EventVenue";
+import NewVenueModal from "@/components/AddVenuesModal"; // your add venue component
+import { getVenues, deleteVenue } from "@/backend/api/EventVenue";
 
 export default function VenuesModal({ eventId, onClose, onEditVenue }) {
   const [venues, setVenues] = useState([]);

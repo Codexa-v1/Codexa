@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import Navbar from "../components/Navbar";
+import Navbar from "@/components/Navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 
 // Modals
-import RSVPModal from "../components/RSVPModal";
-import EditEventModal from "../components/EditEventModal";
-import VendorsModal from "../components/VendorsModal";
-import VenuesModal from "../components/VenuesModal";
-import AddVenuesModal from "../components/AddVenuesModal";
-import ScheduleModal from "../components/ScheduleModal";
-import AddScheduleModal from "../components/AddScheduleModal";
-import EditScheduleModal from "../components/EditScheduleModal";
-import EditVenueModal from "../components/EditVenueModal";
-import EditVendorModal from "../components/EditVendorModal";
-import FloorPlanModal from "../components/FloorPlanModal";
-import DocumentsModal from "../components/DocumentsModal";
+import RSVPModal from "@/components/RSVPModal";
+import EditEventModal from "@/components/EditEventModal";
+import VendorsModal from "@/components/VendorsModal";
+import VenuesModal from "@/components/VenuesModal";
+import AddVenuesModal from "@/components/AddVenuesModal";
+import ScheduleModal from "@/components/ScheduleModal";
+import AddScheduleModal from "@/components/AddScheduleModal";
+import EditScheduleModal from "@/components/EditScheduleModal";
+import EditVenueModal from "@/components/EditVenueModal";
+import EditVendorModal from "@/components/EditVendorModal";
+import FloorPlanModal from "@/components/FloorPlanModal";
+import DocumentsModal from "@/components/DocumentsModal";
 
 // Backend API
-import { getAllEvents } from "../backend/api/EventData";
-import { getVendors } from "../backend/api/EventVendor";
-import { getGuests } from "../backend/api/EventGuest";
+import { getAllEvents } from "@/backend/api/EventData";
+import { getVendors } from "@/backend/api/EventVendor";
+import { getGuests } from "@/backend/api/EventGuest";
 
 export default function EventDetails() {
   const { id } = useParams();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import NewVendorModal from "./NewVendorModal";
-import { deleteVendor } from "../backend/api/EventVendor";
+import NewVendorModal from "@/components/NewVendorModal";
+import { deleteVendor } from "@/backend/api/EventVendor";
 
 export default function VendorsModal({ vendors, onClose, eventId, onEditVendor }) {
   const [searchTerm, setSearchTerm] = useState("");

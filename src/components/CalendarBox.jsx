@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import dayjs from "dayjs";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-import { getAllEvents } from "../backend/api/EventData";
+import { getAllEvents } from "@/backend/api/EventData";
 
 const Calendar = ({ onDayClick }) => {
   // Color mapping for event categories

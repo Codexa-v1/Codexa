@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addVendor, getVendors } from "../backend/api/EventVendor";
+import { addVendor, getVendors } from "@/backend/api/EventVendor";
 
 export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
   const [form, setForm] = useState({

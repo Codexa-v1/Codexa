@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addGuest, getGuests } from "../backend/api/EventGuest";
+import { addGuest, getGuests } from "@/backend/api/EventGuest";
 
 export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
   const [form, setForm] = useState({
