@@ -5,7 +5,7 @@ import Calendar from "../components/CalendarBox";
 import EventPopup from "../components/EventPopup";
 import EventCard from "../components/EventCard";
 import { useEffect, useState } from "react";
-import { getAllEvents } from "../backend/api/EventData";
+import { deleteEvent, getAllEvents } from "../backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
@@ -109,12 +109,7 @@ const HomePage = () => {
                 className="bg-red-600 text-white px-4 py-2 rounded mr-2"
                 onClick={async () => {
                   try {
-                    const res = await fetch(
-                      `http://localhost:3000/api/events/${confirmDeleteId}`,
-                      {
-                        method: "DELETE",
-                      }
-                    );
+                    const res = await deleteEvent(confirmDeleteId);
                     if (!res.ok) throw new Error("Failed to delete event");
                     setConfirmDeleteId(null);
                     // Optionally refresh events list

@@ -1,5 +1,5 @@
 // Add, update, and retrieve guest details and RSVP status.
-const url = 'http://localhost:3000'; // Base URL for the API - the reason why this is the full address is because the frontend and the backend are running on different ports.
+const url = import.meta.env.VITE_BACKEND_URL; // Base URL for the API - the reason why this is the full address is because the frontend and the backend are running on different ports.
 
 export function getGuests(eventId) {
     return fetch(`${url}/api/guests/event/${eventId}`)
