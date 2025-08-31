@@ -110,7 +110,6 @@ const HomePage = () => {
                 onClick={async () => {
                   try {
                     const res = await deleteEvent(confirmDeleteId);
-                    if (!res.ok) throw new Error("Failed to delete event");
                     setConfirmDeleteId(null);
                     // Optionally refresh events list
                     window.location.reload();

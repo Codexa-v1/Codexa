@@ -159,7 +159,6 @@ export default function EventsPage() {
                           onClick={async () => {
                             try {
                               const res = await deleteEvent(confirmDeleteId);
-                              if (!res.ok) throw new Error("Failed to delete event");
                               setConfirmDeleteId(null);
                               window.location.reload();
                             } catch (err) {

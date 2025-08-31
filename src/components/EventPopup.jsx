@@ -59,8 +59,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       floorplan,
     };
     try {
-      const res = createEvent(eventData);
-      if (!res.ok) throw new Error("Failed to create event");
+      const res = await createEvent(eventData);
       setLoading(false);
       setSuccess(true);
       setTimeout(() => {
