@@ -2,13 +2,21 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 
-// ---- mock dependencies ----
+// ---- global mocks ----
+
+// Mock navigate globally
 const mockedNavigate = vi.fn();
-vi.mock("react-router-dom", () => ({
-  useNavigate: () => mockedNavigate,
-}));
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockedNavigate,
+  };
+});
 
+// Mock components
 vi.mock("../components/Navbar", () => ({
   default: () => <nav data-testid="navbar">Navbar</nav>,
 }));
@@ -38,9 +46,11 @@ vi.mock("../components/EventCard", () => ({
   ),
 }));
 
-
-// helper to mock Auth0
-function mockAuth0({ user = { name: "TestUser", sub: "auth0|123" }, isAuthenticated = true } = {}) {
+// ---- helper to mock Auth0 ----
+function mockAuth0({
+  user = { name: "TestUser", sub: "auth0|123" },
+  isAuthenticated = true,
+} = {}) {
   vi.doMock("@auth0/auth0-react", () => ({
     useAuth0: () => ({
       user,
@@ -52,32 +62,43 @@ function mockAuth0({ user = { name: "TestUser", sub: "auth0|123" }, isAuthentica
 
 describe("HomePage", () => {
   beforeEach(() => {
-    vi.resetModules();
+    vi.resetModules(); // reset module cache
     vi.clearAllMocks();
 
+    // Default fetch returns empty array
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve([]), // default: no events
+        json: () => Promise.resolve([]),
       })
     );
   });
 
   test("renders welcome message with user name", async () => {
     mockAuth0();
+
     const { default: HomePage } = await import("../pages/HomePage");
-    render(<HomePage />);
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
+
     expect(await screen.findByText(/Welcome back, TestUser!/i)).toBeInTheDocument();
   });
 
   test("opens and closes Add New Event modal", async () => {
     mockAuth0();
     const { default: HomePage } = await import("../pages/HomePage");
-    render(<HomePage />);
+
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
 
     const addButton = screen.getByRole("button", { name: /Add New Event/i });
     fireEvent.click(addButton);
-
     expect(screen.getByTestId("event-popup")).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Close"));
@@ -89,12 +110,19 @@ describe("HomePage", () => {
   test("renders fallback when no events exist", async () => {
     mockAuth0();
     const { default: HomePage } = await import("../pages/HomePage");
-    render(<HomePage />);
+
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
+
     expect(await screen.findByText(/No events found/i)).toBeInTheDocument();
   });
 
   test("renders upcoming events and see more button", async () => {
     mockAuth0();
+
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
@@ -109,21 +137,25 @@ describe("HomePage", () => {
     );
 
     const { default: HomePage } = await import("../pages/HomePage");
-    render(<HomePage />);
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
 
     expect(await screen.findAllByText("Event 1")).toHaveLength(2);
     expect(screen.getAllByText("Event 2")).toHaveLength(2);
     expect(screen.getAllByText("Event 3")).toHaveLength(2);
 
     const seeMoreBtn = screen.getByRole("button", { name: /See more/i });
-    expect(seeMoreBtn).toBeInTheDocument();
-
     fireEvent.click(seeMoreBtn);
+
     expect(mockedNavigate).toHaveBeenCalledWith("/events");
   });
 
   test("shows cancel confirmation when Cancel clicked", async () => {
     mockAuth0();
+
     const fakeEvent = { _id: "abc123", title: "Deletable Event", date: "2025-08-20" };
     global.fetch = vi.fn(() =>
       Promise.resolve({
@@ -133,16 +165,16 @@ describe("HomePage", () => {
     );
 
     const { default: HomePage } = await import("../pages/HomePage");
-    render(<HomePage />);
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
 
     expect(await screen.findAllByText("Deletable Event")).toHaveLength(2);
 
-    expect(
-  await screen.findByText((content) => content.includes("Cancel"))
-).toBeInTheDocument();
+    expect(await screen.findByText((content) => content.includes("Cancel"))).toBeInTheDocument();
 
-
-    //fireEvent.click(screen.getByRole("button", { name: /No, Go Back/i }));
     await waitFor(() => {
       expect(screen.queryByText(/Cancel\?/i)).not.toBeInTheDocument();
     });

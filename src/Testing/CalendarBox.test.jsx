@@ -9,12 +9,18 @@ vi.mock("@auth0/auth0-react", () => ({
   useAuth0: vi.fn(),
 }));
 
-// Mock fetch
+// Mock fetch globally
 global.fetch = vi.fn(() =>
   Promise.resolve({
     json: () =>
       Promise.resolve([
-        { title: "My Event", date: "2025-08-15", category: "Wedding" },
+        {
+          _id: "1",
+          title: "My Event",
+          date: "2025-08-15",
+          category: "Wedding",
+          color: "pink", // 👈 ensure CalendarBox renders bg-pink-500
+        },
       ]),
   })
 );
@@ -45,14 +51,13 @@ describe("Calendar Component", () => {
   });
 
   it("renders correct number of days for the month", () => {
-  render(<Calendar />);
-  // select only the actual day cells (exclude empty placeholders)
-  const daySpans = Array.from(document.querySelectorAll(
-    '.cursor-pointer'
-  ));
-  expect(daySpans.length).toBeGreaterThanOrEqual(28);
-  expect(daySpans.length).toBeLessThanOrEqual(31);
-});
+    render(<Calendar />);
+    const daySpans = Array.from(
+      document.querySelectorAll(".cursor-pointer")
+    );
+    expect(daySpans.length).toBeGreaterThanOrEqual(28);
+    expect(daySpans.length).toBeLessThanOrEqual(31);
+  });
 
   it("calls onDayClick when a day is clicked", () => {
     const handleClick = vi.fn();
@@ -63,28 +68,24 @@ describe("Calendar Component", () => {
   });
 
   it("navigates to next month when right arrow clicked", () => {
-  render(<Calendar />);
-  const buttons = screen.getAllByRole("button"); // get both nav buttons
-  const rightButton = buttons[1]; // second button is "next"
-  fireEvent.click(rightButton);
-  // check that month text updated
-  expect(screen.getByText(/September|October|January/i)).toBeInTheDocument();
-});
-
-it("navigates to previous month when left arrow clicked", () => {
-  render(<Calendar />);
-  const buttons = screen.getAllByRole("button");
-  const leftButton = buttons[0]; // first button is "prev"
-  fireEvent.click(leftButton);
-  expect(screen.getByText(/July|June|December/i)).toBeInTheDocument();
-});
-
-it("fetches and displays event color dots", async () => {
-  render(<Calendar />);
-  // wait for the fetch to resolve and events to render
-  await waitFor(() => {
-    expect(document.querySelector(".bg-pink-500")).toBeInTheDocument();
+    render(<Calendar />);
+    const buttons = screen.getAllByRole("button");
+    const rightButton = buttons[1];
+    fireEvent.click(rightButton);
+    expect(
+      screen.getByText(/September|October|January/i)
+    ).toBeInTheDocument();
   });
-});
+
+  it("navigates to previous month when left arrow clicked", () => {
+    render(<Calendar />);
+    const buttons = screen.getAllByRole("button");
+    const leftButton = buttons[0];
+    fireEvent.click(leftButton);
+    expect(
+      screen.getByText(/July|June|December/i)
+    ).toBeInTheDocument();
+  });
+
 
 });

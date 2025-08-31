@@ -1,129 +1,146 @@
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import EventDetails from "../pages/EventDetails"; 
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import { getGuests } from "@/backend/api/EventGuest";
+import { getAllEvents } from "@/backend/api/EventData"; 
+import { getVendors } from "@/backend/api/EventVendor";
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { vi } from "vitest";
-import "@testing-library/jest-dom";
-import EventDetails from "../pages/EventDetails";
 
-// ---- mocks for child components ----
-vi.mock("../components/Navbar", () => ({
-  default: () => <div data-testid="navbar">Navbar</div>,
+// ------------------ MOCKS ------------------
+
+// Router mocks
+vi.mock("react-router-dom", () => ({
+  useParams: vi.fn(),
+  useNavigate: vi.fn(),
 }));
-vi.mock("../components/EditEventModal", () => ({
-  default: ({ onClose }) => (
-    <div data-testid="edit-modal">
-      EditEventModal
-      <button onClick={onClose}>Close</button>
-    </div>
-  ),
+
+// Auth0 mock
+vi.mock("@auth0/auth0-react", () => ({
+  useAuth0: vi.fn(),
+}));
+
+// Backend API mocks
+vi.mock("../backend/api/EventData", () => ({
+  getAllEvents: vi.fn(),
+}));
+vi.mock("../backend/api/EventVendor", () => ({
+  getVendors: vi.fn(),
+}));
+vi.mock("../backend/api/EventGuest", () => ({
+  getGuests: vi.fn(),
+}));
+
+// Mock modals & child components 
+vi.mock("../components/Navbar", () => ({
+  default: () => <div>Mock Navbar</div>,
 }));
 vi.mock("../components/RSVPModal", () => ({
-  default: ({ onClose }) => (
-    <div data-testid="rsvp-modal">
-      RSVPModal
-      <button onClick={onClose}>Close</button>
-    </div>
-  ),
+  default: (props) => <div>Mock RSVPModal {props.eventId}</div>,
 }));
 vi.mock("../components/VendorsModal", () => ({
-  default: ({ onClose }) => (
-    <div data-testid="vendors-modal">
-      VendorsModal
-      <button onClick={onClose}>Close</button>
-    </div>
-  ),
+  default: () => <div>Mock VendorsModal</div>,
 }));
-vi.mock("../components/FloorPlanModal", () => ({
-  default: ({ onClose }) => (
-    <div data-testid="floorplan-modal">
-      FloorPlanModal
-      <button onClick={onClose}>Close</button>
-    </div>
-  ),
+vi.mock("../components/VenuesModal", () => ({
+  default: () => <div>Mock VenuesModal</div>,
 }));
-vi.mock("../components/DocumentsModal", () => ({
-  default: ({ onClose }) => (
-    <div data-testid="documents-modal">
-      DocumentsModal
-      <button onClick={onClose}>Close</button>
-    </div>
-  ),
+vi.mock("../components/EditEventModal", () => ({
+  default: () => <div>Mock EditEventModal</div>,
+}));
+vi.mock("../components/WeatherCard", () => ({
+  default: () => <div>Mock WeatherCard</div>,
 }));
 
-// helper: render with router param
-function renderWithRouter(initialPath = "/event/789") {
-  return render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <Routes>
-        <Route path="/event/:id" element={<EventDetails />} />
-      </Routes>
-    </MemoryRouter>
-  );
-}
+// ------------------ TEST DATA ------------------
+const fakeEvent = {
+  _id: "123",
+  title: "My Test Event",
+  category: "Wedding",
+  status: "Planned",
+  date: new Date().toISOString(),
+  startTime: "10:00",
+  endTime: "12:00",
+  location: "Cape Town",
+  description: "A beautiful test event",
+  rsvpTotal: 100,
+  rsvpCurrent: 25,
+  budget: 50000,
+};
 
 describe("EventDetails", () => {
-  it("renders 'Event Not Found' when id is invalid", () => {
-    renderWithRouter("/event/999");
-    expect(screen.getByText("Event Not Found")).toBeInTheDocument();
-    expect(screen.getByText("Back to Events")).toBeInTheDocument();
+  beforeEach(() => {
+    // Reset mocks
+    vi.clearAllMocks();
+
+    // Router params and navigate
+    useParams.mockReturnValue({ id: "123" });
+    useNavigate.mockReturnValue(vi.fn());
+
+    // Auth user
+    useAuth0.mockReturnValue({ user: { sub: "user_1" } });
+
+    // API responses
+    getAllEvents.mockResolvedValue([fakeEvent]);
+    getGuests.mockResolvedValue([{ name: "Alice" }]);
+    getVendors.mockResolvedValue([{ name: "Caterer" }]);
+
+    // navigator + alert mocks
+    Object.assign(navigator, {
+      clipboard: { writeText: vi.fn() },
+      share: vi.fn().mockResolvedValue(),
+    });
+    vi.spyOn(window, "alert").mockImplementation(() => {});
   });
 
-  it("renders event details for valid id", () => {
-  renderWithRouter("/event/789");
-  expect(screen.getByText("Emily & Jake’s Wedding")).toBeInTheDocument();
-  expect(screen.getByText("Wedding")).toBeInTheDocument();
-  expect(screen.getByText("Budget")).toBeInTheDocument();
-  expect(screen.getByText(/R\s?120000/)).toBeInTheDocument();
-});
+  it("renders event details after fetching", async () => {
+    render(<EventDetails />);
 
-
-  it("opens and closes EditEventModal", () => {
-    renderWithRouter("/event/789");
-    fireEvent.click(screen.getByText("Edit Event"));
-    expect(screen.getByTestId("edit-modal")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Close"));
-    expect(screen.queryByTestId("edit-modal")).not.toBeInTheDocument();
+    // Wait for async data load
+    expect(await screen.findByText("My Test Event")).toBeInTheDocument();
+    expect(screen.getByText("Wedding")).toBeInTheDocument();
+    expect(screen.getByText("Planned")).toBeInTheDocument();
+    expect(screen.getByText("R50000")).toBeInTheDocument();
   });
 
-  it("opens and closes RSVPModal", () => {
-  renderWithRouter("/event/789");
-  fireEvent.click(screen.getByRole("button", { name: /view rsvp list/i }));
-  expect(screen.getByTestId("rsvp-modal")).toBeInTheDocument();
-  fireEvent.click(screen.getByText("Close"));
-  expect(screen.queryByTestId("rsvp-modal")).not.toBeInTheDocument();
-});
-
-
-  it("opens and closes VendorsModal", () => {
-  renderWithRouter("/event/789");
-  fireEvent.click(screen.getByRole("button", { name: /view vendors/i }));
-  expect(screen.getByTestId("vendors-modal")).toBeInTheDocument();
-  fireEvent.click(screen.getByText("Close"));
-  expect(screen.queryByTestId("vendors-modal")).not.toBeInTheDocument();
-});
-
-it("opens and closes DocumentsModal", () => {
-  renderWithRouter("/event/789");
-  fireEvent.click(screen.getByRole("button", { name: /view documents/i }));
-  expect(screen.getByTestId("documents-modal")).toBeInTheDocument();
-  fireEvent.click(screen.getByText("Close"));
-  expect(screen.queryByTestId("documents-modal")).not.toBeInTheDocument();
-});
-
-
-  it("opens and closes FloorPlanModal", () => {
-    renderWithRouter("/event/789");
-    fireEvent.click(screen.getByText("View Floor Plan"));
-    expect(screen.getByTestId("floorplan-modal")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("Close"));
-    expect(screen.queryByTestId("floorplan-modal")).not.toBeInTheDocument();
+  it("shows 'Event Not Found' when event ID is missing", async () => {
+    getAllEvents.mockResolvedValue([]);
+    render(<EventDetails />);
+    expect(
+      await screen.findByText("Event Not Found")
+    ).toBeInTheDocument();
   });
 
-  // it("opens and closes DocumentsModal", () => {
-  //   renderWithRouter("/event/789");
-  //   fireEvent.click(screen.getByText(" View Documents"));
-  //   expect(screen.getByTestId("documents-modal")).toBeInTheDocument();
-  //   fireEvent.click(screen.getByText("Close"));
-  //   expect(screen.queryByTestId("documents-modal")).not.toBeInTheDocument();
-  // });
+  it("opens Edit Event modal when button clicked", async () => {
+    render(<EventDetails />);
+    const btn = await screen.findByRole("button", { name: /Edit Event/i });
+    fireEvent.click(btn);
+    expect(screen.getByText("Mock EditEventModal")).toBeInTheDocument();
+  });
+
+  it("sends invites via navigator.share if available", async () => {
+    render(<EventDetails />);
+    const btn = await screen.findByRole("button", { name: /Send Invite/i });
+    fireEvent.click(btn);
+    await waitFor(() => {
+      expect(navigator.share).toHaveBeenCalled();
+    });
+  });
+
+  it("falls back to clipboard + alert if navigator.share not available", async () => {
+    delete navigator.share;
+    render(<EventDetails />);
+    const btn = await screen.findByRole("button", { name: /Send Invite/i });
+    fireEvent.click(btn);
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalled();
+      expect(window.alert).toHaveBeenCalledWith("Link copied to clipboard!");
+    });
+  });
+
+  it("switches tabs and renders correct modal", async () => {
+    render(<EventDetails />);
+    const vendorsTab = await screen.findByRole("button", { name: /Vendors/i });
+    fireEvent.click(vendorsTab);
+    expect(await screen.findByText("Mock VendorsModal")).toBeInTheDocument();
+  });
 });

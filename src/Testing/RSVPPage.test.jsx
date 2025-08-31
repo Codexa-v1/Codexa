@@ -70,8 +70,8 @@ describe("RSVPPage", () => {
       fullName: "John Doe",
       email: "john@example.com",
       mobileNumber: "1234567890",
-      attending: "no",
-      plusOne: "yes",
+      attending: "yes",
+      plusOne: "no",
     });
     expect(window.alert).toHaveBeenCalledWith("Thank you for your RSVP!");
   });

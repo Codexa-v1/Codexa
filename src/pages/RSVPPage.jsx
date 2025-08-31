@@ -164,10 +164,11 @@ export default function RSVPPage() {
 
       <form onSubmit={handleSubmit} className=" space-y-6">
         <section>
-          <label className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="Full name" className="block text-gray-700 font-medium mb-1">
             Full Name
           </label>
           <input
+            id="Full name"
             type="text"
             placeholder="Full Name"
             value={fullName}
@@ -175,8 +176,9 @@ export default function RSVPPage() {
             className="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300"
             required
           />
-          <label className="block text-gray-700 font-medium mb-1">Email</label>
+          <label htmlFor="email" className="block text-gray-700 font-medium mb-1">Email</label>
           <input
+            id="email"
             type="email"
             placeholder="example@gmail.com"
             value={email}
@@ -184,10 +186,11 @@ export default function RSVPPage() {
             className="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300"
             required
           />
-          <label className="block text-gray-700 font-medium mb-1">
+          <label htmlFor="mobileNumber" className="block text-gray-700 font-medium mb-1">
             Mobile Number
           </label>
           <input
+            id="mobileNumber"
             type="number"
             value={mobileNumber}
             onChange={(e) => setMobileNumber(e.target.value)}

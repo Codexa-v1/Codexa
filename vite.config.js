@@ -18,7 +18,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',   // React Testing Library needs DOM
-    setupFiles: './src/setupTests.js', // Jest-DOM matchers, etc.
+    setupFiles: './src/setupTests.jsx', // Jest-DOM matchers, etc.
     coverage: {
       provider: 'v8',
       reporter: ['lcov', 'text'], // required for Codecov + console output
