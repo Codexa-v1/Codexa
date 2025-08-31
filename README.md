@@ -27,7 +27,7 @@ The app allows users to:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/[your-org-or-username]/Codexa.git
+git clone https://github.com/Codexa-v1/Codexa.git
 cd Codexa
 ```
 
@@ -77,3 +77,4 @@ Full documentation (meeting minutes, sprints, design decisions) is available on 
 - Ntando: Testing + Frontend
 - Ntobeko: Frontend Development
 
+[![codecov](https://codecov.io/github/Codexa-v1/Codexa/graph/badge.svg?token=A79VJR62ZH)](https://codecov.io/github/Codexa-v1/Codexa)

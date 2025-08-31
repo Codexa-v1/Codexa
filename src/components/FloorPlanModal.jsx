@@ -7,6 +7,7 @@ export default function FloorPlanModal() {
   return (
     <section className="bg-white rounded-lg shadow-lg p-8 w-full relative">
       <h3 className="text-xl font-bold mb-4 text-green-900">Floor plans</h3>
+      <h4 className="text-lg font-semibold mb-2 text-green-800">Upload Floor Plan</h4>
 
       {floorPlans && floorPlans.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -46,7 +47,7 @@ export default function FloorPlanModal() {
       ) : (
         <p className="text-gray-500">No floorPlans available for this event.</p>
       )}
-      <DocumentUpload />
+  <DocumentUpload />
     </section>
   );
 }
