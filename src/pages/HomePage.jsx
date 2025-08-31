@@ -9,7 +9,7 @@ import { getAllEvents } from "@/backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
-const HomePage = () => {
+const HomePage = ({ onSeeMore }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated } = useAuth0();
   const [events, setEvents] = useState([]);
@@ -86,7 +86,11 @@ const HomePage = () => {
             {Array.isArray(events) && events.length > 3 && (
               <button
                 className="mt-2 w-full bg-green-700 text-white py-2 rounded hover:bg-green-900 font-semibold"
-                onClick={() => navigate("/events")}
+                onClick={() => {
+                  if (onSeeMore) {
+                    onSeeMore();
+                  }
+                }}
               >
                 See more...
               </button>

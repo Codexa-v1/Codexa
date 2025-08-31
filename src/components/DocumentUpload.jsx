@@ -23,26 +23,29 @@ export default function DocumentUpload() {
   };
 
   return (
-    <div className="flex w-fit gap-2 items-center border-black/10 border p-2 mt-4 rounded-lg">
-      <input
-        type="file"
-        onChange={handleFileChange}
-        className="hidden"
-        id="fileInput"
-      />
-      <label
-        htmlFor="fileInput"
-        className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
-      >
-        Choose File
-      </label>
-      {file && <span>{file.name}</span>}
-      <button
-        onClick={handleUpload}
-        className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700"
-      >
-        Upload
-      </button>
+    <div className="flex flex-col w-fit gap-2 items-center border-black/10 border p-2 mt-4 rounded-lg">
+      <span className="font-semibold text-green-700 mb-1">Upload Floor Plan</span>
+      <div className="flex gap-2 items-center">
+        <input
+          type="file"
+          onChange={handleFileChange}
+          className="hidden"
+          id="fileInput"
+        />
+        <label
+          htmlFor="fileInput"
+          className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
+        >
+          Choose File
+        </label>
+        {file && <span>{file.name}</span>}
+        <button
+          onClick={handleUpload}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700"
+        >
+          Upload
+        </button>
+      </div>
     </div>
   );
 }
