@@ -34,7 +34,7 @@ const HomePage = ({ onSeeMore }) => {
   return (
     <section className="home-page min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
       <Navbar />
-      <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans">
+      <section className="p-6 max-w-screen-xl mx-auto min-h-screen font-sans">
         {/* Header */}
         <section className="flex justify-between items-center">
           <h2 className="text-3xl font-bold text-green-900">
