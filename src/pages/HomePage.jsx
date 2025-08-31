@@ -5,7 +5,7 @@ import Calendar from "@/components/CalendarBox";
 import EventPopup from "@/components/EventPopup";
 import EventCard from "@/components/EventCard";
 import { useEffect, useState } from "react";
-import { getAllEvents } from "@/backend/api/EventData";
+import { deleteEvent, getAllEvents } from "../backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
@@ -113,13 +113,7 @@ const HomePage = ({ onSeeMore }) => {
                 className="bg-red-600 text-white px-4 py-2 rounded mr-2"
                 onClick={async () => {
                   try {
-                    const res = await fetch(
-                      `${import.meta.env.VITE_BACKEND_URL}/api/events/${confirmDeleteId}`,
-                      {
-                        method: "DELETE",
-                      }
-                    );
-                    if (!res.ok) throw new Error("Failed to delete event");
+                    const res = await deleteEvent(confirmDeleteId);
                     setConfirmDeleteId(null);
                     // Optionally refresh events list
                     window.location.reload();

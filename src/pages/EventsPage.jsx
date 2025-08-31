@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import EventPopup from "@/components/EventPopup";
 import dayjs from "dayjs";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getAllEvents } from "@/backend/api/EventData";
+import { getAllEvents, deleteEvent } from "../backend/api/EventData";
 
 export default function EventsPage() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -158,11 +158,7 @@ export default function EventsPage() {
                           className="bg-red-600 text-white px-4 py-2 rounded mr-2"
                           onClick={async () => {
                             try {
-                              const res = await fetch(
-                                `${import.meta.env.VITE_BACKEND_URL}/api/events/${confirmDeleteId}`,
-                                { method: "DELETE" }
-                              );
-                              if (!res.ok) throw new Error("Failed to delete event");
+                              const res = await deleteEvent(confirmDeleteId);
                               setConfirmDeleteId(null);
                               window.location.reload();
                             } catch (err) {

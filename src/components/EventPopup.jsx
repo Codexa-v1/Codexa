@@ -59,12 +59,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       floorplan,
     };
     try {
-  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(eventData),
-      });
-      if (!res.ok) throw new Error("Failed to create event");
+      const res = await createEvent(eventData);
       setLoading(false);
       setSuccess(true);
       setTimeout(() => {
