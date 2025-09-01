@@ -112,6 +112,7 @@ export default function VenuesModal({ eventId, onClose, onEditVenue }) {
                   <p><span className="font-medium">Email:</span> {venue.venueEmail || "-"}</p>
                   <p><span className="font-medium">Capacity:</span> {venue.capacity || "-"}</p>
                   <p><span className="font-medium">Status:</span> {venue.venueStatus || "-"}</p>
+                  <p><span className="font-medium">Cost:</span> {venue.venueCost || "-"}</p>
                 </div>
                 <div className="flex gap-2 mt-4">
                   <button

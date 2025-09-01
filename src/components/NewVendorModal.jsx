@@ -103,7 +103,7 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
 
             <section className="relative">
               {form.vendorCost && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Cost</label>}
-              <input name="vendorCost" value={form.vendorCost} onChange={handleChange} required placeholder={form.vendorCost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
+              <input name="vendorCost" value={form.vendorCost} onChange={handleChange} type="number" min="0" required placeholder={form.vendorCost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
             </section>
           </section>
 

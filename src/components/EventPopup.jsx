@@ -57,7 +57,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       },
       startTime,
       endTime,
-      floorplan, // this will be a File object
+      floorplan: "floorplan.com", // this will be a File object
     };
 
     try {
