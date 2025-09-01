@@ -143,9 +143,11 @@ describe("HomePage", () => {
       </MemoryRouter>
     );
 
-    expect(await screen.findAllByText("Event 1")).toHaveLength(2);
-    expect(screen.getAllByText("Event 2")).toHaveLength(2);
-    expect(screen.getAllByText("Event 3")).toHaveLength(2);
+    //event card only renders 3 events once, so .toHaveLength(1)
+
+    expect(await screen.findAllByText("Event 1")).toHaveLength(1);
+    expect(screen.getAllByText("Event 2")).toHaveLength(1);
+    expect(screen.getAllByText("Event 3")).toHaveLength(1);
 
     const seeMoreBtn = screen.getByRole("button", { name: /See more/i });
     fireEvent.click(seeMoreBtn);
@@ -153,30 +155,112 @@ describe("HomePage", () => {
     expect(mockedNavigate).toHaveBeenCalledWith("/events");
   });
 
-  test("shows cancel confirmation when Cancel clicked", async () => {
-    mockAuth0();
+  // ...
 
-    const fakeEvent = { _id: "abc123", title: "Deletable Event", date: "2025-08-20" };
-    global.fetch = vi.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve([fakeEvent]),
-      })
-    );
+test("opens cancel confirmation popup when Cancel button is clicked", async () => {
+  mockAuth0();
 
-    const { default: HomePage } = await import("../pages/HomePage");
-    render(
-      <MemoryRouter>
-        <HomePage />
-      </MemoryRouter>
-    );
+  const fakeEvent = { _id: "abc123", title: "Deletable Event", date: "2025-08-20" };
+  global.fetch = vi.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve([fakeEvent]),
+    })
+  );
 
-    expect(await screen.findAllByText("Deletable Event")).toHaveLength(2);
+  const { default: HomePage } = await import("../pages/HomePage");
+  render(
+    <MemoryRouter>
+      <HomePage />
+    </MemoryRouter>
+  );
 
-    expect(await screen.findByText((content) => content.includes("Cancel"))).toBeInTheDocument();
+  // Ensure event is shown
+  expect(await screen.findByText("Deletable Event")).toBeInTheDocument();
 
-    await waitFor(() => {
-      expect(screen.queryByText(/Cancel\?/i)).not.toBeInTheDocument();
-    });
+  // Click the Cancel button in EventCard
+  fireEvent.click(screen.getByText("Cancel"));
+
+  // Confirmation popup should appear
+  expect(
+    await screen.findByText(/Cancel Event\?/i)
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(/Are you sure you want to cancel this event/i)
+  ).toBeInTheDocument();
+});
+
+test("closes confirmation popup when No, Go Back is clicked", async () => {
+  mockAuth0();
+
+  const fakeEvent = { _id: "abc123", title: "Deletable Event", date: "2025-08-20" };
+  global.fetch = vi.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve([fakeEvent]),
+    })
+  );
+
+  const { default: HomePage } = await import("../pages/HomePage");
+  render(
+    <MemoryRouter>
+      <HomePage />
+    </MemoryRouter>
+  );
+
+  fireEvent.click(await screen.findByText("Cancel"));
+
+  // Confirmation popup should appear
+  expect(await screen.findByText(/Cancel Event\?/i)).toBeInTheDocument();
+
+  // Click "No, Go Back"
+  fireEvent.click(screen.getByText("No, Go Back"));
+
+  await waitFor(() => {
+    expect(screen.queryByText(/Cancel Event\?/i)).not.toBeInTheDocument();
   });
+});
+
+test("deletes event and reloads page when Yes, Cancel is clicked", async () => {
+  mockAuth0();
+
+  const fakeEvent = { _id: "abc123", title: "Deletable Event", date: "2025-08-20" };
+  global.fetch = vi.fn()
+    .mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve([fakeEvent]),
+    })
+    .mockResolvedValueOnce({ ok: true });
+
+  const originalReload = window.location.reload;
+  Object.defineProperty(window.location, "reload", {
+    configurable: true,
+    value: vi.fn(),
+  });
+
+  const { default: HomePage } = await import("../pages/HomePage");
+  render(
+    <MemoryRouter>
+      <HomePage />
+    </MemoryRouter>
+  );
+
+  fireEvent.click(await screen.findByText("Cancel"));
+  fireEvent.click(await screen.findByText("Yes, Cancel"));
+
+  await waitFor(() => {
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/api/events/abc123"),
+      expect.objectContaining({ method: "DELETE" })
+    );
+    expect(window.location.reload).toHaveBeenCalled();
+  });
+
+  // restore
+  Object.defineProperty(window.location, "reload", {
+    configurable: true,
+    value: originalReload,
+  });
+});
+
 });
