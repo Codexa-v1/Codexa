@@ -19,7 +19,7 @@ server.use(cors({
     'http://localhost:5173',
     'https://victorious-ground-09423c310.1.azurestaticapps.net'
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
 
