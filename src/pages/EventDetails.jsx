@@ -163,7 +163,7 @@ export default function EventDetails() {
             onSave={handleEditEventSave}
           />
         )}
-        <h2 className="text-3xl font-bold text-green-900 mb-2">
+        <h2 className="text-[clamp(1.5rem,4vw,2.5rem)] font-bold text-green-900 mb-2">
           {event.title}
         </h2>
         <section className="flex flex-wrap items-center gap-4 text-sm text-gray-700 mb-3">
@@ -176,7 +176,7 @@ export default function EventDetails() {
         <p className="text-gray-600 mb-6">{event.description}</p>
 
         {/* Overview Cards */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
+        <section className="hidden md:grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
             <h4 className="font-semibold">Total Guests</h4>
             <p className="text-2xl font-bold">{event.rsvpTotal}</p>
@@ -204,7 +204,7 @@ export default function EventDetails() {
 
       {/* Tabs Navigation */}
       <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
-        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
+        <section className="flex overflow-x-auto whitespace-nowrap mb-6 bg-gray-100 rounded-lg">
           {[
             "overview",
             "rsvp",
@@ -216,7 +216,7 @@ export default function EventDetails() {
           ].map((tab) => (
             <button
               key={tab}
-              className={`px-4 py-2 ${
+              className={`px-4 py-2 inline-block ${
                 activeTab === tab ? "text-green-700 font-bold" : "text-gray-500"
               }`}
               onClick={() => setActiveTab(tab)}
@@ -230,7 +230,7 @@ export default function EventDetails() {
         {/* Tab Content */}
         <section className="display">
           {activeTab === "overview" && (
-            <section className="grid grid-cols-2 gap-6 mb-8">
+            <section className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
               {/* RSVP Card */}
               <section
                 className="bg-green-100 rounded-lg shadow p-6 cursor-pointer hover:bg-green-200 transition"

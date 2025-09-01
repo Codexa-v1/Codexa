@@ -28,6 +28,13 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 left-0 z-10 w-full bg-white px-6 py-3 shadow-sm">
       <div className="flex justify-between items-center">
+        {/* Hamburger (only mobile) */}
+        <button
+          className="md:hidden text-2xl text-gray-700"
+          onClick={() => setMobileOpen((prev) => !prev)}
+        >
+          {mobileOpen ? <HiX /> : <HiMenu />}
+        </button>
         <h1
           className="text-2xl font-bold text-green-800 cursor-pointer"
           onClick={() => navigate("/")}
@@ -58,14 +65,6 @@ const Navbar = () => {
             Events
           </a>
         </section>
-
-        {/* Hamburger (only mobile) */}
-        <button
-          className="md:hidden text-2xl text-gray-700"
-          onClick={() => setMobileOpen((prev) => !prev)}
-        >
-          {mobileOpen ? <HiX /> : <HiMenu />}
-        </button>
 
         {/* Profile Dropdown */}
         <section className="relative ml-4" ref={dropdownRef}>

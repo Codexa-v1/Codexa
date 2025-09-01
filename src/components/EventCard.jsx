@@ -3,7 +3,8 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
 const EventCard = ({ event, setConfirmDeleteId }) => {
-  const { bgColor, labelColor } = eventColors[event.category] || eventColors.Other;
+  const { bgColor, labelColor } =
+    eventColors[event.category] || eventColors.Other;
   const navigate = useNavigate();
 
   return (
@@ -48,7 +49,7 @@ const EventCard = ({ event, setConfirmDeleteId }) => {
           className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90"
           onClick={() => navigate(`/events/${event._id}`)}
         >
-          View Event
+          View
         </button>
         <button
           className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90"
