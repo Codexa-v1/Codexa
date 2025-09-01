@@ -183,9 +183,13 @@ export default function EventDetails() {
         {/* Overview Cards */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
-            <h4 className="font-semibold">Total Guests</h4>
-            <p className="text-2xl font-bold">{event.rsvpTotal}</p>
-            <p className="text-sm text-gray-500">{event.rsvpCurrent} confirmed</p>
+            <h4 className="font-semibold">Guests</h4>
+            <p className="text-2xl font-bold">{guests.length}</p>
+            <p className="text-sm text-gray-500">
+              Accepted: {guests.filter(g => g.rsvpStatus === "Accepted").length} | 
+              Declined: {guests.filter(g => g.rsvpStatus === "Declined").length} | 
+              Pending: {guests.filter(g => g.rsvpStatus === "Pending").length}
+            </p>
           </div>
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
             <h4 className="font-semibold">Vendors</h4>
