@@ -44,7 +44,7 @@ export async function updateGuest(eventId, guestId, guest) {
 }
 
 export async function deleteGuest(eventId, guestId) {
-    fetch(url+'/event/'+eventId+'/guest/'+guestId, {
+    fetch(`${url}/api/guests/event/${eventId}/guest/${guestId}`, {
         method: 'DELETE',   
         headers: {
             'Content-Type': 'application/json'
@@ -60,6 +60,6 @@ export async function deleteGuest(eventId, guestId) {
     .catch(error => {
         console.error('Error deleting guest:', error);
     });
-}   
+} 
 
 export default { getGuests, addGuest, updateGuest, deleteGuest };
