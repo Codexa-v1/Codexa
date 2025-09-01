@@ -232,11 +232,15 @@ test("deletes event and reloads page when Yes, Cancel is clicked", async () => {
     })
     .mockResolvedValueOnce({ ok: true });
 
-  const originalReload = window.location.reload;
-  Object.defineProperty(window.location, "reload", {
-    configurable: true,
-    value: vi.fn(),
-  });
+  // Save original location
+  const originalLocation = window.location;
+
+  // Mock location with reload
+  delete window.location;
+  window.location = {
+    ...originalLocation,
+    reload: vi.fn(),
+  };
 
   const { default: HomePage } = await import("../pages/HomePage");
   render(
@@ -256,11 +260,11 @@ test("deletes event and reloads page when Yes, Cancel is clicked", async () => {
     expect(window.location.reload).toHaveBeenCalled();
   });
 
-  // restore
-  Object.defineProperty(window.location, "reload", {
-    configurable: true,
-    value: originalReload,
-  });
+  // Restore original location
+  window.location = originalLocation;
 });
+
+
+
 
 });
