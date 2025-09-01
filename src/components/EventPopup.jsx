@@ -24,20 +24,21 @@ export default function EventPopup({ onClose, selectedDate }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("Planned");
-  const [floorplan, setFloorplan] = useState("");
+  const [floorplan, setFloorplan] = useState(null);
   const [success, setSuccess] = useState(false);
 
   const handleCreateEvent = async () => {
     setLoading(true);
     setError("");
     setSuccess(false);
-    // Compose date fields as Date objects
+
     const startDateTime =
       startDate && startTime ? new Date(`${startDate}T${startTime}`) : null;
     const endDateTime =
       endDate && endTime ? new Date(`${endDate}T${endTime}`) : null;
-    // Get eventPlanner from Auth0 user ID
+
     const eventPlanner = user?.sub || "demo@user.com";
+
     const eventData = {
       eventPlanner,
       title,
@@ -56,10 +57,11 @@ export default function EventPopup({ onClose, selectedDate }) {
       },
       startTime,
       endTime,
-      floorplan,
+      floorplan, // this will be a File object
     };
+
     try {
-      const res = await createEvent(eventData);
+      await createEvent(eventData);
       setLoading(false);
       setSuccess(true);
       setTimeout(() => {
@@ -239,18 +241,18 @@ export default function EventPopup({ onClose, selectedDate }) {
           </section>
 
           <section>
-              <label htmlFor="budget" className="block font-medium text-gray-700">
-                Budget
-              </label>
-              <input
-                type="number"
-                id="budget"
-                placeholder="Budget"
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={budget}
-                onChange={(e) => setBudget(e.target.value)}
-              />
-            </section>
+            <label htmlFor="budget" className="block font-medium text-gray-700">
+              Budget
+            </label>
+            <input
+              type="number"
+              id="budget"
+              placeholder="Budget"
+              className="w-full border border-gray-300 rounded-md p-2"
+              value={budget}
+              onChange={(e) => setBudget(e.target.value)}
+            />
+          </section>
 
           {/* Description of Event */}
           <section>
@@ -319,22 +321,35 @@ export default function EventPopup({ onClose, selectedDate }) {
               <option value="Cancelled">Cancelled</option>
             </select>
           </section>
-          {/* Floorplan */}
+
+          {/* Floorplan (updated to file input) */}
           <section>
             <label
               htmlFor="floorplan"
               className="block font-medium text-gray-700"
             >
-              Floorplan URL
+              Floorplan
             </label>
             <input
-              type="text"
+              type="file"
               id="floorplan"
-              placeholder="URL to floorplan image"
+              accept="image/*"
               className="w-full border border-gray-300 rounded-md p-2"
-              value={floorplan}
-              onChange={(e) => setFloorplan(e.target.value)}
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) setFloorplan(file);
+              }}
             />
+            {floorplan && (
+              <div className="mt-4">
+                <p className="text-sm text-gray-600 mb-2">Preview:</p>
+                <img
+                  src={URL.createObjectURL(floorplan)}
+                  alt="Floorplan Preview"
+                  className="w-full max-h-96 object-contain border rounded-md shadow"
+                />
+              </div>
+            )}
           </section>
 
           {/* Submit Button */}
