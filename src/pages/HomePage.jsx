@@ -15,6 +15,7 @@ const HomePage = ({ onSeeMore }) => {
   const [events, setEvents] = useState([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -86,11 +87,7 @@ const HomePage = ({ onSeeMore }) => {
             {Array.isArray(events) && events.length > 3 && (
               <button
                 className="mt-2 w-full bg-green-700 text-white py-2 rounded hover:bg-green-900 font-semibold"
-                onClick={() => {
-                  if (onSeeMore) {
-                    onSeeMore();
-                  }
-                }}
+                onClick={() => navigate('/events')}
               >
                 See more...
               </button>
