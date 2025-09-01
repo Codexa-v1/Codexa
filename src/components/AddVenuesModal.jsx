@@ -50,8 +50,8 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
       venuePhone: "",
       capacity: "",
       venueStatus: "",
-      venueCost: "",
-      venueAvailability: "",
+      //venueCost: "",
+      //venueAvailability: "",
       venueImage: "",
     });
   }
@@ -60,7 +60,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
     if (venues.length === 0) return;
 
     const validVenues = venues.filter(v =>
-      v.venueName && v.venueAddress && v.venueEmail && v.venuePhone && v.capacity && v.venueStatus
+      v.venueName && v.venueAddress && v.venueEmail && v.venuePhone && v.capacity && v.venueStatus// && v.venueAvailability && v.venueCost
     );
 
     if (validVenues.length === 0) {
@@ -106,7 +106,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
 
         <form onSubmit={handleAddVenue} className="space-y-4">
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
+
             <section className="relative">{form.venueName && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Name</label>}
               <input name="venueName" value={form.venueName} onChange={handleChange} required placeholder={form.venueName ? "" : "Name"} className="px-3 py-2 border rounded w-full" />
             </section>
@@ -127,7 +127,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
               <input name="capacity" type="number" value={form.capacity} onChange={handleChange} required placeholder={form.capacity ? "" : "Capacity"} className="px-3 py-2 border rounded w-full" />
             </section>
 
-            <section className="relative">{form.venueCost && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Cost</label>}
+            {/*<section className="relative">{form.venueCost && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Cost</label>}
               <input name="venueCost" type="number" value={form.venueCost} onChange={handleChange} required placeholder={form.venueCost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
             </section>
 
@@ -137,7 +137,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                 <option value="Available">Available</option>
                 <option value="Unavailable">Unavailable</option>
               </select>
-            </section>
+            </section>*/}
 
             <section className="relative">{form.venueStatus && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Status</label>}<select name="venueStatus" value={form.venueStatus} onChange={handleChange} className="px-3 py-2 border rounded w-full"><option value="" disabled hidden>Venue Status</option><option value="Pending">Pending</option><option value="Accepted">Accepted</option><option value="Declined">Declined</option></select></section>
           </section>
