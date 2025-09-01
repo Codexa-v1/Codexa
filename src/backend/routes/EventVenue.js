@@ -38,40 +38,51 @@ router.get('/event/:eventId', async (req, res) => {
 // This is to create a new venue for a particular event - if need be, we will implement a post request to create a
 // venue with a specific id
 router.post('/event/:eventId', async (req, res) => {
-    try {
-        const { eventId } = req.params;
+  try {
+    const { eventId } = req.params;
 
-        // Step 1: Check that the event exists
-        const event = await Event.findById(eventId);
-        if (!event) return res.status(404).send('Event not found');
+    // Log the request body to see what frontend is sending
+    console.log("Request body for adding venue:", req.body);
 
-        // Step 2: Create the Venue
-        const newVenue = new Venue({
-            venueAddress: req.body.venueAddress,
-            venueName: req.body.venueName,
-            venueImage: req.body.venueImage,
-            venueEmail: req.body.venueEmail,
-            venuePhone: req.body.venuePhone,
-            capacity: req.body.capacity,
-            venueStatus: req.body.venueStatus
-        });
-
-        const savedVenue = await newVenue.save();
-
-        // Step 3: Create the EventVenue association
-        const newEventVenue = new EventVenue({
-            eventId,
-            venueId: savedVenue._id
-        });
-
-        await newEventVenue.save();
-
-        // Step 4: Return the created venue
-        res.status(201).json(savedVenue);
-    } catch (error) {
-        console.error('Error adding venue:', error);
-        res.status(500).send('Error adding venue');
+    // Validate event ID
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+      return res.status(400).send('Invalid event ID');
     }
+
+    // Check that the event exists
+    const event = await Event.findById(eventId);
+    if (!event) return res.status(404).send('Event not found');
+
+    // Create new Venue
+    const newVenue = new Venue({
+      venueName: req.body.venueName,
+      venueAddress: req.body.venueAddress,
+      venueEmail: req.body.venueEmail,
+      venuePhone: req.body.venuePhone,
+      capacity: Number(req.body.capacity),           // ensure number
+      venueStatus: req.body.venueStatus,
+      venueCost: Number(req.body.venueCost),         // ensure number
+      venueAvailability: req.body.venueAvailability,
+      venueImage: req.body.venueImage || '',         // optional
+    });
+
+    // Save the venue
+    const savedVenue = await newVenue.save();
+
+    // Create EventVenue association
+    const newEventVenue = new EventVenue({
+      eventId,
+      venueId: savedVenue._id
+    });
+    await newEventVenue.save();
+
+    // Respond with the created venue
+    res.status(201).json(savedVenue);
+
+  } catch (error) {
+    console.error('Error adding venue:', error);
+    res.status(500).send('Error adding venue');
+  }
 });
 
 
