@@ -132,5 +132,7 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 ![alt text](../../assets/meetings/Sprint02/TrelloBoard/24th.png)
 - Our Trello board as of 26 August 2025:
 ![alt text](../../assets/meetings/Sprint02/TrelloBoard/26th.png)
+- Trello board as of 31 August 2025:
+![alt text](../../assets/meetings/Sprint02/TrelloBoard/31st.png)
 
 ---

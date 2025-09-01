@@ -23,15 +23,14 @@ This structure helps keep all project documentation organized and easy to naviga
 - Easy-to-use dashboard for managing events
 
 ## Tech Stack
+
+[Tech Stack explained](./development/TechStack.md)
 - **Frontend:** React 19, Vite, Tailwind CSS
 - **[Backend](./development/Backend.md):** Node.js, Express.js, MongoDB
 - **Authentication:** OAuth
 - **Deployment:** Microsoft Azure
 - **Project Management:** Trello
 - **Documentation:** Markdown + GitHub Pages
-
-[Tech Stack explained](./development/TechStack.md)
-
 
 
 ## Methodologies
@@ -56,7 +55,8 @@ We follow the Github Flow methodology:
 - Trello Board (link)
 - GitHub Issues and Pull Requests
 - Microsoft teams
-- [Team communication plan](./planning/Sprint01/Communication.md)
+
+[Team communication plan](./planning/Sprint01/Communication.md)
 
 
 ## Implementation 
@@ -76,5 +76,7 @@ We follow the Github Flow methodology:
     - [Scrum 01](./meetings/sprint02/Scrum01.md)
     - [Scrum 02](./meetings/sprint02/Scrum02.md)
     - [Scrum 03](./meetings/sprint02/Scrum03.md)
+    - [Scrum 04](./meetings/sprint02/Scrum04.md)
+    - [Scrum 05](./meetings/sprint02/Scrum05.md)
 
 ---
