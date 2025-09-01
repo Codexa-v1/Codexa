@@ -106,92 +106,45 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
 
         <form onSubmit={handleAddVenue} className="space-y-4">
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              name="venueName"
-              value={form.venueName}
-              onChange={handleChange}
-              required
-              placeholder="Venue Name"
-              className="px-3 py-2 border rounded w-full"
-            />
-            <input
-              name="venueAddress"
-              value={form.venueAddress}
-              onChange={handleChange}
-              required
-              placeholder="Venue Address"
-              className="px-3 py-2 border rounded w-full"
-            />
-            <input
-              name="venueEmail"
-              value={form.venueEmail}
-              onChange={handleChange}
-              required
-              placeholder="Email"
-              className="px-3 py-2 border rounded w-full"
-            />
-            <input
-              name="venuePhone"
-              value={form.venuePhone}
-              onChange={handleChange}
-              required
-              placeholder="Phone"
-              className="px-3 py-2 border rounded w-full"
-            />
-            <input
-              name="capacity"
-              type="number"
-              value={form.capacity}
-              onChange={handleChange}
-              required
-              placeholder="Capacity"
-              className="px-3 py-2 border rounded w-full"
-            />
-            <input
-              name="venueCost"
-              type="number"
-              value={form.venueCost}
-              onChange={handleChange}
-              required
-              placeholder="Cost"
-              className="px-3 py-2 border rounded w-full"
-            />
-            <select
-              name="venueAvailability"
-              value={form.venueAvailability}
-              onChange={handleChange}
-              className="px-3 py-2 border rounded w-full"
-            > 
-              <option value="" disabled hidden>Venue Availability</option>
-              <option value="Available">Available</option>
-              <option value="Unavailable">Unavailable</option>
-            </select>
-            <select
-              name="venueStatus"
-              value={form.venueStatus}
-              onChange={handleChange}
-              className="px-3 py-2 border rounded w-full"
-            >
-              <option value="" disabled hidden>Venue Status</option>
-              <option value="Pending">Pending</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Declined">Declined</option>
-            </select>
+            
+            <section className="relative">{form.venueName && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Name</label>}
+              <input name="venueName" value={form.venueName} onChange={handleChange} required placeholder={form.venueName ? "" : "Name"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">{form.venueAddress && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Address</label>}
+              <input name="venueAddress" value={form.venueAddress} onChange={handleChange} required placeholder={form.venueAddress ? "" : "Address"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">{form.venueEmail && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Email</label>}
+              <input name="venueEmail" value={form.venueEmail} onChange={handleChange} required placeholder={form.venueEmail ? "" : "Email"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">{form.venuePhone && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Phone</label>}
+              <input name="venuePhone" value={form.venuePhone} onChange={handleChange} required placeholder={form.venuePhone ? "" : "Phone"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">{form.capacity && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Capacity</label>}
+              <input name="capacity" type="number" value={form.capacity} onChange={handleChange} required placeholder={form.capacity ? "" : "Capacity"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">{form.venueCost && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Cost</label>}
+              <input name="venueCost" type="number" value={form.venueCost} onChange={handleChange} required placeholder={form.venueCost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
+            </section>
+
+            <section className="relative">{form.venueAvailability && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Availability</label>}
+              <select name="venueAvailability" value={form.venueAvailability} onChange={handleChange} className="px-3 py-2 border rounded w-full">
+                <option value="" disabled hidden>Venue Availability</option>
+                <option value="Available">Available</option>
+                <option value="Unavailable">Unavailable</option>
+              </select>
+            </section>
+
+            <section className="relative">{form.venueStatus && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Status</label>}<select name="venueStatus" value={form.venueStatus} onChange={handleChange} className="px-3 py-2 border rounded w-full"><option value="" disabled hidden>Venue Status</option><option value="Pending">Pending</option><option value="Accepted">Accepted</option><option value="Declined">Declined</option></select></section>
           </section>
-          <textarea
-            name="venueImage"
-            value={form.venueImage}
-            onChange={handleChange}
-            placeholder="Venue Image URL (optional)"
-            className="px-3 py-2 border rounded w-full"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
-          >
-            + Add Venue
-          </button>
+          <section className="relative">{form.venueImage && <label className="absolute left-3 -top-5 text-xs font-semibold text-red-900 bg-white px-1">Image URL</label>}<textarea name="venueImage" value={form.venueImage} onChange={handleChange} placeholder={form.venueImage ? "" : "Venue Image URL (optional)"} className="px-3 py-2 border rounded w-full" /></section>
+          <button type="submit" className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">+ Add Venue</button>
         </form>
+
 
         {venues.length > 0 && (
           <section className="mt-6">
