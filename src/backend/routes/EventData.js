@@ -46,6 +46,10 @@ router.post('/', async (req, res) => {
         res.status(201).json(savedEvent);
     } catch (err) {
         console.error(err);
+        if (err.name === 'ValidationError') {
+            // Return validation errors for missing/invalid fields
+            return res.status(400).json({ message: 'Validation error', errors: err.errors });
+        }
         res.status(500).json({ message: 'Server error' });
     }
 });

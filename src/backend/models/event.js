@@ -25,7 +25,7 @@ const eventSchema = new mongoose.Schema({
     },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
-    floorplan: { type: String, required: true }, // url to a picture of the floorplans
+    // floorplan removed to match frontend
     rsvpCurrent: { type: Number, default: 0 },
     rsvpTotal: { type: Number, default: 0 }
 }, {timestamps: true});

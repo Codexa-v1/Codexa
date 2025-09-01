@@ -67,7 +67,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       location,
       budget,
       description,
-      status: "Planning",
+  status: "Planning",
       capacity: capacity ? Number(capacity) : undefined,
       category: category === "other" ? newCategory : category,
       organizer: {
@@ -251,7 +251,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 htmlFor="capacity"
                 className="block font-medium text-gray-700"
               >
-                Capacity
+                Capacity <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -260,6 +260,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 className="w-full border border-gray-300 rounded-md p-2"
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
+                required
               />
             </section>
           </section>
