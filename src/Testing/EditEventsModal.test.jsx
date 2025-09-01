@@ -31,12 +31,11 @@ describe("EditEventModal", () => {
 
   it("renders with initial event data", () => {
     render(<EditEventModal event={mockEvent} onClose={onClose} onSave={onSave} />);
-
     expect(screen.getByLabelText(/title/i)).toHaveValue("Birthday Party");
     expect(screen.getByLabelText(/category/i)).toHaveValue("Celebration");
     expect(screen.getByLabelText(/date/i)).toHaveValue("2025-09-10");
     expect(screen.getByLabelText(/location/i)).toHaveValue("Hall A");
-    expect(screen.getByLabelText(/budget/i)).toHaveValue("5,000"); // formatted
+    expect(screen.getByLabelText(/budget/i)).toHaveValue("5,000");
   });
 
   it("calls onClose when cancel button is clicked", () => {
@@ -80,7 +79,6 @@ describe("EditEventModal", () => {
     updateEvent.mockRejectedValueOnce(new Error("Server error"));
 
     render(<EditEventModal event={mockEvent} onClose={onClose} onSave={onSave} />);
-
     fireEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
     await waitFor(() => {
@@ -88,5 +86,34 @@ describe("EditEventModal", () => {
     });
 
     alertSpy.mockRestore();
+  });
+
+  describe("floating labels", () => {
+    it("shows label when field has value", () => {
+      render(<EditEventModal event={mockEvent} onClose={onClose} onSave={onSave} />);
+      // "Title" should already be visible as a label because event.title exists
+      expect(screen.getByText("Title")).toBeInTheDocument();
+      expect(screen.getByText("Category")).toBeInTheDocument();
+      expect(screen.getByText("Budget")).toBeInTheDocument();
+    });
+
+    it("does not show label when field is empty", () => {
+      const emptyEvent = { _id: "456" }; // no fields filled
+      render(<EditEventModal event={emptyEvent} onClose={onClose} onSave={onSave} />);
+      // Since no values, labels shouldn't appear
+      expect(screen.queryByText("Title")).not.toBeInTheDocument();
+      expect(screen.queryByText("Category")).not.toBeInTheDocument();
+      expect(screen.queryByText("Budget")).not.toBeInTheDocument();
+    });
+
+    it("renders label after typing into empty input", () => {
+      const emptyEvent = { _id: "789" }; // no fields filled
+      render(<EditEventModal event={emptyEvent} onClose={onClose} onSave={onSave} />);
+
+      const titleInput = screen.getByPlaceholderText(/title/i);
+      fireEvent.change(titleInput, { target: { value: "My New Event" } });
+
+      expect(screen.getByText("Title")).toBeInTheDocument();
+    });
   });
 });
