@@ -25,7 +25,7 @@ tuned data in our database
 We used eight different schemas for our models, namely: event, guest, vendor, venue, 
 eventguest, eventvendor, eventguest, eventschedule
 
-- The **Event model** has information that we keep on a specific evet
+- The **Event model** has information that we keep on a specific event
 
 ```bash
 import mongoose from "mongoose";
