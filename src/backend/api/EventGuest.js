@@ -29,7 +29,7 @@ export function addGuest(eventId, guest) {
 }
 
 export async function updateGuest(eventId, guestId, guest) {
-    fetch(url+'/event/'+eventId+'/guest/'+guestId, {
+    fetch(url+'/api/guests/event/'+eventId+'/guest/'+guestId, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ export async function updateGuest(eventId, guestId, guest) {
 }
 
 export async function deleteGuest(eventId, guestId) {
-    fetch(url+'/event/'+eventId+'/guest/'+guestId, {
+    fetch(url+'/api/guests/event/'+eventId+'/guest/'+guestId, {
         method: 'DELETE',   
         headers: {
             'Content-Type': 'application/json'

@@ -198,7 +198,7 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                       <td className="py-2 px-3 text-sm border border-gray-200 text-center">
                         <div className="flex gap-2 justify-center items-center">
                           <button className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200"
-                          onClick={() => handleRemoveGuest(guest.id)}>
+                          onClick={() => handleRemoveGuest(guest._id)}>
                             Remove
                           </button>
                           {guest.rsvpStatus === "Pending" && (
