@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage --coverage.reporter=lcov",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
