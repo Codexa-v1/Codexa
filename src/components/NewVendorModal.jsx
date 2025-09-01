@@ -11,7 +11,7 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
     website: "",
     address: "",
     rating: "",
-    cost: "",
+    vendorCost: "",
     notes: ""
   });
 
@@ -102,8 +102,8 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
             </section>
 
             <section className="relative">
-              {form.cost && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Cost</label>}
-              <input name="cost" value={form.cost} onChange={handleChange} required placeholder={form.cost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
+              {form.vendorCost && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Cost</label>}
+              <input name="vendorCost" value={form.vendorCost} onChange={handleChange} required placeholder={form.vendorCost ? "" : "Cost"} className="px-3 py-2 border rounded w-full" />
             </section>
           </section>
 
