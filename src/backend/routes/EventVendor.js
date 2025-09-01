@@ -43,42 +43,48 @@ router.get('/event/:eventId', async (req, res) => {
 // This is to create a new vendor for a particular event - if need be, we will implement a post request to create a
 // vendor with a specific id
 router.post('/event/:eventId', async (req, res) => {
-    try {
-        const { eventId } = req.params;
+  try {
+    const { eventId } = req.params;
 
-        // Step 1: Check that the event exists
-        const event = await Event.findById(eventId);
-        if (!event) return res.status(404).send('Event not found');
+    // Step 1: Check that the event exists
+    const event = await Event.findById(eventId);
+    if (!event) return res.status(404).send('Event not found');
 
-        // Step 2: Create the Vendor
-        const newVendor = new Vendor({
-            name: req.body.name,
-            vendorType: req.body.vendorType,
-            contactPerson: req.body.contactPerson,
-            phone: req.body.phone,
-            email: req.body.email,
-            website: req.body.website,
-            address: req.body.address,
-            rating: req.body.rating,
-            notes: req.body.notes
-        });
+    // Step 2: Prepare Vendor data with proper types
+    const vendorData = {
+      name: req.body.name,
+      vendorType: req.body.vendorType,
+      contactPerson: req.body.contactPerson,
+      phone: req.body.phone,
+      email: req.body.email,
+      website: req.body.website || undefined,
+      address: req.body.address,
+      rating: req.body.rating ? Number(req.body.rating) : undefined,
+      vendorCost: Number(req.body.vendorCost), // must be a number
+      notes: req.body.notes || undefined
+    };
 
-        const savedVendor = await newVendor.save();
-
-        // Step 3: Create the EventVendor association
-        const newEventVendor = new EventVendor({
-            eventId,
-            vendorId: savedVendor._id
-        });
-
-        await newEventVendor.save();
-
-        // Step 4: Return the created vendor
-        res.status(201).json(savedVendor);
-    } catch (error) {
-        console.error('Error adding vendor:', error);
-        res.status(500).send('Error adding vendor');
+    // Validate vendorCost
+    if (isNaN(vendorData.vendorCost)) {
+      return res.status(400).send('vendorCost must be a number');
     }
+
+    const newVendor = new Vendor(vendorData);
+    const savedVendor = await newVendor.save();
+
+    // Step 3: Create the EventVendor association
+    const newEventVendor = new EventVendor({
+      eventId,
+      vendorId: savedVendor._id
+    });
+    await newEventVendor.save();
+
+    // Step 4: Return the created vendor
+    res.status(201).json(savedVendor);
+  } catch (error) {
+    console.error('Error adding vendor:', error);
+    res.status(500).send('Error adding vendor');
+  }
 });
 
 
