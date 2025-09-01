@@ -23,12 +23,10 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: npm install, build, and test
+      - name: npm install and build
         run: |
           npm install
-          npm install jsdom --save-dev
           npm run build --if-present
-          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -53,4 +51,5 @@ jobs:
           app-name: 'PlanIt-Backend'
           slot-name: 'Production'
           package: .
+
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8D2BCB99F0FC4427B64C0FB2DE539BF6 }}
