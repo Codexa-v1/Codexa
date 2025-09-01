@@ -44,7 +44,7 @@ export async function updateGuest(eventId, guestId, guest) {
 }
 
 export async function deleteGuest(eventId, guestId) {
-    fetch(url+'/api/guests/event/'+eventId+'/guest/'+guestId, {
+    fetch(`${url}/api/guests/event/${eventId}/guest/${guestId}`, {
         method: 'DELETE',   
         headers: {
             'Content-Type': 'application/json'
