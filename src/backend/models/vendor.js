@@ -9,7 +9,7 @@ const vendorSchema = new mongoose.Schema({
     website: String,
     address: { type: String, required: true },
     rating: {type: Number, min: 1, max: 5},
-    vendorCost: { type: Number, required: true },
+    //vendorCost: { type: Number, required: true },
     notes: { type: String }
 }, { timestamps: true });
 
