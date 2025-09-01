@@ -87,6 +87,7 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
       // Save all guests sequentially
       const savedGuests = [];
       for (const guest of validGuests) {
+        console.log('Adding guest:', guest);
         const saved = await addGuest(eventId, guest);
         savedGuests.push(saved);
       }
