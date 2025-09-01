@@ -83,23 +83,23 @@ const Calendar = ({ onDayClick }) => {
     <section className="w-full h-full">
       {/* Month & Year Navigation */}
       <section className="flex items-center gap-2 my-14">
-        <h2 className="text-2xl sm:text-3xl font-bold pl-5 text-green-900">
+        <h2 className="text-[clamp(1.25rem,3vw,1.875rem)] sm:text-3xl font-bold pl-5 text-green-900">
           {monthsOfYear[currentMonth]},
         </h2>
-        <h2 className="text-2xl sm:text-3xl font-bold text-green-900">
+        <h2 className="text-[clamp(1.25rem,3vw,1.875rem)] sm:text-3xl font-bold text-green-900">
           {currentYear}
         </h2>
 
         <section className="flex gap-4 ml-auto">
           <button
             onClick={prevMonth}
-            className="w-14 h-14 bg-gray-100 rounded-full flex justify-center items-center text-2xl text-gray-800 hover:bg-gray-200"
+            className="w-12 h-12 bg-gray-100 rounded-full flex justify-center items-center text-2xl text-gray-800 hover:bg-gray-200"
           >
             <HiChevronLeft />
           </button>
           <button
             onClick={nextMonth}
-            className="w-14 h-14 bg-gray-100 rounded-full flex justify-center items-center text-2xl text-gray-800 hover:bg-gray-200"
+            className="w-12 h-12 bg-gray-100 rounded-full flex justify-center items-center text-2xl text-gray-800 hover:bg-gray-200"
           >
             <HiChevronRight />
           </button>

@@ -37,7 +37,7 @@ const HomePage = () => {
       <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans">
         {/* Header */}
         <section className="flex justify-between items-center">
-          <h2 className="text-3xl font-bold text-green-900">
+          <h2 className="text-[clamp(1.5rem,4vw,2rem)] font-bold text-green-900">
             Welcome back, {user.name}!
           </h2>
           <button
@@ -45,7 +45,7 @@ const HomePage = () => {
             onClick={() => setIsModalOpen(true)}
           >
             <FaCalendarPlus />
-            Add New Event
+            <p className="text-[clamp(0.5rem,2.5vw,1.3rem)]">Add New Event</p>
           </button>
         </section>
         {/* Modal with overlay */}
@@ -79,7 +79,13 @@ const HomePage = () => {
             {Array.isArray(events) && events.length > 0 ? (
               events
                 .slice(0, 3)
-                .map((event, index) => <EventCard key={index} event={event} setConfirmDeleteId={setConfirmDeleteId} />)
+                .map((event, index) => (
+                  <EventCard
+                    key={index}
+                    event={event}
+                    setConfirmDeleteId={setConfirmDeleteId}
+                  />
+                ))
             ) : (
               <p className="text-center text-gray-500">No events found.</p>
             )}
