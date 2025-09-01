@@ -46,36 +46,42 @@ router.post('/event/:eventId', async (req, res) => {
         const event = await Event.findById(req.params.eventId);
         if (!event) return res.status(404).send('Event not found');
 
-        // Step 2: Create and save the guest
+        // Step 2: Create a new Guest
         const newGuest = new Guest({
             name: req.body.name,
-            email: req.body.email,
+            email: req.body.email,          // duplicates allowed
             phone: req.body.phone,
-            rsvpStatus: req.body.rsvpStatus, // optional, default is fine
+            rsvpStatus: req.body.rsvpStatus || 'Pending',
             dietaryPreferences: req.body.dietaryPreferences,
-            eventId: req.params.eventId  // <-- match Guest to event if still needed in Guest schema
+            eventId: req.params.eventId     // optional, depending on schema
         });
 
         const savedGuest = await newGuest.save();
 
-        // Step 3: Create the EventGuest link
+        // Step 3: Create the EventGuest link according to your schema
         const newEventGuest = new EventGuest({
             eventId: event._id,
             guestId: savedGuest._id,
-            rsvpStatus: req.body.rsvpStatus || 'pending',
+            rsvpStatus: req.body.rsvpStatus || 'Pending',
             customNotes: req.body.customNotes || '',
             invitationSent: req.body.invitationSent || false
         });
 
         await newEventGuest.save();
 
-        // Step 4: Respond with the newly created guest
-        res.status(201).json(savedGuest);
+        // Step 4: Respond with the saved guest and link
+        res.status(201).json({
+            guest: savedGuest,
+            eventGuestLink: newEventGuest
+        });
+
     } catch (error) {
         console.error('Error adding guest:', error);
         res.status(500).send('Error adding guest');
     }
 });
+
+
 
 // This is to alter the information of a particular guest in a particular event
 router.patch('/event/:eventId/guest/:guestId', async (req, res) => {
