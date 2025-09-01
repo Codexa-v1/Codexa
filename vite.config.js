@@ -25,6 +25,7 @@ export default defineConfig({
       reportsDirectory: "./coverage",
       include: ['src/**/*.{js,jsx}'],
       exclude: ['**/*.test.{js,jsx}', 'src/setupTests.jsx'],
+      reportOnFailure: true
     },
   },
 })
