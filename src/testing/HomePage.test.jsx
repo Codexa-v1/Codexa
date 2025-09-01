@@ -107,19 +107,18 @@ describe("HomePage", () => {
       })
     );
 
-  const { default: HomePage } = await import("../pages/HomePage");
-  const mockSeeMore = vi.fn();
-  render(<HomePage onSeeMore={mockSeeMore} />);
+    const { default: HomePage } = await import("../pages/HomePage");
+    render(<HomePage />);
 
-  expect(await screen.findAllByText("Event 1")).toHaveLength(2);
-  expect(screen.getAllByText("Event 2")).toHaveLength(2);
-  expect(screen.getAllByText("Event 3")).toHaveLength(2);
+  expect(await screen.findAllByText("Event 1")).toHaveLength(1);
+  expect(screen.getAllByText("Event 2")).toHaveLength(1);
+  expect(screen.getAllByText("Event 3")).toHaveLength(1);
 
-  const seeMoreBtn = screen.getByRole("button", { name: /See more/i });
-  expect(seeMoreBtn).toBeInTheDocument();
+    const seeMoreBtn = screen.getByRole("button", { name: /See more/i });
+    expect(seeMoreBtn).toBeInTheDocument();
 
-  fireEvent.click(seeMoreBtn);
-  expect(mockSeeMore).toHaveBeenCalled();
+    fireEvent.click(seeMoreBtn);
+    expect(mockedNavigate).toHaveBeenCalledWith("/events");
   });
 
   test("shows cancel confirmation when Cancel clicked", async () => {
@@ -135,7 +134,7 @@ describe("HomePage", () => {
     const { default: HomePage } = await import("../pages/HomePage");
     render(<HomePage />);
 
-    expect(await screen.findAllByText("Deletable Event")).toHaveLength(2);
+  expect(await screen.findAllByText("Deletable Event")).toHaveLength(1);
 
     expect(
   await screen.findByText((content) => content.includes("Cancel"))

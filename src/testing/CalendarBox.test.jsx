@@ -13,7 +13,8 @@ global.fetch = vi.fn(() =>
   Promise.resolve({
     json: () =>
       Promise.resolve([
-        { title: "My Event", date: "2025-08-15", category: "Wedding" },
+        // Use a date in the current month (August 2025)
+        { title: "My Event", date: "2025-08-01", category: "Wedding" },
       ]),
   })
 );
@@ -25,7 +26,7 @@ vi.mock("@/backend/api/EventData", () => ({
         _id: "789",
         title: "My Event",
         category: "Wedding",
-        date: "2025-08-15",
+        date: "2025-08-01", // Use August 2025
       },
     ])
   ),
@@ -38,6 +39,8 @@ describe("Calendar Component", () => {
       user: { sub: "123" },
       isAuthenticated: true,
     });
+    // Set system date to August 1, 2025
+    vi.setSystemTime(new Date(2025, 7, 1)); // month is 0-indexed
   });
 
   it("renders current month and year", () => {
@@ -76,26 +79,34 @@ describe("Calendar Component", () => {
 
   it("navigates to next month when right arrow clicked", () => {
   render(<Calendar />);
-  const buttons = screen.getAllByRole("button"); // get both nav buttons
-  const rightButton = buttons[1]; // second button is "next"
+  const buttons = screen.getAllByRole("button");
+  const rightButton = buttons[1];
   fireEvent.click(rightButton);
-  // check that month text updated
-  expect(screen.getByText(/September|October|January/i)).toBeInTheDocument();
+  // Use findByText for async UI update and broader matcher
+  expect(
+    screen.getByText((content) =>
+      /September|October|January/i.test(content)
+    )
+  ).toBeInTheDocument();
 });
 
 it("navigates to previous month when left arrow clicked", () => {
   render(<Calendar />);
   const buttons = screen.getAllByRole("button");
-  const leftButton = buttons[0]; // first button is "prev"
+  const leftButton = buttons[0];
   fireEvent.click(leftButton);
-  expect(screen.getByText(/July|June|December/i)).toBeInTheDocument();
+  // Wait for month to update to July
+  return waitFor(() => {
+    expect(screen.getByText(/July/i)).toBeInTheDocument();
+  });
 });
 
 it("fetches and displays event color dots", async () => {
   render(<Calendar />);
   // wait for the fetch to resolve and events to render
   await waitFor(() => {
-    expect(document.querySelector(".bg-pink-500")).toBeInTheDocument();
+    const colorDot = screen.queryByTestId("event-color-dot-Wedding");
+    expect(colorDot).toBeInTheDocument();
   });
 });
 

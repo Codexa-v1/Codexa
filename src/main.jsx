@@ -15,6 +15,7 @@ createRoot(document.getElementById('root')).render(
         redirect_uri: window.location.origin
       }}
       cacheLocation="localstorage"  // 👈 keeps you logged in on refresh
+      useRefreshTokens={true}       // 👈 allows silent renewal
     >
       <App />
     </Auth0Provider>

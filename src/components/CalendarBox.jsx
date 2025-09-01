@@ -148,6 +148,7 @@ const Calendar = ({ onDayClick }) => {
                     <span
                       key={idx}
                       className={`w-3 h-3 rounded-full ${ev.bgColor}`}
+                      data-testid={`event-color-dot-${ev.category}`}
                     ></span>
                   ))}
                 </span>
