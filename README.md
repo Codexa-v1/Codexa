@@ -56,10 +56,10 @@ npx vitest      #Test
 npm install --save-dev @playwright/test     #install
 npx playwright test     #test
 ```
-- **Backend (API Tests):** Jest + Supertest
+- **Backend (API Tests) on the server-implementation branch:** Jest + Supertest
 ```bash
-npm install --save-dev jest supertest     #install
-npx jest     #test
+npm install     #install all dependencies
+npm run test:backend    #test
 ```
 
 ### 5. 📦 Deployment
