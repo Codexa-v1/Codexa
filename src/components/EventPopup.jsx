@@ -264,7 +264,13 @@ export default function EventPopup({ onClose, selectedDate }) {
                 placeholder="Capacity"
                 className="w-full border border-gray-300 rounded-md p-2"
                 value={capacity}
-                onChange={(e) => setCapacity(e.target.value)}
+                min={1}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                onChange={e => {
+                  const val = e.target.value;
+                  if (/^\d*$/.test(val)) setCapacity(val);
+                }}
                 required
               />
             </section>
@@ -280,7 +286,13 @@ export default function EventPopup({ onClose, selectedDate }) {
                 placeholder="Budget"
                 className="w-full border border-gray-300 rounded-md p-2"
                 value={budget}
-                onChange={(e) => setBudget(e.target.value)}
+                min={0}
+                inputMode="numeric"
+                pattern="[0-9]*"
+                onChange={e => {
+                  const val = e.target.value;
+                  if (/^\d*$/.test(val)) setBudget(val);
+                }}
                 required
               />
             </section>
