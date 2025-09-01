@@ -9,7 +9,8 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
     venuePhone: "",
     capacity: "",
     venueStatus: "",
-    venueAvailability: "",
+    //venueCost: "",
+    //venueAvailability: "",
     venueImage: "",
   });
   const [venues, setVenues] = useState([]);
@@ -23,8 +24,8 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
 
   function handleAddVenue(e) {
     e.preventDefault();
-    const { venueName, venueAddress, venueEmail, venuePhone, capacity, venueStatus, venueAvailability } = form;
-    if (!venueName || !venueAddress || !venueEmail || !venuePhone || !capacity || !venueStatus || !venueAvailability) return;
+    const { venueName, venueAddress, venueEmail, venuePhone, capacity, venueStatus, /*venueAvailability, */ /*venueCost*/ } = form;
+    if (!venueName || !venueAddress || !venueEmail || !venuePhone || !capacity || !venueStatus /*|| !venueAvailability || !venueCost*/) return;
 
     setVenues(prev => [
       ...prev,
@@ -36,7 +37,8 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
         venuePhone: venuePhone.trim(),
         capacity: Number(capacity),
         venueStatus,
-        venueAvailability,
+        //venueCost: form.venueCost ? Number(form.venueCost) : 0,
+        //venueAvailability,
         venueImage: form.venueImage?.trim() || "",
       },
     ]);
@@ -48,8 +50,8 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
       venuePhone: "",
       capacity: "",
       venueStatus: "",
-      venueCost: "",
-      venueAvailability: "",
+      //venueCost: "",
+      //venueAvailability: "",
       venueImage: "",
     });
   }
@@ -145,7 +147,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
               placeholder="Capacity"
               className="px-3 py-2 border rounded w-full"
             />
-            <input
+            {/*<input
               name="venueCost"
               type="number"
               value={form.venueCost}
@@ -159,11 +161,11 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
               value={form.venueAvailability}
               onChange={handleChange}
               className="px-3 py-2 border rounded w-full"
-            >
+            > 
               <option value="" disabled hidden>Venue Availability</option>
               <option value="Available">Available</option>
               <option value="Unavailable">Unavailable</option>
-            </select>
+            </select> */}
             <select
               name="venueStatus"
               value={form.venueStatus}
@@ -203,8 +205,8 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                   <th className="border px-2">Phone</th>
                   <th className="border px-2">Capacity</th>
                   <th className="border px-2">Status</th>
-                  <th className="border px-2">Cost</th>
-                  <th className="border px-2">Availability</th>
+                  {/*<th className="border px-2">Cost</th>
+                  <th className="border px-2">Availability</th> */}
                   <th className="border px-2">Image</th>
                 </tr>
               </thead>
@@ -217,8 +219,8 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                     <td className="border px-2">{v.venuePhone}</td>
                     <td className="border px-2">{v.capacity}</td>
                     <td className="border px-2">{v.venueStatus}</td>
-                    <td className="border px-2">{v.venueCost}</td>
-                    <td className="border px-2">{v.venueAvailability}</td>
+                    {/*<td className="border px-2">{v.venueCost}</td>
+                    <td className="border px-2">{v.venueAvailability}</td>*/}
                     <td className="border px-2">{v.venueImage}</td>
                   </tr>
                 ))}

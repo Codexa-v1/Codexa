@@ -7,7 +7,7 @@ const eventSchema = new mongoose.Schema({
     venuePhone: { type: String, required: true },
     capacity: { type: Number, required: true },
     venueStatus: { type: String, required: true },
-    venueCost: { type: Number, required: true },
+    //venueCost: { type: Number, required: true },
     venueAvailability: { type: String, required: true },
     venueImage: { type: String }, // Optional
 }, {timestamps: true});

@@ -95,7 +95,7 @@ export default function VendorsModal({ vendors, onClose, eventId, onEditVendor }
                 <p><span className="font-medium">Contact:</span> {vendor.contactPerson}</p>
                 <p><span className="font-medium">Phone:</span> {vendor.phone}</p>
                 <p><span className="font-medium">Email:</span> {vendor.email}</p>
-                <p><span className="font-medium">Cost:</span> {vendor.vendorCost}</p>
+                {/* <p><span className="font-medium">Cost:</span> {vendor.vendorCost}</p> */}
               </div>
               <div className="flex gap-2 mt-4">
                 <button
