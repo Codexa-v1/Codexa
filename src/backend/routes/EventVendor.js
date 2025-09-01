@@ -38,6 +38,7 @@ router.get('/event/:eventId', async (req, res) => {
 // This is to create a new vendor for a particular event - if need be, we will implement a post request to create a
 // vendor with a specific id
 router.post('/event/:eventId', async (req, res) => {
+    console.log('Received body:', req.body);
     try {
         const { eventId } = req.params;
 

@@ -11,39 +11,54 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
     website: "",
     address: "",
     rating: "",
+    vendorCost: "",
     notes: ""
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
-  }
 
-  async function handleSubmit(e) {
+    // If numeric field, store value as string (convert later)
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // --- Save new vendor ---
-      const vendor = { ...form };
-      await addVendor(eventId, vendor);
-      // --- Refresh vendor list ---
-      const vendors = await getVendors(eventId);
+      // Validate required numeric fields
+      if (!form.vendorCost || isNaN(Number(form.vendorCost))) {
+        setError("Vendor cost is required and must be a number");
+        setLoading(false);
+        return;
+      }
 
-      // Pass back the updated vendors list to the parent
+      const vendor = {
+        ...form,
+        rating: form.rating ? Number(form.rating) : undefined,
+        vendorCost: Number(form.vendorCost) // important: convert string -> number
+      };
+
+      console.log("Adding vendor with request body:", vendor);
+
+      await addVendor(eventId, vendor);
+
+      const vendors = await getVendors(eventId);
       if (onVendorsUpdated) onVendorsUpdated(vendors);
 
-      onClose(); // close only after success
+      onClose();
     } catch (err) {
-      setError(err.message);
+      console.error("Error adding vendor:", err);
+      setError(err.message || "Error saving vendor");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -54,6 +69,7 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
         >
           &times;
         </button>
+
         <h3 className="text-xl font-bold mb-4 text-blue-900">Add New Vendor</h3>
 
         {error && <p className="text-red-600 mb-3">{error}</p>}
@@ -68,14 +84,13 @@ export default function NewVendorModal({ eventId, onClose, onVendorsUpdated }) {
             <input name="website" value={form.website} onChange={handleChange} placeholder="Website" className="px-3 py-2 border rounded w-full" />
             <input name="address" value={form.address} onChange={handleChange} required placeholder="Address" className="px-3 py-2 border rounded w-full" />
             <input name="rating" value={form.rating} onChange={handleChange} type="number" min="1" max="5" placeholder="Rating (1-5)" className="px-3 py-2 border rounded w-full" />
+            <input name="vendorCost" value={form.vendorCost} onChange={handleChange} type="number" min="0" step="0.01" required placeholder="Vendor Cost" className="px-3 py-2 border rounded w-full" />
           </section>
 
           <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Notes" className="px-3 py-2 border rounded w-full" />
 
           <section className="flex justify-end gap-2">
-            <button type="button" className="px-4 py-2 rounded bg-gray-200 text-gray-700" onClick={onClose} disabled={loading}>
-              Cancel
-            </button>
+            <button type="button" className="px-4 py-2 rounded bg-gray-200 text-gray-700" onClick={onClose} disabled={loading}>Cancel</button>
             <button type="submit" className="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-800 disabled:opacity-50" disabled={loading}>
               {loading ? "Saving..." : "Save Vendor"}
             </button>
