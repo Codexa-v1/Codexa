@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import { eventColors } from "@/utils/eventColors";
 
 export default function EventPopup({ onClose, selectedDate }) {
+  // Helper to get today's date in YYYY-MM-DD
+  const todayStr = dayjs().format("YYYY-MM-DD");
   const { user } = useAuth0();
   const [category, setCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
@@ -23,11 +25,32 @@ export default function EventPopup({ onClose, selectedDate }) {
   const [organizerEmail, setOrganizerEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [status, setStatus] = useState("Planned");
+    const [status, setStatus] = useState("Planning"); // Status is always 'Planning' for new events
   const [floorplan, setFloorplan] = useState("");
   const [success, setSuccess] = useState(false);
 
   const handleCreateEvent = async () => {
+    // Validate date logic
+    if (startDate && dayjs(startDate).isBefore(todayStr)) {
+      setLoading(false);
+      setError("Start date cannot be in the past.");
+      return;
+    }
+    if (endDate && dayjs(endDate).isBefore(todayStr)) {
+      setLoading(false);
+      setError("End date cannot be in the past.");
+      return;
+    }
+    if (startDate && endDate && dayjs(endDate).isBefore(dayjs(startDate))) {
+      setLoading(false);
+      setError("End date cannot be before start date.");
+      return;
+    }
+    if (startDate === endDate && startTime && endTime && endTime <= startTime) {
+      setLoading(false);
+      setError("End time must be after start time if dates are the same.");
+      return;
+    }
     setLoading(true);
     setError("");
     setSuccess(false);
@@ -46,7 +69,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       location,
       budget,
       description,
-      status,
+        status: "Planning",
       capacity: capacity ? Number(capacity) : undefined,
       category: category === "other" ? newCategory : category,
       organizer: {
@@ -145,6 +168,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 type="date"
                 id="startDate"
                 className="w-full border border-gray-300 rounded-md p-2"
+                min={todayStr}
                 value={
                   selectedDate
                     ? dayjs(selectedDate).format("YYYY-MM-DD")
@@ -181,6 +205,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 type="date"
                 id="endDate"
                 className="w-full border border-gray-300 rounded-md p-2"
+                min={startDate ? startDate : todayStr}
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />
@@ -303,22 +328,7 @@ export default function EventPopup({ onClose, selectedDate }) {
           </section>
 
           {/* Status */}
-          <section>
-            <label htmlFor="status" className="block font-medium text-gray-700">
-              Status
-            </label>
-            <select
-              id="status"
-              className="w-full border border-gray-300 rounded-md p-2 mb-2"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="Planned">Planned</option>
-              <option value="Ongoing">Ongoing</option>
-              <option value="Completed">Completed</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
-          </section>
+            {/* Status is always 'Planning' for new events. No input shown. */}
           {/* Floorplan */}
           <section>
             <label
