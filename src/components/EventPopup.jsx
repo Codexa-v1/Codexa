@@ -29,6 +29,11 @@ export default function EventPopup({ onClose, selectedDate }) {
 
   const handleCreateEvent = async () => {
     // Validate date logic
+    if (!endDate) {
+      setLoading(false);
+      setError("End date is required.");
+      return;
+    }
     if (startDate && dayjs(startDate).isBefore(todayStr)) {
       setLoading(false);
       setError("Start date cannot be in the past.");
