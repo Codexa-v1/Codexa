@@ -24,7 +24,7 @@ export default defineConfig({
       reporter: ['lcov', 'text'], // required for Codecov + console output
       reportsDirectory: "./coverage",
       include: ['src/**/*.{js,jsx}'],
-      exclude: ['**/*.test.{js,jsx}', 'src/setupTests.js'],
+      exclude: ['**/*.test.{js,jsx}', 'src/setupTests.jsx'],
     },
   },
 })
