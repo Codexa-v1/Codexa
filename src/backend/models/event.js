@@ -9,14 +9,14 @@ const eventSchema = new mongoose.Schema({
     description: { type: String, required: true },
     status: { 
         type: String, 
-        enum: ['Planned', 'Ongoing', 'Completed', 'Cancelled'], 
-        default: 'Planned' 
+        enum: ['Planning', 'Ongoing', 'Completed', 'Cancelled'], 
+        default: 'Planning' 
     },
     budget: {
         type: Number,
         required: true
     },
-    capacity: Number,
+    capacity: { type: Number, required: true },
     category: { type: String, required: true },
     organizer: {
         name: String,
@@ -25,7 +25,6 @@ const eventSchema = new mongoose.Schema({
     },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
-    floorplan: { type: String, required: true }, // will be overwritten
     rsvpCurrent: { type: Number, default: 0 },
     rsvpTotal: { type: Number, default: 0 }
 }, {timestamps: true});
@@ -34,9 +33,6 @@ eventSchema.pre('save', function(next) {
     if (this.category && typeof this.category === 'string') {
         this.category = this.category.charAt(0).toUpperCase() + this.category.slice(1).toLowerCase();
     }
-
-    // Always enforce the same floorplan string
-    this.floorplan = "default-floorplan.png";
 
     next();
 });
