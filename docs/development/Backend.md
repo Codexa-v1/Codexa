@@ -26,6 +26,7 @@ We used eight different schemas for our models, namely: event, guest, vendor, ve
 eventguest, eventvendor, eventguest, eventschedule
 
 - The **Event model** has information that we keep on a specific evet
+
 ```bash
 import mongoose from "mongoose";
 
@@ -66,13 +67,13 @@ eventSchema.pre('save', function(next) {
     next();
 });
 
-
 const Event = mongoose.model("Event", eventSchema);
 
 export default Event;
 ```
 
 - The **Guest model** has information that we keep on a specific guest.
+
 ```bash
 import mongoose from 'mongoose';
 
@@ -94,6 +95,7 @@ export default Guest;
 - The **Eventguest model** keeps the ID of the guest created together with the ID of the 
 event the guest was created in – this results in a collection which allows us to get all the 
 guests in a particular event.
+
 ```bash
 import mongoose from "mongoose";
 
@@ -119,10 +121,10 @@ const eventGuestSchema = new mongoose.Schema({
 
 const EventGuest = mongoose.model('EventGuest', eventGuestSchema);
 export default EventGuest;
-
 ```
 
 - The **Vendor model** has information that we keep on a specific vendor.
+
 ```bash
 import mongoose from "mongoose";
 
@@ -141,12 +143,12 @@ const vendorSchema = new mongoose.Schema({
 const Vendor = mongoose.model("Vendor", vendorSchema);
 
 export default Vendor;
-
 ```
 
 - The **Eventvendor model** keeps the ID of the vendor created together with the ID of the 
 event the vendor was created in – this results in a collection which allows us to get all the 
 vendors for a particular event.
+
 ```bash
 import mongoose from "mongoose";
 
@@ -174,10 +176,10 @@ const eventVendorSchema = new mongoose.Schema({
 
 const EventVendor = mongoose.model('EventVendor', eventVendorSchema);
 export default EventVendor;
-
 ```
 
 - The **Venue model** has information that we keep on a specific venue.
+
 ```bash
 import mongoose from "mongoose";
 
@@ -199,6 +201,7 @@ export default Venue;
 - The **Eventvenue model** keeps the ID of the venue created together with the ID of the 
 event the venue was created in – this results in a collection which allows us to get all the 
 venues for a particular event.
+
 ```bash
 import mongoose from "mongoose";
 
@@ -226,11 +229,11 @@ const eventVenueSchema = new mongoose.Schema({
 
 const EventVenue = mongoose.model('EventVenue', eventVenueSchema);
 export default EventVenue;
-
 ```
 
 - The **Eventschedule** model has information on the schedules that a specific event will 
 have
+
 ```bash
 // A schedule object will simply have start-time, end-time, and some field to describe what will be happening between the two times
 // An event will therefore have many schedule objects
@@ -247,7 +250,6 @@ const scheduleSchema = new mongoose.Schema({
 const Schedule = mongoose.model("Schedule", scheduleSchema);
 
 export default Schedule;
-
 ```
 ---
 
