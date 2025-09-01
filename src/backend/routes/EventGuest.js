@@ -11,10 +11,15 @@ import EventGuest from "../models/eventguest.js";
 const router = express.Router();
 
 // This is to get all the guests in an event - if need be, we will implement the get request for a single guest
+import mongoose from 'mongoose';
 router.get('/event/:eventId', async (req, res) => {
+    const eventId = req.params.eventId;
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        return res.status(400).send('Invalid event ID');
+    }
     try {
         // Step 1: Find all EventGuest entries for this event
-        const eventGuests = await EventGuest.find({ eventId: req.params.eventId });
+        const eventGuests = await EventGuest.find({ eventId });
 
         if (eventGuests.length === 0) {
             return res.status(404).send('No guests found for this event');

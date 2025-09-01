@@ -13,10 +13,15 @@ const router = express.Router();
 // Define your routes here
 
 // This is to get all vendors for a particular event - if need be, we will implement a get request for a specific vendor
+import mongoose from 'mongoose';
 router.get('/event/:eventId', async (req, res) => {
+    const eventId = req.params.eventId;
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        return res.status(400).send('Invalid event ID');
+    }
     try {
         // Step 1: Find all EventVendor entries for this event
-        const eventVendors = await EventVendor.find({ eventId: req.params.eventId });
+        const eventVendors = await EventVendor.find({ eventId });
 
         if (eventVendors.length === 0) {
             return res.status(404).send('No vendors found for this event');

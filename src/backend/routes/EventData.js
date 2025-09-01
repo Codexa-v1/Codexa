@@ -5,8 +5,12 @@ const router = express.Router();
 
 // Define your routes here
 
+import mongoose from 'mongoose';
 router.get('/:id', (req, res) => {
     const eventId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        return res.status(400).json({ message: 'Invalid event ID' });
+    }
     Event.findById(eventId)
         .then(event => {
             if (!event) {

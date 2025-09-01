@@ -8,10 +8,15 @@ const router = express.Router();
 // Define your routes here
 
 // This is to get all venues for a particular event - if need be, we will implement a get request for a specific venue
+import mongoose from 'mongoose';
 router.get('/event/:eventId', async (req, res) => {
+    const eventId = req.params.eventId;
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        return res.status(400).send('Invalid event ID');
+    }
     try {
         // Step 1: Find all EventVenue entries for this event
-        const eventVenues = await EventVenue.find({ eventId: req.params.eventId });
+        const eventVenues = await EventVenue.find({ eventId });
 
         if (eventVenues.length === 0) {
             return res.status(404).send('No venues found for this event');
