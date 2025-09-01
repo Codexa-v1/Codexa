@@ -27,9 +27,228 @@ eventguest, eventvendor, eventguest, eventschedule
 
 - The **Event model** has information that we keep on a specific evet
 ```bash
+import mongoose from "mongoose";
+
+const eventSchema = new mongoose.Schema({
+    eventPlanner: { type: String, required: true }, // This is to keep track of the Auth0 token of the person who created the event
+    title: { type: String, required: true },
+    date: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+    location: { type: String, required: true },
+    description: { type: String, required: true },
+    status: { 
+        type: String, 
+        enum: ['Planned', 'Ongoing', 'Completed', 'Cancelled'], 
+        default: 'Planned' 
+    },
+    budget: {
+        type: Number,
+        required: true
+    },
+    capacity: Number,
+    category: { type: String, required: true },
+    organizer: {
+        name: String,
+        contact: String,
+        email: String
+    },
+    startTime: { type: String, required: true },
+    endTime: { type: String, required: true },
+    floorplan: { type: String, required: true }, // url to a picture of the floorplans
+    rsvpCurrent: { type: Number, default: 0 },
+    rsvpTotal: { type: Number, default: 0 }
+}, {timestamps: true});
+
+eventSchema.pre('save', function(next) {
+    if (this.category && typeof this.category === 'string') {
+        this.category = this.category.charAt(0).toUpperCase() + this.category.slice(1).toLowerCase();
+    }
+    next();
+});
+
+
+const Event = mongoose.model("Event", eventSchema);
+
+export default Event;
+```
+
+- The **Guest model** has information that we keep on a specific guest.
+```bash
+import mongoose from 'mongoose';
+
+const guest = new mongoose.Schema({
+  // for id, just use the automatically created field in mongo
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  phone: { type: String, required: true },
+  eventId: { type: String, required: true },
+  rsvpStatus: { type: String, enum: ['Pending', 'Accepted', 'Declined'], default: 'Pending', required: true },
+  dietaryPreferences: { type: String, default: '' },
+}, { timestamps: true});
+
+const Guest = mongoose.model('Guest', guest);
+
+export default Guest;
+```
+
+- The **Eventguest model** keeps the ID of the guest created together with the ID of the 
+event the guest was created in – this results in a collection which allows us to get all the 
+guests in a particular event.
+```bash
+import mongoose from "mongoose";
+
+const eventGuestSchema = new mongoose.Schema({
+    eventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',
+        required: true
+    },
+    guestId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Guest',
+        required: true
+    },
+    rsvpStatus: {
+        type: String,
+        enum: ['Pending', 'Accepted', 'Declined'],
+        default: 'Pending'
+    },
+    customNotes: { type: String },
+    invitationSent: { type: Boolean, default: false }
+}, { timestamps: true });
+
+const EventGuest = mongoose.model('EventGuest', eventGuestSchema);
+export default EventGuest;
 
 ```
 
+- The **Vendor model** has information that we keep on a specific vendor.
+```bash
+import mongoose from "mongoose";
+
+const vendorSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    vendorType: { type: String, required: true },
+    contactPerson: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
+    website: String,
+    address: { type: String, required: true },
+    rating: {type: Number, min: 1, max: 5},
+    notes: { type: String }
+}, { timestamps: true });
+
+const Vendor = mongoose.model("Vendor", vendorSchema);
+
+export default Vendor;
+
+```
+
+- The **Eventvendor model** keeps the ID of the vendor created together with the ID of the 
+event the vendor was created in – this results in a collection which allows us to get all the 
+vendors for a particular event.
+```bash
+import mongoose from "mongoose";
+
+const eventVendorSchema = new mongoose.Schema({
+    eventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',
+        required: true
+    },
+    vendorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vendor',
+        required: true
+    },
+    // Optional: Add fields for contract details, status, etc.
+    contractDetails: {
+        type: String
+    },
+    status: {
+        type: String,
+        enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
+        default: 'Pending'
+    },
+}, {timestamps: true});
+
+const EventVendor = mongoose.model('EventVendor', eventVendorSchema);
+export default EventVendor;
+
+```
+
+- The **Venue model** has information that we keep on a specific venue.
+```bash
+import mongoose from "mongoose";
+
+const eventSchema = new mongoose.Schema({
+    venueName: { type: String, required: true },
+    venueAddress: { type: String, required: true },
+    venueEmail: { type: String, required: true },
+    venuePhone: { type: String, required: true },
+    capacity: { type: Number, required: true },
+    venueStatus: { type: String, required: true },
+    venueImage: { type: String }, // Optional
+}, {timestamps: true});
+
+const Venue = mongoose.model("Venue", eventSchema);
+
+export default Venue;
+```
+
+- The **Eventvenue model** keeps the ID of the venue created together with the ID of the 
+event the venue was created in – this results in a collection which allows us to get all the 
+venues for a particular event.
+```bash
+import mongoose from "mongoose";
+
+const eventVenueSchema = new mongoose.Schema({
+    eventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',
+        required: true
+    },
+    venueId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Venue',
+        required: true
+    },
+    // Optional: Add fields for contract details, status, etc.
+    contractDetails: {
+        type: String
+    },
+    status: {
+        type: String,
+        enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
+        default: 'Pending'
+    },
+}, {timestamps: true});
+
+const EventVenue = mongoose.model('EventVenue', eventVenueSchema);
+export default EventVenue;
+
+```
+
+- The **Eventschedule** model has information on the schedules that a specific event will 
+have
+```bash
+// A schedule object will simply have start-time, end-time, and some field to describe what will be happening between the two times
+// An event will therefore have many schedule objects
+
+import mongoose from "mongoose";
+
+const scheduleSchema = new mongoose.Schema({
+  eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event", required: true },
+  description: { type: String, required: true },
+  startTime: { type: String, required: true },
+  endTime: { type: String, required: true }
+}, { timestamps: true });
+
+const Schedule = mongoose.model("Schedule", scheduleSchema);
+
+export default Schedule;
+
+```
 ---
 
 ## API and Routes
