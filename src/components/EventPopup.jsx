@@ -25,8 +25,6 @@ export default function EventPopup({ onClose, selectedDate }) {
   const [organizerEmail, setOrganizerEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-    const [status, setStatus] = useState("Planning"); // Status is always 'Planning' for new events
-  const [floorplan, setFloorplan] = useState("");
   const [success, setSuccess] = useState(false);
 
   const handleCreateEvent = async () => {
@@ -69,7 +67,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       location,
       budget,
       description,
-        status: "Planning",
+      status: "Planning",
       capacity: capacity ? Number(capacity) : undefined,
       category: category === "other" ? newCategory : category,
       organizer: {
@@ -79,7 +77,6 @@ export default function EventPopup({ onClose, selectedDate }) {
       },
       startTime,
       endTime,
-      floorplan,
     };
     try {
       const res = await createEvent(eventData);
@@ -113,13 +110,14 @@ export default function EventPopup({ onClose, selectedDate }) {
               htmlFor="category"
               className="block font-medium text-gray-700"
             >
-              Category
+              Category <span className="text-red-600">*</span>
             </label>
             <select
               id="category"
               className="w-full border border-gray-300 rounded-md p-2 mb-2"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
+              required
             >
               <option value="">Select Category</option>
               {Object.keys(eventColors).map((cat) => (
@@ -136,6 +134,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 className="w-full border border-gray-300 rounded-md p-2 mt-1"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
+                required
               />
             )}
           </section>
@@ -143,7 +142,7 @@ export default function EventPopup({ onClose, selectedDate }) {
           {/* Event Title */}
           <section>
             <label htmlFor="title" className="block font-medium text-gray-700">
-              Event Title
+              Event Title <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -152,6 +151,7 @@ export default function EventPopup({ onClose, selectedDate }) {
               className="w-full border border-gray-300 rounded-md p-2"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
             />
           </section>
 
@@ -234,7 +234,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 htmlFor="location"
                 className="block font-medium text-gray-700"
               >
-                Location
+                Location <span className="text-red-600">*</span>
               </label>
               <input
                 type="text"
@@ -243,6 +243,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 className="w-full border border-gray-300 rounded-md p-2"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                required
               />
             </section>
             <section>
@@ -265,7 +266,7 @@ export default function EventPopup({ onClose, selectedDate }) {
 
           <section>
               <label htmlFor="budget" className="block font-medium text-gray-700">
-                Budget
+                Budget <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -274,6 +275,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 className="w-full border border-gray-300 rounded-md p-2"
                 value={budget}
                 onChange={(e) => setBudget(e.target.value)}
+                required
               />
             </section>
 
@@ -283,7 +285,7 @@ export default function EventPopup({ onClose, selectedDate }) {
               htmlFor="description"
               className="block font-medium text-gray-700"
             >
-              Description of Event
+              Description of Event <span className="text-red-600">*</span>
             </label>
             <textarea
               id="description"
@@ -291,6 +293,7 @@ export default function EventPopup({ onClose, selectedDate }) {
               className="w-full border border-gray-300 rounded-md p-2"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              required
             ></textarea>
           </section>
 
@@ -329,23 +332,7 @@ export default function EventPopup({ onClose, selectedDate }) {
 
           {/* Status */}
             {/* Status is always 'Planning' for new events. No input shown. */}
-          {/* Floorplan */}
-          <section>
-            <label
-              htmlFor="floorplan"
-              className="block font-medium text-gray-700"
-            >
-              Floorplan URL
-            </label>
-            <input
-              type="text"
-              id="floorplan"
-              placeholder="URL to floorplan image"
-              className="w-full border border-gray-300 rounded-md p-2"
-              value={floorplan}
-              onChange={(e) => setFloorplan(e.target.value)}
-            />
-          </section>
+          {/* Venue and Floorplan fields removed as per requirements */}
 
           {/* Submit Button */}
           <button
