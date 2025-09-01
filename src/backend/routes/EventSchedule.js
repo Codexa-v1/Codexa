@@ -12,15 +12,19 @@ import EventSchedule from "../models/eventschedule.js";
 const router = express.Router();
 
 // Get all schedule items for a particular event
+import mongoose from "mongoose";
 router.get("/event/:eventId", async (req, res) => {
-  const { eventId } = req.params;
-  try {
-    const schedules = await EventSchedule.find({ eventId });
-    res.json(schedules);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to fetch events" });
-  }
+    const { eventId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        return res.status(400).json({ message: "Invalid event ID" });
+    }
+    try {
+        const schedules = await EventSchedule.find({ eventId });
+        res.json(schedules);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to fetch events" });
+    }
 });
 
 // Add a new schedule item for an event

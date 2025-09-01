@@ -2,6 +2,10 @@
 import mongoose from 'mongoose';
 
 const connectDB = async () => {
+  if (process.env.NODE_ENV === 'test') {
+    // Skip actual DB connection during tests
+    return;
+  }
   console.log('🔌 Starting MongoDB connection...');
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI);
