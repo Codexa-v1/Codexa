@@ -12,17 +12,23 @@ When a request is made, the flow looks like this:
 ---
 
 ## 📈 Database and Models
-We use **MongoDB Atlas** as our database, connected via **Mongoose**, which allows us to define schemas and models. Schemas enforce structure on the data stored in collections, ensuring uniformity across entries. Models are the building blocks of the data we query, create, update, and delete.
+For our database system, we decided to use **MongoDB** as our database. The reason for 
+this lies in the way in which one can specify how exactly data will be stored in the 
+database for different **collections**, using models. **Models** are pieces of code where one 
+specifies what fields an object will have, for instance, for a guest a model would have 
+information such as name, surname, contact details, etc. This would be the structure of all 
+guests for our application, and so by using models we can ensure consistency in how we 
+send and receive data from the database. Furthermore, we can add whichever fields we 
+desire for models that we are planning to use, making models a good choice to store fine
+tuned data in our database
 
-Currently, we have five main collections (subject to change as development progresses):
+We used eight different schemas for our models, namely: event, guest, vendor, venue, 
+eventguest, eventvendor, eventguest, eventschedule
 
-- **events** → stores details about events (date, time, description, etc.)
-- **guests** → stores information about guests (name, email, phone, etc.)
-- **vendors** → stores information about vendors (business details, services, etc.)
-- **eventguests** → links guests to specific events using `guestId` and `eventId`
-- **eventvendors** → links vendors to specific events using `vendorId` and `eventId`
+- The **Event model** has information that we keep on a specific evet
+```bash
 
-This design allows us to manage many-to-many relationships between events and both guests and vendors.
+```
 
 ---
 
