@@ -85,7 +85,7 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
 
   return (
     <>
-      <section className="bg-white rounded-lg shadow-lg p-12 max-w-7xl w-full relative">
+    <section className="bg-white rounded-lg shadow-lg p-4 sm:p-12 max-w-7xl w-full relative max-h-screen overflow-y-auto">
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           onClick={onClose}

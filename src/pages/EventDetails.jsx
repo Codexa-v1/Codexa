@@ -115,9 +115,9 @@ export default function EventDetails() {
 
   if (!event) {
     return (
-      <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 to-green-900">
+      <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 to-green-900 px-2 sm:px-0">
         <Navbar />
-        <section className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow mt-8 text-center">
+        <section className="p-2 sm:p-6 max-w-lg mx-auto bg-white rounded-lg shadow mt-8 text-center">
           <h2 className="text-2xl font-bold text-red-700 mb-2">Event Not Found</h2>
           <button
             className="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-700"
@@ -207,12 +207,12 @@ export default function EventDetails() {
 
       {/* Tabs Navigation */}
       <section className="p-6 w-10/12 max-w-screen-xl mx-auto bg-white rounded-lg shadow mt-8">
-        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
+        <section className="flex overflow-x-auto gap-2 sm:gap-4 mb-6 bg-gray-100 rounded-lg px-2 py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {["overview","rsvp","vendors","venues","schedule","floor","documents"].map((tab) => (
             <button
               key={tab}
-              className={`px-4 py-2 ${
-                activeTab === tab ? "text-green-700 font-bold" : "text-gray-500"
+              className={`flex-shrink-0 px-3 sm:px-4 py-2 rounded transition-colors duration-200 whitespace-nowrap ${
+                activeTab === tab ? "bg-green-100 text-green-700 font-bold" : "text-gray-500 hover:bg-gray-200"
               }`}
               onClick={() => setActiveTab(tab)}
             >
@@ -232,12 +232,12 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">RSVP Progress</h3>
                 <p className="text-xs mb-2">
-                  Progress: {event.rsvpCurrent}/{event.rsvpTotal}
+                  Progress: {guests.filter(g => g.rsvpStatus === "Accepted").length}/{guests.length}
                 </p>
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section
                     className="bg-green-900 h-2 rounded"
-                    style={{ width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%` }}
+                    style={{ width: `${guests.length > 0 ? (guests.filter(g => g.rsvpStatus === "Accepted").length / guests.length) * 100 : 0}%` }}
                   ></section>
                 </section>
                 <p className="text-xs text-green-900">Click to view guest list</p>

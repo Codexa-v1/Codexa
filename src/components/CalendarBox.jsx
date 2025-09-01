@@ -80,9 +80,9 @@ const Calendar = ({ onDayClick }) => {
   }, [isAuthenticated, user, getBgColor]);
 
   return (
-    <section className="w-full h-full">
+  <section className="w-full h-full px-1 sm:px-0">
       {/* Month & Year Navigation */}
-      <section className="flex items-center gap-2 my-14">
+  <section className="flex flex-col sm:flex-row items-center gap-2 my-8 sm:my-14">
         <h2 className="text-2xl sm:text-3xl font-bold pl-5 text-green-900">
           {monthsOfYear[currentMonth]},
         </h2>
@@ -107,7 +107,7 @@ const Calendar = ({ onDayClick }) => {
       </section>
 
       {/* Weekdays */}
-      <section className="grid grid-cols-7 my-12">
+  <section className="grid grid-cols-7 my-6 sm:my-12">
         {daysOfWeek.map((day) => (
           <span
             key={day}
@@ -119,7 +119,7 @@ const Calendar = ({ onDayClick }) => {
       </section>
 
       {/* Days */}
-      <section className="grid grid-cols-7 gap-1">
+  <section className="grid grid-cols-7 gap-1">
         {[...Array(firstDayOfMonth).keys()].map((_, index) => (
           <span
             key={`empty-${index}`}

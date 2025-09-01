@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { addGuest, getGuests } from "@/backend/api/EventGuest";
+import SpinnerIcon from "./SpinnerIcon";
 
 export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
   const [form, setForm] = useState({
@@ -87,19 +88,19 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
       // Save all guests sequentially
       const savedGuests = [];
       for (const guest of validGuests) {
-        console.log('Adding guest:', guest);
         const saved = await addGuest(eventId, guest);
         savedGuests.push(saved);
       }
 
-      const guests = await getGuests(eventId);
+      const guests = await getGuests(eventId);  
 
-      // Pass back the updated guests list to the parent
-      if (onGuestsUpdated) onGuestsUpdated(guests);
+  // Pass back the updated guests list to the parent
+  if (onGuestsUpdated) onGuestsUpdated(guests);
 
-      // Clear local preview list
-      setGuests([]);
-      onClose(); // close modal after success
+  // Clear local preview list
+  setGuests([]);
+  window.location.reload(); // reload page after success
+  onClose(); // close modal after success
     } catch (err) {
       setError(err.message || "Failed to save guests.");
       console.error(err);
@@ -123,8 +124,14 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
     }
 
   return (
-    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <section className="bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full relative">
+    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-2 sm:px-0">
+      {loading && (
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-30 z-50">
+          <SpinnerIcon />
+          <span className="mt-4 text-white text-lg font-semibold">Loading...</span>
+        </div>
+      )}
+      <section className="bg-white rounded-lg shadow-lg p-4 sm:p-8 max-w-3xl w-full relative max-h-screen overflow-y-auto">
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           onClick={onClose}

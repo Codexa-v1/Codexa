@@ -4,8 +4,73 @@ import {
   deleteEventSchedule, 
   updateEventSchedule 
 } from "../backend/api/EventSchedule";
+const url = import.meta.env.VITE_BACKEND_URL;
 
 export default function ScheduleModal({ eventId, onClose, onAddSchedule, onEditSchedule }) {
+  // --- Export to Word ---
+  async function handleExportWord() {
+    // Get event details (fetch from backend or pass as prop if available)
+    let eventDetails = {};
+    try {
+      const res = await fetch(`${url}/api/events/${eventId}`);
+      if (res.ok) {
+        eventDetails = await res.json();
+      }
+    } catch (err) {
+      console.error("Error fetching event details for export:", err);
+    }
+
+    // Format date for display
+    let formattedDate = "";
+    if (eventDetails.date) {
+      const dateObj = new Date(eventDetails.date);
+      formattedDate = dateObj.toLocaleDateString();
+    }
+
+    // Build Word document
+    const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun } = await import("docx");
+
+    const scheduleTable = new Table({
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({ children: [new Paragraph("Time")] }),
+            new TableCell({ children: [new Paragraph("Description")] }),
+          ],
+        }),
+        ...schedule.map(item =>
+          new TableRow({
+            children: [
+              new TableCell({ children: [new Paragraph(`${item.startTime} – ${item.endTime}`)] }),
+              new TableCell({ children: [new Paragraph(item.description)] }),
+            ],
+          })
+        )
+      ]
+    });
+
+    const doc = new Document({
+      sections: [{
+        children: [
+          new Paragraph({ text: `Event Title: ${eventDetails.title || ""}`, heading: "Heading1" }),
+          new Paragraph({ text: `Date: ${formattedDate}` }),
+          new Paragraph({ text: `Location: ${eventDetails.location || ""}` }),
+          new Paragraph({ text: `Description: ${eventDetails.description || ""}` }),
+          new Paragraph({ text: "Schedule:", heading: "Heading2" }),
+          scheduleTable
+        ]
+      }]
+    });
+
+    Packer.toBlob(doc).then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "EventSchedule.docx";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
   const [schedule, setSchedule] = useState([]);
 
   useEffect(() => {
@@ -68,7 +133,7 @@ export default function ScheduleModal({ eventId, onClose, onAddSchedule, onEditS
   };
 
   return (
-    <section className="bg-white rounded-lg shadow-lg p-12 max-w-7xl w-full relative">
+  <section className="bg-white rounded-lg shadow-lg p-4 sm:p-12 max-w-7xl w-full relative max-h-screen overflow-y-auto">
       <button
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
         onClick={onClose}
@@ -78,12 +143,20 @@ export default function ScheduleModal({ eventId, onClose, onAddSchedule, onEditS
 
       <h3 className="text-xl font-bold mb-4 text-yellow-900">Event Schedule</h3>
 
-      <button
-        className="mb-4 px-3 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-800"
-        onClick={() => onAddSchedule(null)} // open AddScheduleModal for new
-      >
-        + Add Schedule Item
-      </button>
+      <section className="flex gap-2 mb-4">
+        <button
+          className="px-3 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-800"
+          onClick={() => onAddSchedule(null)} // open AddScheduleModal for new
+        >
+          + Add Schedule Item
+        </button>
+        <button
+          className="px-3 py-2 bg-blue-700 text-white rounded hover:bg-blue-800"
+          onClick={handleExportWord}
+        >
+          Export to Word
+        </button>
+      </section>
 
       {schedule.length === 0 ? (
         <p>No schedule items added yet.</p>
