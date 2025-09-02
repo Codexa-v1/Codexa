@@ -41,7 +41,7 @@ npx jest        #test
 - ![alt text](../../assets/development/Sprint02/Bugs/Trello.png)
 
 ## 4. User Feedback
-- **Google Form** was distributed to peers for user reviews.
+- **[Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeQoMUbDmMaMzPh1MDD8YCQLu8-IxFAlJN5ozyVCMwD-llzKg/viewform?usp=header)** was distributed to peers for user reviews.
 - Questions included: ease of login, event creation flow, UI intuitiveness, problems faced, places for improvement...
 - Results were compiled and analyzed, feedback that may be integrated into next sprint include:
     - UI adjustments, fixing confusing flows.
