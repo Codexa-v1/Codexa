@@ -251,10 +251,6 @@ const Schedule = mongoose.model("Schedule", scheduleSchema);
 
 export default Schedule;
 ```
----
-
-## API and Routes
-Our routes, built with **Express.js**, define how data is sent and retrieved from the database. These include CRUD operations (Create, Read, Update, Delete) across our collections. The API layer ensures the frontend communicates seamlessly with these routes.
 
 ---
 

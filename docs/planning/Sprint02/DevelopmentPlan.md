@@ -92,12 +92,12 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 
 ---
 
-**User Story 3: Guest Management**  
-**As an** event planner, **I want to** send RSVP to my guests **so that** they can revieve my invitation
+**User Story 3: Event Management**  
+**As an** event planner, **I want to** click on the "Events" tab **so that** see all the events that have planned
 
 **Acceptance Criteria:**    
-- Users can see the list of all invitations sent out
-- Users can track status of the rsvps sent out to attendees
+- Users should be able to see all the events that have planned on the UI
+- Users should be able to interact with the events on the UI, cancel the event or view the event.
 
 ---
 
@@ -134,5 +134,6 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 ![alt text](../../assets/meetings/Sprint02/TrelloBoard/26th.png)
 - Trello board as of 31 August 2025:
 ![alt text](../../assets/meetings/Sprint02/TrelloBoard/31st.png)
-
+- Trello board as of 2 September 2025:
+![alt text](../../assets/meetings/Sprint02/TrelloBoard/2nd.png)
 ---
