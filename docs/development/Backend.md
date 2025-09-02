@@ -254,51 +254,6 @@ export default Schedule;
 
 ---
 
-## 🔒 Authentication 
-We are using **Auth0** for authentication and authorization. This ensures secure login, token-based authentication, and role-based access control.
-
-- **SPA (Frontend)** → Uses `@auth0/auth0-react` for handling login/logout, token retrieval, and redirects.
-- **Backend (API)** → Uses Auth0-issued JWT tokens to verify requests, with audience and issuer checks enabled.
-- **Allowed URLs** → Auth0 configured with callback, logout, and web origins for both localhost (development) and Azure production domains.
-- **Environment variables**:
-  - Frontend: `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`  
-    → injected at build time via GitHub Secrets.
-  - Backend: `AUTH0_DOMAIN`, `AUTH0_AUDIENCE`  
-    → stored securely in Azure App Service Configuration.
-
-🔐 **Security note:** Secrets are never stored in the repo. SPA keys are safe to expose (domain, clientId, audience) but API secrets remain on the server side.
-
----
-
-## 🧪 Testing
-We are implementing testing at three levels: frontend, backend, and end-to-end.
-
-### 1. Frontend Unit & Integration Tests → Vitest + React Testing Library
-```bash
-npm install --save-dev vitest @testing-library/react @testing-library/jest-dom      #install
-npx vitest      #test
-```
-- Vitest → Chosen because it is optimized for Vite projects, fast
-- React Testing Library → Helps ensure UI components work as expected from a user perspective.
-- @testing-library/jest-dom → Provides expressive matchers for DOM node assertions.
-
-### 2. End-to-End (E2E) Tests → Playwright
-```bash
-npm install --save-dev @playwright/test #install
-npx playwright test         #test
-```
-- Playwright → Chosen for cross-browser testing (Chromium, Firefox, WebKit). Provides automated testing that simulates real user interactions across multiple devices and screen sizes.
-
-### 3. Backend Tests → Jest + Supertest
-**Install:**
-```bash
-npm install --save-dev jest supertest       #install
-npx jest        #test
-```
-- Jest → A widely adopted JavaScript testing framework, simple configuration, good for asynchronous tests.
-- Supertest → Specialized for testing HTTP APIs in Node.js, making it easy to assert responses from Express routes
-
----
 
 ## 🚀 Deployment
 We chose **Microsoft Azure** for deployment because:  
