@@ -36,7 +36,7 @@ npx jest        #test
 
 ## 3. Manual Testing
 - Each feature manually tested before merging to main.
-- Bug tracking handled via [GitHub](https://github.com/Codexa-v1/Codexa) Issues + [Trello](https://trello.com/b/1v7ctfOX/codexa).
+- Bug tracking handled via [GitHub Issues](https://github.com/Codexa-v1/Codexa/issues?q=is%3Aissue) + [Trello](https://trello.com/b/1v7ctfOX/codexa).
 - ![alt text](../../assets/development/Sprint02/Bugs/Github.png)
 - ![alt text](../../assets/development/Sprint02/Bugs/Trello.png)
 
