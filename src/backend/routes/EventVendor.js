@@ -60,14 +60,14 @@ router.post('/event/:eventId', async (req, res) => {
       website: req.body.website || undefined,
       address: req.body.address,
       rating: req.body.rating ? Number(req.body.rating) : undefined,
-      vendorCost: Number(req.body.vendorCost), // must be a number
+      //vendorCost: Number(req.body.vendorCost), // must be a number
       notes: req.body.notes || undefined
     };
 
     // Validate vendorCost
-    if (isNaN(vendorData.vendorCost)) {
-      return res.status(400).send('vendorCost must be a number');
-    }
+    //if (isNaN(vendorData.vendorCost)) {
+      //return res.status(400).send('vendorCost must be a number');
+    //}
 
     const newVendor = new Vendor(vendorData);
     const savedVendor = await newVendor.save();
