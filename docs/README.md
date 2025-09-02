@@ -31,6 +31,7 @@ This structure helps keep all project documentation organized and easy to naviga
 - **Deployment:** Microsoft Azure
 - **Project Management:** Trello
 - **Documentation:** Markdown + GitHub Pages
+- **[Testing](./planning/Sprint02/Testing.md):** Frontend, Backend, Manual Testing, User testing
 
 
 ## Methodologies
@@ -73,7 +74,6 @@ We follow the Github Flow methodology:
 - Sprint two
     - [Sprint 2 brief](./planning/Sprint02/Sprint02Brief.md)
     - [Sprint Development Plan](./planning/Sprint02/DevelopmentPlan.md)
-    - [Testing](./planning/Sprint02/Testing.md)
     - [Scrum 01](./meetings/sprint02/Scrum01.md)
     - [Scrum 02](./meetings/sprint02/Scrum02.md)
     - [Scrum 03](./meetings/sprint02/Scrum03.md)
