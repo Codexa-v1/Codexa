@@ -96,19 +96,17 @@ Deliver core functionality of the Event Planning system, while ensuring testing,
 **As an** event planner, **I want to** click on the "Events" tab **so that** see all the events that have planned
 
 **Acceptance Criteria:**    
-- Users should be able to see all the events that have planned on the UI
-- Users should be able to interact with the events on the UI, cancel the event or view the event.
+- Users can see all the events that have planned on the UI
+- Users can interact with the events on the UI, cancel the event or view the event.
 
 ---
 
 **User Story 4: Vendor Management**  
-**As an** event planner, **I want to** browse, compare, and select vendors based on affordability **so that** I can choose the best options for my events.
+**As an** event planner, **I want to** add a new vendor to my event **so that** they can sell thier goods or services at this specific event.
 
 **Acceptance Criteria:**  
-- Users can view a list of vendors with details (name, services, cost).  
-- Vendors can be filtered by cost, or other category.  
-- Users can select and link vendors to specific events.  
-- Selected vendors appear in the event details page.  
+- Users can click on an "Add Vendor" button on the UI to add a new vendor.  
+- UI has a form to enter event details
 
 ---
 
