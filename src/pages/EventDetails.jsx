@@ -208,7 +208,7 @@ export default function EventDetails() {
 
       {/* Tabs Navigation */}
       <section className="p-6 w-10/12 max-w-screen-xl mx-auto bg-white rounded-lg shadow mt-8">
-        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
+        <section className="flex overflow-x-auto gap-2 sm:gap-4 mb-6 bg-gray-100 rounded-lg px-2 py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {[
             "overview",
             "rsvp",
