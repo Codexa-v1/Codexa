@@ -104,10 +104,8 @@ it("navigates to previous month when left arrow clicked", () => {
 it("fetches and displays event color dots", async () => {
   render(<Calendar />);
   // wait for the fetch to resolve and events to render
-  await waitFor(() => {
-    const colorDot = screen.queryByTestId("event-color-dot-Wedding");
+  const colorDot = screen.findByTestId("event-color-dot-Wedding");
     expect(colorDot).toBeInTheDocument();
-  });
 });
 
 });
