@@ -242,19 +242,15 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">RSVP Progress</h3>
                 <p className="text-xs mb-2">
-                  Progress: {event.rsvpCurrent}/{event.rsvpTotal}
+                  Progress: {guests.filter(g => g.rsvpStatus === "Accepted").length}/{guests.length}
                 </p>
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section
                     className="bg-green-900 h-2 rounded"
-                    style={{
-                      width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
-                    }}
+                    style={{ width: `${guests.length > 0 ? (guests.filter(g => g.rsvpStatus === "Accepted").length / guests.length) * 100 : 0}%` }}
                   ></section>
                 </section>
-                <p className="text-xs text-green-900">
-                  Click to view guest list
-                </p>
+                <p className="text-xs text-green-900">Click to view guest list</p>
               </section>
               <WeatherCard eventDate={event.date} location={event.location} />
 
