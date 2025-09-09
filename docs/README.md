@@ -84,5 +84,6 @@ We follow the Github Flow methodology:
 - Sprint three
     - [Sprint 3 brief](./planning/Sprint03/Sprint_3_Brief.md)
     - [Scrum 01](./meetings/sprint03/scrum01.md)
+    - [Scrum 02](./meetings/sprint03/Scrum02.md)
 
 ---
