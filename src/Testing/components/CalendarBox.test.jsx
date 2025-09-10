@@ -1,7 +1,7 @@
 // src/Testing/Calendar.test.jsx
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Calendar from "../components/CalendarBox.jsx";
+import Calendar from "../../components/CalendarBox.jsx";
 import { useAuth0 } from "@auth0/auth0-react";
 import dayjs from "dayjs";
 

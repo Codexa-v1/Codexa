@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import "@testing-library/jest-dom";
-import About from "../pages/AboutPage.jsx";
+import About from "../../pages/AboutPage.jsx";
 
 // ---- mock child components ----
 vi.mock("../components/LandingNavbar", () => ({

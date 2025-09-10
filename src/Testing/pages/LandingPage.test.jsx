@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import "@testing-library/jest-dom";
-import LandingPage from "../pages/LandingPage.jsx";
+import LandingPage from "../../pages/LandingPage.jsx";
 import React from "react";
 
 // Mock react-router-dom

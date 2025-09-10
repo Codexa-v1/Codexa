@@ -1,6 +1,6 @@
 // src/Testing/WeatherCard.test.jsx
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import WeatherCard from "../components/WeatherCard";
+import WeatherCard from "../../components/WeatherCard";
 import React from "react";
 
 // Mock dayjs to ensure consistent behavior

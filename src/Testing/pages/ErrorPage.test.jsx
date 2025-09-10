@@ -2,7 +2,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import Error from "../pages/ErrorPage.jsx";
+import Error from "../../pages/ErrorPage.jsx";
 import React from "react";
 
 // mock react-router-dom navigate

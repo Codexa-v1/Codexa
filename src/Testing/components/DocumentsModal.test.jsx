@@ -1,7 +1,7 @@
 // src/Testing/DocumentsModal.test.jsx
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import DocumentsModal from "../components/DocumentsModal.jsx";
+import DocumentsModal from "../../components/DocumentsModal.jsx";
 
 // Mock DocumentUpload so we don't test it here
 vi.mock("../components/DocumentUpload", () => ({

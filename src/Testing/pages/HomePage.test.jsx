@@ -77,7 +77,7 @@ describe("HomePage", () => {
   test("renders welcome message with user name", async () => {
     mockAuth0();
 
-    const { default: HomePage } = await import("../pages/HomePage");
+    const { default: HomePage } = await import("../../pages/HomePage");
     render(
       <MemoryRouter>
         <HomePage />
@@ -89,7 +89,7 @@ describe("HomePage", () => {
 
   test("opens and closes Add New Event modal", async () => {
     mockAuth0();
-    const { default: HomePage } = await import("../pages/HomePage");
+    const { default: HomePage } = await import("../../pages/HomePage");
 
     render(
       <MemoryRouter>
@@ -109,7 +109,7 @@ describe("HomePage", () => {
 
   test("renders fallback when no events exist", async () => {
     mockAuth0();
-    const { default: HomePage } = await import("../pages/HomePage");
+    const { default: HomePage } = await import("../../pages/HomePage");
 
     render(
       <MemoryRouter>
@@ -136,7 +136,7 @@ describe("HomePage", () => {
       })
     );
 
-    const { default: HomePage } = await import("../pages/HomePage");
+    const { default: HomePage } = await import("../../pages/HomePage");
     render(
       <MemoryRouter>
         <HomePage />
@@ -168,7 +168,7 @@ test("opens cancel confirmation popup when Cancel button is clicked", async () =
     })
   );
 
-  const { default: HomePage } = await import("../pages/HomePage");
+  const { default: HomePage } = await import("../../pages/HomePage");
   render(
     <MemoryRouter>
       <HomePage />
@@ -201,7 +201,7 @@ test("closes confirmation popup when No, Go Back is clicked", async () => {
     })
   );
 
-  const { default: HomePage } = await import("../pages/HomePage");
+  const { default: HomePage } = await import("../../pages/HomePage");
   render(
     <MemoryRouter>
       <HomePage />
@@ -242,7 +242,7 @@ test("deletes event and reloads page when Yes, Cancel is clicked", async () => {
     reload: vi.fn(),
   };
 
-  const { default: HomePage } = await import("../pages/HomePage");
+  const { default: HomePage } = await import("../../pages/HomePage");
   render(
     <MemoryRouter>
       <HomePage />
