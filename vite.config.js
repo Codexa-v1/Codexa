@@ -14,4 +14,17 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',   // React Testing Library needs DOM
+    setupFiles: './src/setupTests.jsx', // Jest-DOM matchers, etc.
+    coverage: {
+      provider: 'v8',
+      reporter: ['lcov', 'text'], // required for Codecov + console output
+      reportsDirectory: "./coverage",
+      include: ['src/**/*.{js,jsx}'],
+      exclude: ['**/*.test.{js,jsx}', 'src/setupTests.jsx'],
+      reportOnFailure: true
+    },
+  },
 })

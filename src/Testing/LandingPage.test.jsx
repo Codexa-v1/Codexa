@@ -47,4 +47,12 @@ describe("LandingPage", () => {
     expect(screen.getAllByRole("button", { name: /about/i })).toHaveLength(2); // desktop + mobile navq
     
   });
+  it("closes mobile menu when close button clicked", () => {
+    render(<LandingPage />);
+    const menuButton = screen.getByRole("button", { name: /open navigation menu/i });
+    fireEvent.click(menuButton);
+    const closeButton = screen.getByRole("button", { name: /close navigation menu/i });
+    fireEvent.click(closeButton);
+    expect(screen.queryByRole("button", { name: /about/i })).toBeInTheDocument(); // only desktop nav
+  });
 });
