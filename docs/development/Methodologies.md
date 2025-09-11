@@ -6,8 +6,7 @@ We follow the Agile Scrum methodology to ensure adaptive planning, early deliver
 
 ### Core Practices
 - 🧍 **Standups:**  
-  Held on **Tuesdays, Thursdays, and Sundays** to sync up on progress and blockers.  
-  These days were chosen based on our academic timetable, ensuring regular check-ins without clashing with classes.  
+  Held on **Tuesdays, Thursdays, and Sundays** to sync up on progress and blockers. These days were chosen based on our academic timetable, ensuring regular check-ins without clashing with classes.  
   - Each standup is short (10–15 minutes).  
   - Members report on:  
     1. What they worked on since the last meeting.  
@@ -15,15 +14,11 @@ We follow the Agile Scrum methodology to ensure adaptive planning, early deliver
     3. Any blockers they are facing.  
 
 - 📝 **Sprint Retrospectives and Planning:**  
-  Conducted after every sprint to reflect on what went well, what could be improved, and which practices to continue.  
-  Retros usually happen **immediately after receiving tutor feedback**, so we can incorporate external insights into the next sprint.  
-  We also record agreed-upon **action items** and assign owners. Before each sprint, we review the backlog, refine tasks, and select items to commit to.  
-  This ensures the sprint goal is realistic and aligned with deadlines (like rubric submissions).  
+  Conducted after every sprint to reflect on what went well, what could be improved, and which practices to continue. Retros usually happen **immediately after receiving tutor feedback**, so we can incorporate external insights into the next sprint. We also record agreed-upon **action items** and assign owners. Before each sprint, we review the backlog, refine tasks, and select items to commit to. This ensures the sprint goal is realistic and aligned with deadlines (like rubric submissions).  
 
 - 🔁 **Role Rotation:**  
   Team roles (e.g., Scrum Master, DevOps, Product Owner) **rotate every sprint**.  
-  This helps distribute responsibilities, prevent silos, and encourages members to **learn new skills**.  
-  Role rotation also gives everyone exposure to leadership and technical roles, preparing us for industry teamwork.  
+  This helps distribute responsibilities, prevent silos, and encourages members to **learn new skills**. Role rotation also gives everyone exposure to leadership and technical roles, preparing us for industry teamwork.  
 
 - 🗃️ **Backlog Management:**  
   We use **Trello** as our product backlog and sprint board.  
