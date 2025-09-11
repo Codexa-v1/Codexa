@@ -9,6 +9,7 @@ import exportRouter from './routes/EventExport.js';
 import vendorRouter from './routes/EventVendor.js';
 import venueRouter from './routes/EventVenue.js';
 import scheduleRouter from './routes/EventSchedule.js';
+import azureRouter from './routes/AzureRoutes.js';
 
 const server = express();
 const port = process.env.PORT || 3000;
@@ -39,7 +40,8 @@ server.use('/api/export', exportRouter);
 server.use('/api/vendors', vendorRouter);
 server.use('/api/venues', venueRouter);
 server.use('/api/schedules', scheduleRouter);
+server.use('/api/azure', azureRouter);
 
 server.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on ${port}`);
 });
