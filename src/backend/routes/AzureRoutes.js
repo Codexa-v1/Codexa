@@ -1,20 +1,17 @@
-// backend/routes/AzureRoutes.js
-const express = require("express");
-const {
+import express from "express";
+import {
   BlobServiceClient,
   StorageSharedKeyCredential,
   generateBlobSASQueryParameters,
   ContainerSASPermissions
-} = require("@azure/storage-blob");
+} from "@azure/storage-blob";
 
 const router = express.Router();
 
-// Get env vars securely
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 const containerName = "files";
 
-// GET SAS token
 router.get("/get-sas", async (req, res) => {
   try {
     const sharedKey = new StorageSharedKeyCredential(accountName, accountKey);
@@ -25,7 +22,6 @@ router.get("/get-sas", async (req, res) => {
 
     const containerClient = blobServiceClient.getContainerClient(containerName);
 
-    // Expire in 30 mins
     const expiryDate = new Date();
     expiryDate.setMinutes(expiryDate.getMinutes() + 30);
 
@@ -45,4 +41,4 @@ router.get("/get-sas", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
