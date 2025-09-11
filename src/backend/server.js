@@ -10,6 +10,7 @@ import exportRouter from './routes/EventExport.js';
 import vendorRouter from './routes/EventVendor.js';
 import venueRouter from './routes/EventVenue.js';
 import scheduleRouter from './routes/EventSchedule.js';
+import azureRouter from './routes/AzureRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -40,6 +41,7 @@ app.use('/api/export', exportRouter);
 app.use('/api/vendors', vendorRouter);
 app.use('/api/venues', venueRouter);
 app.use('/api/schedules', scheduleRouter);
+app.use('/api/azure', azureRouter);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
