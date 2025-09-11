@@ -100,5 +100,10 @@ Deliver a **feature-complete, stable, and tested event planning web application*
  ## 3. ⌛ Sprint Timeline
 - Below are snapshots of our Trello board as we progress through the entire sprint. The trello board can be accessed via this [Link](https://trello.com/invite/b/688926a06672f847b26eadd8/ATTI44809ab9733ae3526b4a7133a7e97f41E5E6470D/codexa)
 
+- Our trello board as pf 09 September
+![Alt text](../../assets/meetings/Sprint03/09Sept.png)
+
+- Our trello board as pf 11 September
+![Alt text](../../assets/meetings/Sprint03/11_Sept.png)
 
 ---
