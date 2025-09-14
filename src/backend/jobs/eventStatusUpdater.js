@@ -17,8 +17,6 @@ export const startEventStatusUpdater = () => {
         { endDate: { $lt: now } },
         { status: "Completed" }
       );
-
-      console.log("✅ Event statuses auto-updated");
     } catch (err) {
       console.error("❌ Error updating event statuses:", err);
     }

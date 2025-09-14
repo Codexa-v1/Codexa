@@ -27,7 +27,10 @@ export default function EventsPage() {
   }, [isAuthenticated, user]);
 
   // Get unique event categories for filter dropdown
-  const eventCategories = ["All", ...Array.from(new Set(events.map((e) => e.category)))];
+  const eventCategories = [
+    "All",
+    ...Array.from(new Set(events.map((e) => e.category))),
+  ];
 
   // Filter and search logic
   const filteredEvents = events.filter((event) => {
@@ -92,7 +95,9 @@ export default function EventsPage() {
         {/* Events Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEvents.length === 0 ? (
-            <p className="col-span-3 text-center text-gray-600">No events found.</p>
+            <p className="col-span-3 text-center text-gray-600">
+              No events found.
+            </p>
           ) : (
             filteredEvents.map((event) => {
               const { bgColor, labelColor } =
@@ -120,7 +125,9 @@ export default function EventsPage() {
                     <div
                       className="bg-green-900 h-1 rounded"
                       style={{
-                        width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
+                        width: `${
+                          (event.rsvpCurrent / event.rsvpTotal) * 100
+                        }%`,
                       }}
                     ></div>
                   </div>
@@ -152,7 +159,8 @@ export default function EventsPage() {
                           Cancel Event?
                         </h3>
                         <p className="mb-4">
-                          Are you sure you want to cancel this event? This action cannot be undone.
+                          Are you sure you want to cancel this event? This
+                          action cannot be undone.
                         </p>
                         <button
                           className="bg-red-600 text-white px-4 py-2 rounded mr-2"

@@ -17,16 +17,23 @@ const HomePage = ({ onSeeMore }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchEvents = async () => {
     if (isAuthenticated && user) {
-      // Fetch events for the logged in user from backend
-      getAllEvents(user.sub)
-        .then((data) => setEvents(data))
-        .catch((err) => console.error("Failed to fetch events:", err));
+      try {
+        const data = await getAllEvents(user.sub);
+        setEvents(data);
+      } catch (err) {
+        console.error("Failed to fetch events:", err);
+      }
     }
+  };
+
+  // Fetch events on mount
+  useEffect(() => {
+    fetchEvents();
   }, [isAuthenticated, user]);
 
-  // Filter only Planned or Ongoing events
+  // Filter events to show only Planned or Ongoing
   const upcomingEvents = Array.isArray(events)
     ? events.filter((e) => e.status === "Planned" || e.status === "Ongoing")
     : [];
@@ -65,6 +72,7 @@ const HomePage = ({ onSeeMore }) => {
               <EventPopup
                 onClose={() => setIsModalOpen(false)}
                 selectedDate={selectedDate}
+                onEventCreated={fetchEvents} // refresh after creating a new event
               />
             </section>
           </>

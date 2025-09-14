@@ -5,7 +5,7 @@ import { createEvent } from "@/backend/api/EventData.js";
 import dayjs from "dayjs";
 import { eventColors } from "@/utils/eventColors";
 
-export default function EventPopup({ onClose, selectedDate }) {
+export default function EventPopup({ onClose, selectedDate, onEventCreated }) {
   // Helper to get today's date in YYYY-MM-DD
   const todayStr = dayjs().format("YYYY-MM-DD");
   const { user } = useAuth0();
@@ -87,6 +87,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       const res = await createEvent(eventData);
       setLoading(false);
       setSuccess(true);
+      onEventCreated?.(); // refresh HomePage events
       setTimeout(() => {
         setSuccess(false);
         onClose();
