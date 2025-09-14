@@ -72,7 +72,7 @@ export default function EventPopup({ onClose, selectedDate }) {
       location,
       budget,
       description,
-  status: "Planning",
+      status: "Planned",
       capacity: capacity ? Number(capacity) : undefined,
       category: category === "other" ? newCategory : category,
       organizer: {
@@ -267,7 +267,7 @@ export default function EventPopup({ onClose, selectedDate }) {
                 min={1}
                 inputMode="numeric"
                 pattern="[0-9]*"
-                onChange={e => {
+                onChange={(e) => {
                   const val = e.target.value;
                   if (/^\d*$/.test(val)) setCapacity(val);
                 }}
@@ -277,25 +277,25 @@ export default function EventPopup({ onClose, selectedDate }) {
           </section>
 
           <section>
-              <label htmlFor="budget" className="block font-medium text-gray-700">
-                Budget <span className="text-red-600">*</span>
-              </label>
-              <input
-                type="number"
-                id="budget"
-                placeholder="Budget"
-                className="w-full border border-gray-300 rounded-md p-2"
-                value={budget}
-                min={0}
-                inputMode="numeric"
-                pattern="[0-9]*"
-                onChange={e => {
-                  const val = e.target.value;
-                  if (/^\d*$/.test(val)) setBudget(val);
-                }}
-                required
-              />
-            </section>
+            <label htmlFor="budget" className="block font-medium text-gray-700">
+              Budget <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="number"
+              id="budget"
+              placeholder="Budget"
+              className="w-full border border-gray-300 rounded-md p-2"
+              value={budget}
+              min={0}
+              inputMode="numeric"
+              pattern="[0-9]*"
+              onChange={(e) => {
+                const val = e.target.value;
+                if (/^\d*$/.test(val)) setBudget(val);
+              }}
+              required
+            />
+          </section>
 
           {/* Description of Event */}
           <section>
@@ -349,7 +349,7 @@ export default function EventPopup({ onClose, selectedDate }) {
           </section>
 
           {/* Status */}
-            {/* Status is always 'Planning' for new events. No input shown. */}
+          {/* Status is always 'Planning' for new events. No input shown. */}
           {/* Venue and Floorplan fields removed as per requirements */}
 
           {/* Submit Button */}
