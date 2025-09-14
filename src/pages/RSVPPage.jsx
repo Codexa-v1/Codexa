@@ -1,141 +1,32 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-
-const mockEvents = [
-  {
-    _id: "789",
-    type: "Wedding",
-    title: "Emily & Jake’s Wedding",
-    date: "2025-08-18T09:00:00",
-    location: "Riverside Mansion",
-    rsvpCurrent: 34,
-    rsvpTotal: 46,
-    vendors: [
-      {
-        name: "Floral Designs",
-        vendorType: "Florist",
-        contactPerson: "Jane Flowers",
-        phone: "012-345-6789",
-        email: "floral@email.com",
-        website: "https://floraldesigns.com",
-        address: "123 Flower St, Cityville",
-        location: "Main Hall",
-        rating: 5,
-        notes: "Specializes in wedding bouquets.",
-      },
-      {
-        name: "DJ Mike",
-        vendorType: "Music",
-        contactPerson: "Mike Johnson",
-        phone: "098-765-4321",
-        email: "dj.mike@email.com",
-        website: "https://djmike.com",
-        address: "456 Music Ave, Cityville",
-        location: "Dance Floor",
-        rating: 4,
-        notes: "Has own sound equipment.",
-      },
-      {
-        name: "Catering Co.",
-        vendorType: "Catering",
-        contactPerson: "Sarah Chef",
-        phone: "011-223-3445",
-        email: "catering@email.com",
-        website: "https://cateringco.com",
-        address: "789 Food Rd, Cityville",
-        location: "Dining Area",
-        rating: 5,
-        notes: "Can accommodate vegan options.",
-      },
-    ],
-    description: "Join us for a beautiful wedding celebration!",
-    budget: 120000,
-  },
-  {
-    _id: "456",
-    type: "Conference",
-    title: "Business Conference",
-    date: "2025-08-18T11:00:00",
-    location: "Wits Sport Conference Center",
-    rsvpCurrent: 24,
-    rsvpTotal: 46,
-    vendors: [
-      {
-        name: "AV Solutions",
-        vendorType: "Audio/Visual",
-        contactPerson: "Alex Vision",
-        phone: "021-334-5566",
-        email: "av@email.com",
-        website: "https://avsolutions.com",
-        address: "321 AV Blvd, Cityville",
-        location: "Conference Room",
-        rating: 4,
-        notes: "Provides projectors and microphones.",
-      },
-      {
-        name: "Catering Co.",
-        vendorType: "Catering",
-        contactPerson: "Sarah Chef",
-        phone: "011-223-3445",
-        email: "catering@email.com",
-        website: "https://cateringco.com",
-        address: "789 Food Rd, Cityville",
-        location: "Dining Area",
-        rating: 5,
-        notes: "Can accommodate vegan options.",
-      },
-    ],
-    description: "Annual business conference for networking and learning.",
-    budget: 80000,
-  },
-  {
-    _id: "123",
-    type: "Birthday",
-    title: "John’s 30th Birthday",
-    date: "2025-08-26T15:00:00",
-    location: "The Beach",
-    rsvpCurrent: 33,
-    rsvpTotal: 36,
-    vendors: [
-      {
-        name: "Beach Party Rentals",
-        vendorType: "Equipment",
-        contactPerson: "Sandy Beach",
-        phone: "022-445-6677",
-        email: "beachparty@email.com",
-        website: "https://beachpartyrentals.com",
-        address: "654 Beach Rd, Seaville",
-        location: "Beach Area",
-        rating: 5,
-        notes: "Offers full beach setup.",
-      },
-      {
-        name: "DJ Mike",
-        vendorType: "Music",
-        contactPerson: "Mike Johnson",
-        phone: "098-765-4321",
-        email: "dj.mike@email.com",
-        website: "https://djmike.com",
-        address: "456 Music Ave, Cityville",
-        location: "Dance Floor",
-        rating: 4,
-        notes: "Has own sound equipment.",
-      },
-    ],
-    description: "Celebrate John's milestone birthday by the sea!",
-    budget: 25000,
-  },
-];
+import { useState, useEffect } from "react";
+import { getEvent } from "../backend/api/EventData";
 
 export default function RSVPPage() {
   const { eventId } = useParams();
-  const event = mockEvents.find((e) => e._id === eventId);
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [attending, setAttending] = useState("yes");
   const [plusOne, setPlusOne] = useState("no");
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const eventData = await getEvent(eventId);
+        setEvent(eventData);
+      } catch (err) {
+        setError(err.message || "Failed to load event");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvent();
+  }, [eventId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -146,6 +37,8 @@ export default function RSVPPage() {
     alert("Thank you for your RSVP!");
   };
 
+  if (loading) return <p>Loading event...</p>;
+  if (error) return <p>Error: {error}</p>;
   if (!event) return <p>Event not found.</p>;
 
   return (
