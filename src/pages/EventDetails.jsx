@@ -4,8 +4,6 @@ import dayjs from "dayjs";
 import Navbar from "../components/Navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 
-
-
 // Modals
 import RSVPModal from "../components/RSVPModal";
 import EditEventModal from "../components/EditEventModal";
@@ -183,9 +181,11 @@ export default function EventDetails() {
             <h4 className="font-semibold">Guests</h4>
             <p className="text-2xl font-bold">{guests.length}</p>
             <p className="text-sm text-gray-500">
-              Accepted: {guests.filter(g => g.rsvpStatus === "Accepted").length} | 
-              Declined: {guests.filter(g => g.rsvpStatus === "Declined").length} | 
-              Pending: {guests.filter(g => g.rsvpStatus === "Pending").length}
+              Accepted:{" "}
+              {guests.filter((g) => g.rsvpStatus === "Accepted").length} |
+              Declined:{" "}
+              {guests.filter((g) => g.rsvpStatus === "Declined").length} |
+              Pending: {guests.filter((g) => g.rsvpStatus === "Pending").length}
             </p>
           </div>
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
@@ -234,7 +234,7 @@ export default function EventDetails() {
         {/* Tab Content */}
         <section className="display">
           {activeTab === "overview" && (
-            <section className="grid grid-cols-2 gap-6 mb-8">
+            <section className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* RSVP Card */}
               <section
                 className="bg-green-100 rounded-lg shadow p-6 cursor-pointer hover:bg-green-200 transition"
@@ -242,15 +242,28 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">RSVP Progress</h3>
                 <p className="text-xs mb-2">
-                  Progress: {guests.filter(g => g.rsvpStatus === "Accepted").length}/{guests.length}
+                  Progress:{" "}
+                  {guests.filter((g) => g.rsvpStatus === "Accepted").length}/
+                  {guests.length}
                 </p>
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section
                     className="bg-green-900 h-2 rounded"
-                    style={{ width: `${guests.length > 0 ? (guests.filter(g => g.rsvpStatus === "Accepted").length / guests.length) * 100 : 0}%` }}
+                    style={{
+                      width: `${
+                        guests.length > 0
+                          ? (guests.filter((g) => g.rsvpStatus === "Accepted")
+                              .length /
+                              guests.length) *
+                            100
+                          : 0
+                      }%`,
+                    }}
                   ></section>
                 </section>
-                <p className="text-xs text-green-900">Click to view guest list</p>
+                <p className="text-xs text-green-900">
+                  Click to view guest list
+                </p>
               </section>
               <WeatherCard eventDate={event.date} location={event.location} />
 
