@@ -8,13 +8,6 @@ export default function LandingPage() {
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const scrollToFeatures = () => {
-    const section = document.getElementById("features");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white w-full pl-6 pr-6">
       {/* Header */}
@@ -146,7 +139,7 @@ export default function LandingPage() {
                 Because perfect events don't happen by accident.
               </p>
               <button
-                onClick={scrollToFeatures}
+                onClick={() => loginWithRedirect()}
                 className="bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-800 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Get Started
