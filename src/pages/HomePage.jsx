@@ -26,6 +26,11 @@ const HomePage = ({ onSeeMore }) => {
     }
   }, [isAuthenticated, user]);
 
+  // Filter only Planned or Ongoing events
+  const upcomingEvents = Array.isArray(events)
+    ? events.filter((e) => e.status === "Planned" || e.status === "Ongoing")
+    : [];
+
   // When a day is clicked in the calendar
   const handleDayClick = (date) => {
     setSelectedDate(date);
@@ -77,17 +82,25 @@ const HomePage = ({ onSeeMore }) => {
             <h3 className="mb-3 text-xl font-semibold text-center text-green-900">
               Upcoming Events
             </h3>
-            {Array.isArray(events) && events.length > 0 ? (
-              events
+
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents
                 .slice(0, 3)
-                .map((event, index) => <EventCard key={index} event={event} setConfirmDeleteId={setConfirmDeleteId} />)
+                .map((event, index) => (
+                  <EventCard
+                    key={index}
+                    event={event}
+                    setConfirmDeleteId={setConfirmDeleteId}
+                  />
+                ))
             ) : (
-              <p className="text-center text-gray-500">No events found.</p>
+              <p className="text-center text-gray-500">No upcoming events.</p>
             )}
-            {Array.isArray(events) && events.length > 3 && (
+
+            {upcomingEvents.length > 3 && (
               <button
                 className="mt-2 w-full bg-green-700 text-white py-2 rounded hover:bg-green-900 font-semibold"
-                onClick={() => navigate('/events')}
+                onClick={() => navigate("/events")}
               >
                 See more...
               </button>
