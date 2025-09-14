@@ -244,7 +244,7 @@ export default function EventDetails() {
                 <p className="text-xs mb-2">
                   Progress:{" "}
                   {guests.filter((g) => g.rsvpStatus === "Accepted").length}/
-                  {guests.length}
+                  {event.capacity}
                 </p>
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section

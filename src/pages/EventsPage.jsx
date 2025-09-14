@@ -125,14 +125,12 @@ export default function EventsPage() {
                     <div
                       className="bg-green-900 h-1 rounded"
                       style={{
-                        width: `${
-                          (event.rsvpCurrent / event.rsvpTotal) * 100
-                        }%`,
+                        width: `${(event.rsvpCurrent / event.capacity) * 100}%`,
                       }}
                     ></div>
                   </div>
                   <p className="text-xs mb-2">
-                    RSVP: {event.rsvpCurrent}/{event.rsvpTotal}
+                    RSVP: {event.rsvpCurrent}/{event.capacity}
                   </p>
 
                   {/* Actions */}
