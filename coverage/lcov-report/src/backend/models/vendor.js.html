@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -80,40 +80,40 @@
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import mongoose from "mongoose";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import mongoose from "mongoose";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >const vendorSchema = new mongoose.Schema({</span>
-<span class="cstat-no" title="statement not covered" >    name: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >    vendorType: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >    contactPerson: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >    phone: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >    email: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >    website: String,</span>
-<span class="cstat-no" title="statement not covered" >    address: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >    rating: {type: Number, min: 1, max: 5},</span>
-<span class="cstat-no" title="statement not covered" >    notes: { type: String }</span>
-<span class="cstat-no" title="statement not covered" >}, { timestamps: true });</span>
+const vendorSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    vendorType: { type: String, required: true },
+    contactPerson: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: { type: String, required: true },
+    website: String,
+    address: { type: String, required: true },
+    rating: {type: Number, min: 1, max: 5},
+    notes: { type: String }
+}, { timestamps: true });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >const Vendor = mongoose.model("Vendor", vendorSchema);</span>
+const Vendor = mongoose.model("Vendor", vendorSchema);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export default Vendor;</span>
+export default Vendor;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -121,7 +121,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-10T07:44:35.461Z
+                at 2025-09-17T08:47:28.801Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
