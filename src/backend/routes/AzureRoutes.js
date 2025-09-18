@@ -56,9 +56,14 @@ router.get("/list-user-documents", async (req, res) => {
 
     const documents = [];
 
-    // Assume user uploads are stored with prefix `userId/filename`
+    // List blobs with prefix = userId/ (includes docType folder)
     for await (const blob of containerClient.listBlobsFlat({ prefix: `${userId}/` })) {
-      // Generate SAS URL for each blob
+      // Extract docType and filename from path
+      const parts = blob.name.split("/");
+      const docType = parts.length > 2 ? parts[1] : "Other";
+      const fileName = parts[parts.length - 1];
+
+      // Generate SAS URL (read-only)
       const expiryDate = new Date();
       expiryDate.setMinutes(expiryDate.getMinutes() + 30);
 
@@ -66,16 +71,16 @@ router.get("/list-user-documents", async (req, res) => {
         {
           containerName,
           blobName: blob.name,
-          permissions: ContainerSASPermissions.parse("r"), // read-only
+          permissions: BlobSASPermissions.parse("r"), // read-only
           expiresOn: expiryDate,
         },
         sharedKey
       ).toString();
 
       documents.push({
-        name: blob.name.split("/").pop(),
+        name: fileName,
+        type: docType,
         size: blob.properties.contentLength,
-        type: blob.properties.contentType,
         date: blob.properties.lastModified,
         url: `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}?${sasToken}`,
       });
@@ -83,7 +88,7 @@ router.get("/list-user-documents", async (req, res) => {
 
     res.json(documents);
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching documents:", err);
     res.status(500).json({ error: err.message });
   }
 });
