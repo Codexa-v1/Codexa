@@ -10,6 +10,7 @@ const router = express.Router();
 
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
+
 const containerName = "files";
 
 router.get("/get-sas", async (req, res) => {
