@@ -8,8 +8,14 @@ import { useEffect, useState } from "react";
 import { deleteEvent, getAllEvents } from "../backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
+<<<<<<< HEAD
 const HomePage = ({ onSeeMore }) => {
+=======
+const HomePage = () => {
+  const navigate = useNavigate();
+>>>>>>> ui-enhancement-server-implementation-testing
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated } = useAuth0();
   const [events, setEvents] = useState([]);

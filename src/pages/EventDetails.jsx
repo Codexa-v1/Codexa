@@ -180,12 +180,19 @@ export default function EventDetails() {
         {/* Overview Cards */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
+<<<<<<< HEAD
             <h4 className="font-semibold">Guests</h4>
             <p className="text-2xl font-bold">{guests.length}</p>
             <p className="text-sm text-gray-500">
               Accepted: {guests.filter(g => g.rsvpStatus === "Accepted").length} | 
               Declined: {guests.filter(g => g.rsvpStatus === "Declined").length} | 
               Pending: {guests.filter(g => g.rsvpStatus === "Pending").length}
+=======
+            <h4 className="font-semibold">Total Guests</h4>
+            <p className="text-2xl font-bold">{event.rsvpTotal}</p>
+            <p className="text-sm text-gray-500">
+              {event.rsvpCurrent} confirmed
+>>>>>>> ui-enhancement-server-implementation-testing
             </p>
           </div>
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
@@ -207,8 +214,13 @@ export default function EventDetails() {
       </section>
 
       {/* Tabs Navigation */}
+<<<<<<< HEAD
       <section className="p-6 w-10/12 max-w-screen-xl mx-auto bg-white rounded-lg shadow mt-8">
         <section className="flex overflow-x-auto gap-2 sm:gap-4 mb-6 bg-gray-100 rounded-lg px-2 py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+=======
+      <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
+        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
+>>>>>>> ui-enhancement-server-implementation-testing
           {[
             "overview",
             "rsvp",
@@ -247,10 +259,18 @@ export default function EventDetails() {
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section
                     className="bg-green-900 h-2 rounded"
+<<<<<<< HEAD
                     style={{ width: `${guests.length > 0 ? (guests.filter(g => g.rsvpStatus === "Accepted").length / guests.length) * 100 : 0}%` }}
+=======
+                    style={{
+                      width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
+                    }}
+>>>>>>> ui-enhancement-server-implementation-testing
                   ></section>
                 </section>
-                <p className="text-xs text-green-900">Click to view guest list</p>
+                <p className="text-xs text-green-900">
+                  Click to view guest list
+                </p>
               </section>
               <WeatherCard eventDate={event.date} location={event.location} />
 

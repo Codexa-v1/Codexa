@@ -15,6 +15,7 @@ export default defineConfig({
   },
   test: {
     globals: true,
+<<<<<<< HEAD
     environment: "jsdom",   // so RTL has a DOM
     coverage: {
       provider: "v8",
@@ -23,5 +24,20 @@ export default defineConfig({
       exclude: ['**/*.test.{js,jsx}', 'src/setupTests.js'],
   },
     setupFiles: "./src/setupTests.js", // optional, for global setup
+=======
+    environment: 'jsdom',   // React Testing Library needs DOM
+    setupFiles: './src/setupTests.jsx', // Jest-DOM matchers, etc.
+    coverage: {
+      provider: 'v8',
+      reporter: ['lcov', 'text'], // required for Codecov + console output
+      reportsDirectory: "./coverage",
+      include: ['src/**/*.{js,jsx}'],
+      exclude: ['**/*.test.{js,jsx}', 'src/setupTests.jsx'],
+      reportOnFailure: true
+    },
+>>>>>>> ui-enhancement-server-implementation-testing
   },
+  define: {
+    'import.meta.env.VITE_BACKEND_URL': '"http://localhost:3000"'
+  }
 });
