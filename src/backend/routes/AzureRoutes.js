@@ -3,7 +3,8 @@ import {
   BlobServiceClient,
   StorageSharedKeyCredential,
   generateBlobSASQueryParameters,
-  ContainerSASPermissions
+  ContainerSASPermissions,
+  BlobSASPermissions,
 } from "@azure/storage-blob";
 
 const router = express.Router();
