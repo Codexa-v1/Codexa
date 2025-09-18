@@ -57,7 +57,7 @@ router.get("/list-user-documents", async (req, res) => {
     const documents = [];
 
     // List blobs with prefix = userId/ (includes docType folder)
-    for await (const blob of containerClient.listBlobsFlat({ prefix: `${userId}/` })) {
+    for await (const blob of containerClient.listBlobsFlat({ prefix = `${docType}/${userId}/` })) {
       // Extract docType and filename from path
       const parts = blob.name.split("/");
       const docType = parts.length > 2 ? parts[1] : "Other";
