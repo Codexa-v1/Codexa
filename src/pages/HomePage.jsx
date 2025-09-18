@@ -5,23 +5,18 @@ import Calendar from "@/components/CalendarBox";
 import EventPopup from "@/components/EventPopup";
 import EventCard from "@/components/EventCard";
 import { useEffect, useState } from "react";
-import { deleteEvent, getAllEvents } from "../backend/api/EventData";
+import { getAllEvents } from "@/backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 
-<<<<<<< HEAD
-const HomePage = ({ onSeeMore }) => {
-=======
 const HomePage = () => {
   const navigate = useNavigate();
->>>>>>> ui-enhancement-server-implementation-testing
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated } = useAuth0();
   const [events, setEvents] = useState([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -41,9 +36,9 @@ const HomePage = () => {
   return (
     <section className="home-page min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
       <Navbar />
-      <section className="p-2 sm:p-6 max-w-screen-xl mx-auto min-h-screen font-sans">
+      <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans">
         {/* Header */}
-        <section className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+        <section className="flex justify-between items-center">
           <h2 className="text-3xl font-bold text-green-900">
             Welcome back, {user.name}!
           </h2>
@@ -93,7 +88,7 @@ const HomePage = () => {
             {Array.isArray(events) && events.length > 3 && (
               <button
                 className="mt-2 w-full bg-green-700 text-white py-2 rounded hover:bg-green-900 font-semibold"
-                onClick={() => navigate('/events')}
+                onClick={() => navigate("/events")}
               >
                 See more...
               </button>
@@ -116,7 +111,13 @@ const HomePage = () => {
                 className="bg-red-600 text-white px-4 py-2 rounded mr-2"
                 onClick={async () => {
                   try {
-                    const res = await deleteEvent(confirmDeleteId);
+                    const res = await fetch(
+                      `${import.meta.env.VITE_BACKEND_URL}/api/events/${confirmDeleteId}`,
+                      {
+                        method: "DELETE",
+                      }
+                    );
+                    if (!res.ok) throw new Error("Failed to delete event");
                     setConfirmDeleteId(null);
                     // Optionally refresh events list
                     window.location.reload();
