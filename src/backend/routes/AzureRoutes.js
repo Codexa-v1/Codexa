@@ -43,47 +43,44 @@ router.get("/get-sas", async (req, res) => {
 });
 
 router.get("/list-user-documents", async (req, res) => {
+  const userId = req.query.userId;
+  if (!userId) return res.status(400).json({ error: "Missing userId" });
+
+  const sharedKey = new StorageSharedKeyCredential(accountName, accountKey);
+  const blobServiceClient = new BlobServiceClient(
+    `https://${accountName}.blob.core.windows.net`,
+    sharedKey
+  );
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+
+  const docTypes = ["FloorPlan", "Agenda", "Budget", "VendorContract", "Photos", "Other"];
+  const documents = [];
+
   try {
-    const { userId } = req.query;
-    if (!userId) return res.status(400).json({ error: "Missing userId" });
+    for (const docType of docTypes) {
+      // List blobs under each docType for this user
+      for await (const blob of containerClient.listBlobsFlat({ prefix: `${docType}/${userId}/` })) {
+        const fileName = blob.name.split("/").pop();
 
-    const sharedKey = new StorageSharedKeyCredential(accountName, accountKey);
-    const blobServiceClient = new BlobServiceClient(
-      `https://${accountName}.blob.core.windows.net`,
-      sharedKey
-    );
-    const containerClient = blobServiceClient.getContainerClient(containerName);
+        // Generate SAS for this blob (read-only, expires in 30 mins)
+        const sasToken = generateBlobSASQueryParameters(
+          {
+            containerName,
+            blobName: blob.name,
+            permissions: BlobSASPermissions.parse("r"),
+            expiresOn: new Date(new Date().getTime() + 30 * 60 * 1000),
+          },
+          sharedKey
+        ).toString();
 
-    const documents = [];
-
-    // List blobs with prefix = userId/ (includes docType folder)
-    for await (const blob of containerClient.listBlobsFlat({ prefix: `${docType}/${userId}/` })) {
-      // Extract docType and filename from path
-      const parts = blob.name.split("/");
-      const docType = parts.length > 2 ? parts[1] : "Other";
-      const fileName = parts[parts.length - 1];
-
-      // Generate SAS URL (read-only)
-      const expiryDate = new Date();
-      expiryDate.setMinutes(expiryDate.getMinutes() + 30);
-
-      const sasToken = generateBlobSASQueryParameters(
-        {
-          containerName,
-          blobName: blob.name,
-          permissions: BlobSASPermissions.parse("r"), // read-only
-          expiresOn: expiryDate,
-        },
-        sharedKey
-      ).toString();
-
-      documents.push({
-        name: fileName,
-        type: docType,
-        size: blob.properties.contentLength,
-        date: blob.properties.lastModified,
-        url: `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}?${sasToken}`,
-      });
+        documents.push({
+          name: fileName,
+          type: docType,
+          size: blob.properties.contentLength,
+          date: blob.properties.lastModified,
+          url: `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}?${sasToken}`,
+        });
+      }
     }
 
     res.json(documents);
