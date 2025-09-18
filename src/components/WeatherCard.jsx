@@ -122,37 +122,14 @@ export default function WeatherCard({ eventDate, location }) {
       ) : error === "Not available" ? (
         <p className="text-sm">Forecast not yet available for this date!</p>
       ) : forecast ? (
-<<<<<<< HEAD
-        <section className="flex flex-col sm:flex-row sm:justify-between gap-6 sm:gap-0 items-center w-full">
-          {/* Left side: main weather */}
-          <section className="flex flex-col items-center mb-4 sm:mb-0 sm:items-start">
-=======
         <section className="flex justify-between">
           {/* Left side: main weather */}
           <section className="flex flex-col">
->>>>>>> ui-enhancement-server-implementation-testing
             <img
               src={getWeatherIcon(forecast.weather.main)}
               alt={forecast.weather.description}
               className="w-16 sm:w-18 mt-1"
             />
-<<<<<<< HEAD
-            <h1 className="text-xl font-semibold mt-2">
-              {Math.round(forecast.temp)}°C
-            </h1>
-            <h2 className="text-base font-medium mt-1">{forecast.city}</h2>
-          </section>
-
-          {/* Details */}
-          <section className="flex flex-col justify-between items-center sm:items-start w-full gap-4 px-2 sm:px-6">
-            <p className="capitalize text-sm font-medium mb-2 sm:mb-0 text-center sm:text-left">
-              {forecast.weather.description}
-            </p>
-            <section className="flex items-center mb-2 sm:mb-0">
-              <img src={humidityIcon} alt="Humidity" className="w-6 mr-3" />
-              <section className="text-left">
-                <p className="text-base font-medium">{forecast.humidity}%</p>
-=======
             <h1 className="text-xl font-semibold">
               {Math.round(forecast.temp)}°C
             </h1>
@@ -168,7 +145,6 @@ export default function WeatherCard({ eventDate, location }) {
               <img src={humidityIcon} alt="Humidity" className="w-6 mr-3" />
               <section className="text-left">
                 <p className="text-l font-medium">{forecast.humidity}%</p>
->>>>>>> ui-enhancement-server-implementation-testing
                 <p className="text-xs">Humidity</p>
               </section>
             </section>
@@ -176,11 +152,7 @@ export default function WeatherCard({ eventDate, location }) {
             <section className="flex items-center">
               <img src={wind} alt="Wind" className="w-6 mr-3" />
               <section className="text-left">
-<<<<<<< HEAD
-                <p className="text-base font-medium">
-=======
                 <p className="text-l font-medium">
->>>>>>> ui-enhancement-server-implementation-testing
                   {Math.round(forecast.wind)} km/h
                 </p>
                 <p className="text-xs">Wind Speed</p>
