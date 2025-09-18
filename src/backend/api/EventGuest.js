@@ -42,26 +42,6 @@ export function updateGuest(eventId, guestId, guest) {
         });
 }
 
-<<<<<<< HEAD
-export async function deleteGuest(eventId, guestId) {
-    fetch(`${url}/api/guests/event/${eventId}/guest/${guestId}`, {
-        method: 'DELETE',   
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Guest deleted successfully');
-        } else {
-            throw new Error('Failed to delete guest');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting guest:', error);
-    });
-} 
-=======
 export function deleteGuest(eventId, guestId) {
     return fetch(`${url}/event/${eventId}/guest/${guestId}`, {
         method: 'DELETE',
@@ -73,6 +53,5 @@ export function deleteGuest(eventId, guestId) {
             return { success: true };
         });
 }
->>>>>>> ui-enhancement-server-implementation-testing
 
 export default { getGuests, addGuest, updateGuest, deleteGuest };
