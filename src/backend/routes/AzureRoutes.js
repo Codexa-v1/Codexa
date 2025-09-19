@@ -130,4 +130,35 @@ router.get("/list-user-documents", async (req, res) => {
   }
 });
 
+// ------------------ DELETE DOCUMENT ------------------
+router.post("/delete-user-document", async (req, res) => {
+  try {
+    const { userId, eventId, docType, fileName } = req.body;
+
+    if (!userId || !eventId || !docType || !fileName) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const sharedKey = new StorageSharedKeyCredential(accountName, accountKey);
+    const blobServiceClient = new BlobServiceClient(
+      `https://${accountName}.blob.core.windows.net`,
+      sharedKey
+    );
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    // Build the blob path used in uploads
+    const blobName = `${docType}/${userId}/${eventId}/${fileName}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    // Delete the blob if it exists
+    await blockBlobClient.deleteIfExists();
+
+    res.status(200).json({ message: "Document deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting document:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 export default router;
