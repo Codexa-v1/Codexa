@@ -1,51 +1,67 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function DocumentUpload() {
+export default function DocumentUpload({ userId, eventId }) {
+  const [docType, setDocType] = useState("Other");
   const [file, setFile] = useState(null);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const [uploading, setUploading] = useState(false);
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (!file || !userId || !eventId) return alert("Missing info");
 
+    setUploading(true);
     const formData = new FormData();
-    formData.append("document", file);
+    formData.append("file", file);
+    formData.append("userId", userId);
+    formData.append("eventId", eventId);
+    formData.append("docType", docType);
 
-    // // Send to backend
-    // await fetch("/api/upload", {
-    //   method: "POST",
-    //   body: formData,
-    // });
+    try {
+      const res = await fetch(
+        "https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/azure/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-    alert("Uploaded!");
+      if (!res.ok) throw new Error("Upload failed");
+
+      alert("Upload successful!");
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Failed to upload file");
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
-    <div className="flex flex-col w-fit gap-2 items-center border-black/10 border p-2 mt-4 rounded-lg">
-      <span className="font-semibold text-green-700 mb-1">Upload Floor Plan</span>
-      <div className="flex gap-2 items-center">
-        <input
-          type="file"
-          onChange={handleFileChange}
-          className="hidden"
-          id="fileInput"
-        />
-        <label
-          htmlFor="fileInput"
-          className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
-        >
-          Choose File
-        </label>
-        {file && <span>{file.name}</span>}
-        <button
-          onClick={handleUpload}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700"
-        >
-          Upload
-        </button>
-      </div>
+    <div className="border rounded-lg p-4 shadow-sm">
+      <h4 className="font-bold mb-2">Upload a Document</h4>
+      <select
+        value={docType}
+        onChange={(e) => setDocType(e.target.value)}
+        className="border rounded p-2 mr-2"
+      >
+        <option value="FloorPlan">Floor Plan</option>
+        <option value="Agenda">Agenda</option>
+        <option value="Budget">Budget</option>
+        <option value="VendorContract">Vendor Contract</option>
+        <option value="Photos">Photos</option>
+        <option value="Other">Other</option>
+      </select>
+      <input
+        type="file"
+        onChange={(e) => setFile(e.target.files[0])}
+        className="mb-2"
+      />
+      <button
+        onClick={handleUpload}
+        disabled={uploading}
+        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+      >
+        {uploading ? "Uploading..." : "Upload"}
+      </button>
     </div>
   );
 }
