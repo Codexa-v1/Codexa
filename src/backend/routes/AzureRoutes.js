@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 import {
   BlobServiceClient,
   StorageSharedKeyCredential,
@@ -8,12 +9,14 @@ import {
 } from "@azure/storage-blob";
 
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 
 const containerName = "files";
 
+// ------------------ GET SAS TOKEN ------------------
 router.get("/get-sas", async (req, res) => {
   try {
     const sharedKey = new StorageSharedKeyCredential(accountName, accountKey);
@@ -43,9 +46,43 @@ router.get("/get-sas", async (req, res) => {
   }
 });
 
+// ------------------ UPLOAD ------------------
+router.post("/upload", upload.single("file"), async (req, res) => {
+  try {
+    const { userId, docType, eventId } = req.body;
+    const file = req.file;
+
+    if (!file || !userId || !docType || !eventId) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const sharedKey = new StorageSharedKeyCredential(accountName, accountKey);
+    const blobServiceClient = new BlobServiceClient(
+      `https://${accountName}.blob.core.windows.net`,
+      sharedKey
+    );
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+
+    // Path: files/{docType}/{userId}/{eventId}/{filename}
+    const blobName = `${docType}/${userId}/${eventId}/${file.originalname}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    await blockBlobClient.uploadData(file.buffer, {
+      blobHTTPHeaders: { blobContentType: file.mimetype },
+    });
+
+    res.json({ message: "File uploaded successfully", path: blobName });
+  } catch (err) {
+    console.error("Error uploading file:", err.message);
+    res.status(500).json({ error: "Error uploading file" });
+  }
+});
+
+// ------------------ LIST DOCUMENTS ------------------
 router.get("/list-user-documents", async (req, res) => {
-  const userId = req.query.userId;
-  if (!userId) return res.status(400).json({ error: "Missing userId" });
+  const { userId, eventId } = req.query;
+  if (!userId || !eventId)
+    return res.status(400).json({ error: "Missing userId or eventId" });
 
   const sharedKey = new StorageSharedKeyCredential(accountName, accountKey);
   const blobServiceClient = new BlobServiceClient(
@@ -59,8 +96,10 @@ router.get("/list-user-documents", async (req, res) => {
 
   try {
     for (const docType of docTypes) {
-      // List blobs under each docType for this user
-      for await (const blob of containerClient.listBlobsFlat({ prefix: `${docType}/${userId}/` })) {
+      // List blobs under {docType}/{userId}/{eventId}/
+      for await (const blob of containerClient.listBlobsFlat({
+        prefix: `${docType}/${userId}/${eventId}/`,
+      })) {
         const fileName = blob.name.split("/").pop();
 
         // Generate SAS for this blob (read-only, expires in 30 mins)
