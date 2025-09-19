@@ -70,22 +70,19 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 ## 3. 👤 User Stories with Acceptance Criteria
 
 ### User Story 1: Guest Management
-**As an event planner,** I want to add guests with unique IDs (not emails), so that I can reuse the same guest across multiple events.  
+**As an event planner,** I want to add guests, so that they can accept or decline my invitation
 - **Acceptance Criteria:**  
   - Guests can be added without duplicate errors.  
   - Each guest has a unique ID scoped to an event.  
-  - A “VIP” tag can be added to highlight priority guests.  
 
 ---
 
 ### User Story 2: Vendor Management
 **As an event planner,** I want to compare vendors by availability and affordability, so that I can make cost-effective and conflict-free choices.  
 - **Acceptance Criteria:**  
-  - Alerts if required vendor details are missing.  
-  - Vendors unavailable if booked on the same date.  
+  - Alerts if required vendor details are missing.   
   - Vendors can be filtered by budget.  
-  - When a vendor is added, the budget reduces accordingly.  
-  - Alert appears if budget is exceeded.  
+  - When a vendor is added, the budget reduces accordingly.   
 
 ---
 
@@ -93,7 +90,7 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 **As a user,** I want the app to refresh automatically after changes, so that I can see updated information without manually reloading.  
 - **Acceptance Criteria:**  
   - Pages refresh automatically after guest/vendor changes.  
-  - No noticeable performance lag (>2s delay avoided).  
+  - No noticeable performance lag
 
 ---
 

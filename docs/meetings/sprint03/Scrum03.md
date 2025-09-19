@@ -1,4 +1,4 @@
-# 📋 Scrum 3 Meeting – Sprint 3 Minutes
+# 📋 Codexa: Scrum 04 Meeting Minutes
 
 **Date:** September 11, 2025  
 **Time:** 20:34 – 20:47  
