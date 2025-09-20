@@ -56,7 +56,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/error" element={<Error />} />
         <Route path="/about" element={<About />} />
-        <Route path="/rsvp/:eventId" element={<RSVPPage />} />
+        <Route path="/rsvp/:eventId/:guestId" element={<RSVPPage />} />
       </Routes>
     </Router>
   );
