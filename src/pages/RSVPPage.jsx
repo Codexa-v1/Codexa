@@ -13,7 +13,7 @@ const RSVPPage = () => {
       const eventRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/events/${eventId}`);
       setEvent(eventRes.data);
 
-      const rsvpRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guest/rsvp/${eventId}/${guestId}`);
+      const rsvpRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/rsvp/${eventId}/${guestId}`);
       setRsvpStatus(rsvpRes.data.rsvpStatus);
     };
     fetchData();
@@ -34,7 +34,7 @@ const RSVPPage = () => {
     if (!selectedStatus) return;
     setConfirming(true);
     try {
-      await axios.post(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guest/rsvp/${eventId}/${guestId}`, { rsvpStatus: selectedStatus });
+      await axios.post(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/rsvp/${eventId}/${guestId}`, { rsvpStatus: selectedStatus });
       setRsvpStatus(selectedStatus);
       alert('RSVP updated!');
     } catch (err) {
