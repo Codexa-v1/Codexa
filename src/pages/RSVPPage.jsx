@@ -1,167 +1,50 @@
+<<<<<<< Updated upstream
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import React from "react";
 
+=======
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+>>>>>>> Stashed changes
 
-const mockEvents = [
-  {
-    _id: "789",
-    type: "Wedding",
-    title: "Emily & Jake’s Wedding",
-    date: "2025-08-18T09:00:00",
-    location: "Riverside Mansion",
-    rsvpCurrent: 34,
-    rsvpTotal: 46,
-    vendors: [
-      {
-        name: "Floral Designs",
-        vendorType: "Florist",
-        contactPerson: "Jane Flowers",
-        phone: "012-345-6789",
-        email: "floral@email.com",
-        website: "https://floraldesigns.com",
-        address: "123 Flower St, Cityville",
-        location: "Main Hall",
-        rating: 5,
-        notes: "Specializes in wedding bouquets.",
-      },
-      {
-        name: "DJ Mike",
-        vendorType: "Music",
-        contactPerson: "Mike Johnson",
-        phone: "098-765-4321",
-        email: "dj.mike@email.com",
-        website: "https://djmike.com",
-        address: "456 Music Ave, Cityville",
-        location: "Dance Floor",
-        rating: 4,
-        notes: "Has own sound equipment.",
-      },
-      {
-        name: "Catering Co.",
-        vendorType: "Catering",
-        contactPerson: "Sarah Chef",
-        phone: "011-223-3445",
-        email: "catering@email.com",
-        website: "https://cateringco.com",
-        address: "789 Food Rd, Cityville",
-        location: "Dining Area",
-        rating: 5,
-        notes: "Can accommodate vegan options.",
-      },
-    ],
-    description: "Join us for a beautiful wedding celebration!",
-    budget: 120000,
-  },
-  {
-    _id: "456",
-    type: "Conference",
-    title: "Business Conference",
-    date: "2025-08-18T11:00:00",
-    location: "Wits Sport Conference Center",
-    rsvpCurrent: 24,
-    rsvpTotal: 46,
-    vendors: [
-      {
-        name: "AV Solutions",
-        vendorType: "Audio/Visual",
-        contactPerson: "Alex Vision",
-        phone: "021-334-5566",
-        email: "av@email.com",
-        website: "https://avsolutions.com",
-        address: "321 AV Blvd, Cityville",
-        location: "Conference Room",
-        rating: 4,
-        notes: "Provides projectors and microphones.",
-      },
-      {
-        name: "Catering Co.",
-        vendorType: "Catering",
-        contactPerson: "Sarah Chef",
-        phone: "011-223-3445",
-        email: "catering@email.com",
-        website: "https://cateringco.com",
-        address: "789 Food Rd, Cityville",
-        location: "Dining Area",
-        rating: 5,
-        notes: "Can accommodate vegan options.",
-      },
-    ],
-    description: "Annual business conference for networking and learning.",
-    budget: 80000,
-  },
-  {
-    _id: "123",
-    type: "Birthday",
-    title: "John’s 30th Birthday",
-    date: "2025-08-26T15:00:00",
-    location: "The Beach",
-    rsvpCurrent: 33,
-    rsvpTotal: 36,
-    vendors: [
-      {
-        name: "Beach Party Rentals",
-        vendorType: "Equipment",
-        contactPerson: "Sandy Beach",
-        phone: "022-445-6677",
-        email: "beachparty@email.com",
-        website: "https://beachpartyrentals.com",
-        address: "654 Beach Rd, Seaville",
-        location: "Beach Area",
-        rating: 5,
-        notes: "Offers full beach setup.",
-      },
-      {
-        name: "DJ Mike",
-        vendorType: "Music",
-        contactPerson: "Mike Johnson",
-        phone: "098-765-4321",
-        email: "dj.mike@email.com",
-        website: "https://djmike.com",
-        address: "456 Music Ave, Cityville",
-        location: "Dance Floor",
-        rating: 4,
-        notes: "Has own sound equipment.",
-      },
-    ],
-    description: "Celebrate John's milestone birthday by the sea!",
-    budget: 25000,
-  },
-];
+const RSVPPage = () => {
+  const { eventId, guestId } = useParams();
+  const [rsvpStatus, setRsvpStatus] = useState('');
+  const [event, setEvent] = useState(null);
 
-export default function RSVPPage() {
-  const { eventId } = useParams();
-  const event = mockEvents.find((e) => e._id === eventId);
+  useEffect(() => {
+    // Fetch current RSVP status & event info
+    const fetchData = async () => {
+      const eventRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/events/${eventId}`);
+      setEvent(eventRes.data);
 
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [attending, setAttending] = useState("yes");
-  const [plusOne, setPlusOne] = useState("no");
+      const rsvpRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guest/rsvp/${eventId}/${guestId}`);
+      setRsvpStatus(rsvpRes.data.rsvpStatus);
+    };
+    fetchData();
+  }, [eventId, guestId]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const rsvpData = { fullName, email, mobileNumber, attending, plusOne };
-    console.log("Submitting RSVP:", rsvpData);
+  const handleChange = async (e) => {
+    const status = e.target.value;
+    setRsvpStatus(status);
 
-    // later → send to backend API
-    alert("Thank you for your RSVP!");
+    await axios.post(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guest/rsvp/${eventId}/${guestId}`, { rsvpStatus: status });
+    alert('RSVP updated!');
   };
 
-  if (!event) return <p>Event not found.</p>;
+  if (!event) return <p>Loading...</p>;
 
   return (
-    <section className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-2xl shadow-md">
-      <h1 className="text-2xl font-bold mb-2 text-center">{event.title}</h1>
-      <p className="text-gray-600 mb-2 text-center">{event.description}</p>
-      <p className="text-gray-600 mb-1">
-        <strong>Date:</strong> {new Date(event.date).toLocaleString()}
-      </p>
-      <p className="text-gray-600 mb-4">
-        {" "}
-        <strong>Location: </strong> {event.location}
-      </p>
+    <div>
+      <h1>RSVP for {event.title}</h1>
+      <p>From Date: {event.date} to {event.endDate}</p>
+      <p>Start Time: {event.startTime}</p>
+      <p>End Time: {event.endTime}</p>
+      <p>Location: {event.location}</p>
 
+<<<<<<< Updated upstream
       <form onSubmit={handleSubmit} className=" space-y-6">
         <section>
           <label htmlFor="Full name" className="block text-gray-700 font-medium mb-1">
@@ -250,5 +133,34 @@ export default function RSVPPage() {
         </button>
       </form>
     </section>
+=======
+      <label>
+        <input
+          type="radio"
+          value="Accepted"
+          checked={rsvpStatus === 'Accepted'}
+          onChange={handleChange}
+        /> Accept
+      </label>
+      <label>
+        <input
+          type="radio"
+          value="Declined"
+          checked={rsvpStatus === 'Declined'}
+          onChange={handleChange}
+        /> Decline
+      </label>
+      <label>
+        <input
+          type="radio"
+          value="Pending"
+          checked={rsvpStatus === 'Pending'}
+          onChange={handleChange}
+        /> Maybe
+      </label>
+    </div>
+>>>>>>> Stashed changes
   );
-}
+};
+
+export default RSVPPage;
