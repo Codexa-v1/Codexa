@@ -169,12 +169,12 @@ router.post('/event/:eventId/guest/:guestId/remind', async (req, res) => {
     const guest = await Guest.findById(guestId);
     const event = await Event.findById(eventId);
 
-    const rsvpLink = `https://planit.com/rsvp/${eventId}/${guestId}`;
+    const rsvpLink = `https://victorious-ground-09423c310.1.azurestaticapps.net/rsvp/${eventId}/${guestId}`;
 
     const htmlMessage = `<p>Hi ${guest.name},</p>
   <p>
     This email serves to remind you to confirm your RSVP for the Event: <b>${event.title}</b> held on 
-    <b>${event.date}</b> at <b>${event.time}</b> here: 
+    <b>${event.date}</b> here: 
     <a href="${rsvpLink}">${rsvpLink}</a>
   </p>
   <p><b>Thank you for your attention! (DO NOT REPLY TO THIS EMAIL)</b></p>`;
@@ -209,7 +209,7 @@ router.post('/event/:eventId/guest/:guestId/reinvite', async (req, res) => {
         const event = await Event.findById(eventId);
         if (!event) return res.status(404).send('Event not found');
 
-        const rsvpLink = `${process.env.VITE_BACKEND_URL}/guest/${eventId}/${guestId}`;
+        const rsvpLink = `https://victorious-ground-09423c310.1.azurestaticapps.net/rsvp/${eventId}/${guestId}`;
         const htmlMessage = `
             <p>Hi ${guest.name},</p>
             <p>Please RSVP for the event: <b>${event.title}</b> held on <b>${event.date}</b> here:
