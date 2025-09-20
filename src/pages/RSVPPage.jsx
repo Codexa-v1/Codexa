@@ -13,8 +13,10 @@ const RSVPPage = () => {
       const eventRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/events/${eventId}`);
       setEvent(eventRes.data);
 
-      const rsvpRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/rsvp/${eventId}/${guestId}`);
-      setRsvpStatus(rsvpRes.data.rsvpStatus);
+      const guestsRes = await axios.get(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}`);
+      const guest = guestsRes.data.find(g => g._id === guestId);
+      if (!guest) throw new Error("Guest not found");
+      setRsvpStatus(guest.rsvpStatus);
     };
     fetchData();
   }, [eventId, guestId]);
@@ -34,7 +36,7 @@ const RSVPPage = () => {
     if (!selectedStatus) return;
     setConfirming(true);
     try {
-      await axios.post(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/rsvp/${eventId}/${guestId}`, { rsvpStatus: selectedStatus });
+      await axios.patch(`https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}/guest/${guestId}`, { rsvpStatus: selectedStatus });
       setRsvpStatus(selectedStatus);
       alert('RSVP updated!');
     } catch (err) {
