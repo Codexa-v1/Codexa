@@ -7,6 +7,7 @@ import express from 'express';
 import Event from '../models/event.js';
 import Guest from '../models/guest.js';
 import EventGuest from "../models/eventguest.js";
+import { sendEmail } from '../utils/email.js';
 
 const router = express.Router();
 
@@ -80,8 +81,6 @@ router.post('/event/:eventId', async (req, res) => {
         res.status(500).send('Error adding guest');
     }
 });
-
-
 
 // This is to alter the information of a particular guest in a particular event
 router.patch('/event/:eventId/guest/:guestId', async (req, res) => {
@@ -157,6 +156,33 @@ router.delete('/event/:eventId/guest/:guestId', async (req, res) => {
         console.error('Error deleting guest:', error);
         res.status(500).send('Error deleting guest from event');
     }
+});
+
+
+
+router.post('/event/:eventId/guest/:guestId/remind', async (req, res) => {
+  try {
+    const { eventId, guestId } = req.params;
+    const eventGuest = await EventGuest.findOne({ eventId, guestId });
+    const guest = await Guest.findById(guestId);
+    const event = await Event.findById(eventId);
+
+    if (!eventGuest || !guest || !event) {
+      return res.status(404).send('Guest or Event not found');
+    }
+
+    const rsvpLink = `https://google.com`; // Replace with actual RSVP link generation logic
+    // Send reminder email
+    const emailSubject = `Reminder: RSVP for ${event.title}`;
+    const emailBody = `Hi ${guest.name},\n\nYou haven't responded to the invitation for ${event.title}.\nPlease confirm your RSVP here: ${rsvpLink}\n\nThank you.`;
+
+    await sendEmail(guest.email, emailSubject, emailBody);
+
+    res.status(200).json({ message: 'Reminder email sent successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Failed to send reminder email');
+  }
 });
 
 export default router;
