@@ -164,25 +164,104 @@ router.post('/event/:eventId/guest/:guestId/remind', async (req, res) => {
   try {
     const { eventId, guestId } = req.params;
     const eventGuest = await EventGuest.findOne({ eventId, guestId });
+    if (!eventGuest) return res.status(404).send('Guest not found');
+
     const guest = await Guest.findById(guestId);
     const event = await Event.findById(eventId);
 
-    if (!eventGuest || !guest || !event) {
-      return res.status(404).send('Guest or Event not found');
-    }
+    const rsvpLink = `https://planit.com/rsvp/${eventId}/${guestId}`;
 
-    const rsvpLink = `https://google.com`; // Replace with actual RSVP link generation logic
-    // Send reminder email
-    const emailSubject = `Reminder: RSVP for ${event.title}`;
-    const emailBody = `Hi ${guest.name},\n\nYou haven't responded to the invitation for ${event.title}.\nPlease confirm your RSVP here: ${rsvpLink}\n\nThank you.`;
+    const htmlMessage = `<p>Hi ${guest.name},</p>
+  <p>
+    This email serves to remind you to confirm your RSVP for the Event: <b>${event.title}</b> held on 
+    <b>${event.date}</b> at <b>${event.time}</b> here: 
+    <a href="${rsvpLink}">${rsvpLink}</a>
+  </p>
+  <p><b>Thank you for your attention! (DO NOT REPLY TO THIS EMAIL)</b></p>`;
 
-    await sendEmail(guest.email, emailSubject, emailBody);
+    console.log('Sending reminder to:', guest.email);
 
-    res.status(200).json({ message: 'Reminder email sent successfully' });
+    await sendEmail({
+      to: guest.email,                  // Must be exact property name
+      subject: `Reminder: RSVP for ${event.title}`,
+      html: htmlMessage
+    });
+
+    res.status(200).send('Reminder sent successfully!');
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Failed to send reminder email');
+    console.error('Error sending reminder email:', error);
+    res.status(500).send('Failed to send reminder');
   }
 });
+
+
+router.post('/event/:eventId/guest/:guestId/reinvite', async (req, res) => {
+    try {
+        const { eventId, guestId } = req.params;
+
+        const guest = await Guest.findById(guestId);
+        if (!guest) return res.status(404).send('Guest not found');
+
+        if (!guest.email) {
+            return res.status(400).send(`Guest ${guest.name} does not have an email`);
+        }
+
+        const event = await Event.findById(eventId);
+        if (!event) return res.status(404).send('Event not found');
+
+        const rsvpLink = `${process.env.VITE_BACKEND_URL}/guest/${eventId}/${guestId}`;
+        const htmlMessage = `
+            <p>Hi ${guest.name},</p>
+            <p>Please RSVP for the event: <b>${event.title}</b> held on <b>${event.date}</b> here:
+            <a href="${rsvpLink}">${rsvpLink}</a></p>
+            <p><b>Thank you! (DO NOT REPLY)</b></p>
+        `;
+
+        console.log('Sending reinvite to:', guest.email);
+
+        await sendEmail({
+            to: guest.email,       // ✅ this must be exactly like this
+            subject: `Re-invite: RSVP for ${event.title}`,
+            html: htmlMessage,
+        });
+
+        res.status(200).send(`Reinvite sent to ${guest.email}`);
+    } catch (error) {
+        console.error('Error sending reinvite email:', error);
+        res.status(500).send('Error sending reinvite email');
+    }
+});
+
+// Get RSVP status for a guest
+router.get('/rsvp/:eventId/:guestId', async (req, res) => {
+  const { eventId, guestId } = req.params;
+
+  const eventGuest = await EventGuest.findOne({ eventId, guestId });
+  if (!eventGuest) return res.status(404).send('Guest not found');
+
+  res.json({ rsvpStatus: eventGuest.rsvpStatus });
+});
+
+// Update RSVP status for a guest
+router.post('/rsvp/:eventId/:guestId', async (req, res) => {
+  const { eventId, guestId } = req.params;
+  const { rsvpStatus } = req.body; // "Accepted", "Declined", "Pending"
+
+  if (!['Pending', 'Accepted', 'Declined'].includes(rsvpStatus)) {
+    return res.status(400).send('Invalid RSVP status');
+  }
+
+  const eventGuest = await EventGuest.findOne({ eventId, guestId });
+  if (!eventGuest) return res.status(404).send('Guest not found');
+
+  eventGuest.rsvpStatus = rsvpStatus;
+  await eventGuest.save();
+
+  res.status(200).send('RSVP updated successfully!');
+});
+
+
+
+
 
 export default router;

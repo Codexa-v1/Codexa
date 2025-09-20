@@ -25,6 +25,7 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "framer-motion": "^12.23.12",
+    "googleapis": "^160.0.0",
     "heroicons": "^2.2.0",
     "lucide-react": "^0.539.0",
     "mongoose": "^8.17.1",

@@ -1,30 +1,22 @@
 import nodemailer from 'nodemailer';
 
-// Create a transporter using SMTP (example with Gmail)
-const transporter = nodemailer.createTransport({
-  service: 'gmail', // e.g., 'gmail' or custom SMTP host
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+export async function sendEmail({ to, subject, html }) {
+    if (!to) throw new Error('Recipient email is required');
 
-// Send email function
-export async function sendEmail(to, subject, text, html = null) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    text,
-    html,
-  };
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,      // your Gmail
+            pass: process.env.EMAIL_PASS,      // your Gmail app password
+        },
+    });
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent: ', info.response);
-    return info;
-  } catch (err) {
-    console.error('Error sending email:', err);
-    throw err;
-  }
+    const info = await transporter.sendMail({
+        from: `"PlanIt" <${process.env.EMAIL_USER}>`,
+        to,       // must be string or array of strings
+        subject,
+        html,
+    });
+
+    console.log('Email sent:', info.messageId);
 }
