@@ -38,15 +38,30 @@ describe('Event Router', () => {
   beforeEach(() => {
     app = createTestApp();
 
-    // JSON-safe mock event
+    // JSON-safe mock event matching the schema
     mockEvent = {
       _id: '507f1f77bcf86cd799439011',
-      title: 'Test Event',
-      description: 'Test Description',
-      date: '2024-12-01T00:00:00.000Z',
       eventPlanner: 'user123',
-      theme: 'Birthday',
-      location: 'Test Location'
+      title: 'Test Event',
+      date: '2024-12-01T10:00:00.000Z',
+      endDate: '2024-12-01T12:00:00.000Z',
+      location: 'Test Location',
+      description: 'Test Description',
+      status: 'Planned',
+      budget: 1000,
+      capacity: 50,
+      category: 'Corporate',
+      organizer: {
+        name: 'Jane Doe',
+        contact: '123-456-7890',
+        email: 'jane@example.com'
+      },
+      startTime: '10:00',
+      endTime: '12:00',
+      rsvpCurrent: 10,
+      rsvpTotal: 50,
+      createdAt: '2024-11-01T10:00:00.000Z',
+      updatedAt: '2024-11-10T10:00:00.000Z'
     };
 
     vi.clearAllMocks();
@@ -166,14 +181,29 @@ describe('Event Router', () => {
   // ------------------- POST / -------------------
   describe('POST /', () => {
     const newEventData = {
+      eventPlanner: 'user123',
       title: 'New Event',
+      date: '2024-12-01T10:00:00.000Z',
+      endDate: '2024-12-01T12:00:00.000Z',
+      location: 'New Location',
       description: 'New Description',
-      date: '2024-12-01T00:00:00.000Z',
-      eventPlanner: 'user123'
+      status: 'Planned',
+      budget: 500,
+      capacity: 100,
+      category: 'Corporate',
+      organizer: {
+        name: 'John Smith',
+        contact: '555-555-5555',
+        email: 'john@example.com'
+      },
+      startTime: '10:00',
+      endTime: '12:00',
+      rsvpCurrent: 0,
+      rsvpTotal: 100
     };
 
     it('should create new event successfully', async () => {
-      const savedEvent = { ...newEventData, _id: '507f1f77bcf86cd799439012' };
+      const savedEvent = { ...newEventData, _id: '507f1f77bcf86cd799439012', createdAt: '2024-11-01T10:00:00.000Z', updatedAt: '2024-11-01T10:00:00.000Z' };
       Event.prototype.save.mockResolvedValue(savedEvent);
 
       const response = await request(app)
@@ -204,7 +234,7 @@ describe('Event Router', () => {
     });
 
     it('should handle empty request body', async () => {
-      Event.prototype.save.mockResolvedValue({ _id: '507f1f77bcf86cd799439013' });
+      Event.prototype.save.mockResolvedValue({ _id: '507f1f77bcf86cd799439013', createdAt: '2024-11-01T10:00:00.000Z', updatedAt: '2024-11-01T10:00:00.000Z' });
 
       const response = await request(app)
         .post('/events')
@@ -261,12 +291,27 @@ describe('Event Router', () => {
       mockEvent,
       {
         _id: '507f1f77bcf86cd799439012',
-        title: 'Another Event',
         eventPlanner: 'user123',
-        date: null,
-        description: null,
-        theme: null,
-        location: null
+        title: 'Another Event',
+        date: '2024-12-02T10:00:00.000Z',
+        endDate: '2024-12-02T12:00:00.000Z',
+        location: 'Another Location',
+        description: 'Another Description',
+        status: 'Planned',
+        budget: 2000,
+        capacity: 150,
+        category: 'Corporate',
+        organizer: {
+          name: 'Alice Smith',
+          contact: '222-333-4444',
+          email: 'alice@example.com'
+        },
+        startTime: '10:00',
+        endTime: '12:00',
+        rsvpCurrent: 20,
+        rsvpTotal: 150,
+        createdAt: '2024-11-02T10:00:00.000Z',
+        updatedAt: '2024-11-10T10:00:00.000Z'
       }
     ];
 

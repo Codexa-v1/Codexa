@@ -17,7 +17,30 @@ describe('Event Download Router', () => {
   });
 
   it('GET /event/:eventId - should return event when found', async () => {
-    const mockEvent = { _id: '507f1f77bcf86cd799439012', title: 'Test Event' };
+    const mockEvent = {
+      _id: '507f1f77bcf86cd799439012',
+      eventPlanner: 'user123',
+      title: 'Test Event',
+      date: '2024-12-01T10:00:00.000Z',
+      endDate: '2024-12-01T12:00:00.000Z',
+      location: 'Test Location',
+      description: 'Test Description',
+      status: 'Planned',
+      budget: 1000,
+      capacity: 50,
+      category: 'Corporate',
+      organizer: {
+        name: 'Jane Doe',
+        contact: '123-456-7890',
+        email: 'jane@example.com'
+      },
+      startTime: '10:00',
+      endTime: '12:00',
+      rsvpCurrent: 10,
+      rsvpTotal: 50,
+      createdAt: '2024-11-01T10:00:00.000Z',
+      updatedAt: '2024-11-10T10:00:00.000Z'
+    };
     Event.findById.mockResolvedValue(mockEvent);
 
     const res = await request(app).get('/event/507f1f77bcf86cd799439012');

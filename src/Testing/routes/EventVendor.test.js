@@ -1,7 +1,7 @@
 // src/Testing/routes/vendor.test.js
 import request from "supertest";
 import express from "express";
-import router from "../../backend/routes/EventVendor.js"; // adjust path
+import router from "../../backend/routes/EventVendor.js";
 import Event from "../../backend/models/event.js";
 import Vendor from "../../backend/models/vendor.js";
 import EventVendor from "../../backend/models/eventvendor.js";
@@ -31,8 +31,34 @@ describe("Vendor Router", () => {
       { vendorId: "vendor2" }
     ];
     const vendors = [
-      { _id: "vendor1", name: "Vendor 1" },
-      { _id: "vendor2", name: "Vendor 2" }
+      {
+        _id: "vendor1",
+        name: "Venue Co.",
+        vendorType: "Venue",
+        contactPerson: "John Smith",
+        phone: "123-456-7890",
+        email: "venue@example.com",
+        website: "https://venueco.com",
+        address: "123 Main St",
+        rating: 5,
+        notes: "Preferred partner",
+        createdAt: "2025-09-01T10:00:00.000Z",
+        updatedAt: "2025-09-10T10:00:00.000Z"
+      },
+      {
+        _id: "vendor2",
+        name: "Catering Co.",
+        vendorType: "Catering",
+        contactPerson: "Jane Doe",
+        phone: "987-654-3210",
+        email: "catering@example.com",
+        website: "https://cateringco.com",
+        address: "456 Side St",
+        rating: 4,
+        notes: "Vegetarian options available",
+        createdAt: "2025-09-01T10:00:00.000Z",
+        updatedAt: "2025-09-10T10:00:00.000Z"
+      }
     ];
 
     EventVendor.find.mockResolvedValue(eventVendors);
@@ -69,7 +95,17 @@ describe("Vendor Router", () => {
   // ========================
   it("should create a new vendor for an event", async () => {
     const eventId = "event123";
-    const vendorData = { name: "Vendor X", vendorType: "Catering" };
+    const vendorData = {
+      name: "Florist Co.",
+      vendorType: "Florist",
+      contactPerson: "Sam Lee",
+      phone: "555-555-5555",
+      email: "florist@example.com",
+      website: "https://floristco.com",
+      address: "789 Market St",
+      rating: 3,
+      notes: "Seasonal discounts"
+    };
 
     Event.findById.mockResolvedValue({ _id: eventId });
     Vendor.prototype.save = vi.fn().mockResolvedValue({ _id: "vendor123", ...vendorData });
@@ -99,7 +135,17 @@ describe("Vendor Router", () => {
   it("should update a vendor", async () => {
     const eventId = "event123";
     const vendorId = "vendor123";
-    const updateFields = { name: "Updated Vendor" };
+    const updateFields = {
+      name: "Updated Vendor",
+      vendorType: "Decor",
+      contactPerson: "Sam Lee",
+      phone: "555-555-5555",
+      email: "decor@example.com",
+      website: "https://decorco.com",
+      address: "789 Market St",
+      rating: 3,
+      notes: "Seasonal discounts"
+    };
 
     EventVendor.findOne.mockResolvedValue({ eventId, vendorId });
     Vendor.findByIdAndUpdate.mockResolvedValue({ _id: vendorId, ...updateFields });
@@ -131,7 +177,20 @@ describe("Vendor Router", () => {
     EventVendor.findOne.mockResolvedValue({ eventId, vendorId });
     EventVendor.deleteOne.mockResolvedValue({});
     EventVendor.exists.mockResolvedValue(false);
-    Vendor.findByIdAndDelete.mockResolvedValue({ _id: vendorId });
+    Vendor.findByIdAndDelete.mockResolvedValue({
+      _id: vendorId,
+      name: "Florist Co.",
+      vendorType: "Florist",
+      contactPerson: "Sam Lee",
+      phone: "555-555-5555",
+      email: "florist@example.com",
+      website: "https://floristco.com",
+      address: "789 Market St",
+      rating: 3,
+      notes: "Seasonal discounts",
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    });
 
     const res = await request(app).delete(`/event/${eventId}/vendors/${vendorId}`);
 

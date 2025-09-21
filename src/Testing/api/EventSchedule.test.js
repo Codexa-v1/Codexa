@@ -1,3 +1,5 @@
+// need to change mockSchedule to match your schedule structure in model
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   getSchedule,
@@ -15,7 +17,15 @@ beforeEach(() => {
 
 describe("Schedule API", () => {
   it("getSchedule should return schedule JSON", async () => {
-    const mockSchedule = [{ id: "s1", title: "Opening" }];
+    const mockSchedule = [{
+      id: "s1",
+      eventId: "event123",
+      description: "Opening Ceremony",
+      startTime: "09:00",
+      endTime: "09:30",
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    }];
 
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -31,8 +41,18 @@ describe("Schedule API", () => {
   });
 
   it("createEventSchedule should POST and return new schedule", async () => {
-    const scheduleData = { title: "Session 1" };
-    const mockResponse = { id: "s2", ...scheduleData };
+    const scheduleData = {
+      eventId: "event123",
+      description: "Session 1",
+      startTime: "10:00",
+      endTime: "11:00"
+    };
+    const mockResponse = {
+      id: "s2",
+      ...scheduleData,
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    };
 
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -53,8 +73,18 @@ describe("Schedule API", () => {
   });
 
   it("updateEventSchedule should PATCH and return updated schedule", async () => {
-    const updateData = { title: "Updated Session" };
-    const mockResponse = { id: "s3", ...updateData };
+    const updateData = {
+      description: "Updated Session",
+      startTime: "11:00",
+      endTime: "12:00"
+    };
+    const mockResponse = {
+      id: "s3",
+      eventId: "event123",
+      ...updateData,
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    };
 
     fetch.mockResolvedValueOnce({
       ok: true,
