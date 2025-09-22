@@ -154,3 +154,7 @@ This document details the tests implemented in the `api` and `routes` folders, s
 
 - **Model Validation**  
   Ensured all test data matches the actual Mongoose schemas.
+ 
+---
+
+All API and routes were tested, as all of them are crucial in making our application functional.
