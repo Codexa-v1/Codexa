@@ -7,6 +7,7 @@ We are implementing testing at three levels: frontend, backend, and end-to-end.
 - **End-to-End** (E2E) → Automated user flows tested with Playwright.
 - **Manual Testing** → Exploratory tests by the dev team.
 - **User Testing** → Google Forms distributed to real users for UX feedback.
+- [**Sprint 3** Testing](/Codexa/docs/planning/Sprint03/Testing.md) → Expands Sprint 3 testing across frontend components, backend APIs, and Express routes.
 
 ## 2. Automated Testing
 ### 1. Frontend Unit & Integration Tests → Vitest + React Testing Library
