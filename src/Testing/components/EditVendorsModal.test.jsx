@@ -125,4 +125,27 @@ describe("EditVendorModal", () => {
 
     expect(onClose).toHaveBeenCalled();
   });
+  
+  it("initializes empty form fields when vendor props are missing", () => {
+  render(
+    <EditVendorModal
+      eventId="event1"
+      vendor={{}} // simulate no vendor data
+      onClose={onClose}
+      onVendorsUpdated={onVendorsUpdated}
+    />
+  );
+
+  // All inputs should start empty
+  expect(screen.getByPlaceholderText("Name")).toHaveValue("");
+  expect(screen.getByPlaceholderText("Type")).toHaveValue("");
+  expect(screen.getByPlaceholderText("Contact Person")).toHaveValue("");
+  expect(screen.getByPlaceholderText("Phone")).toHaveValue("");
+  expect(screen.getByPlaceholderText("Email")).toHaveValue("");
+  expect(screen.getByPlaceholderText("Website")).toHaveValue("");
+  expect(screen.getByPlaceholderText("Address")).toHaveValue("");
+  expect(screen.getByPlaceholderText("Rating (1-5)")).toHaveValue(null);
+  expect(screen.getByPlaceholderText("Notes")).toHaveValue("");
+});
+
 });
