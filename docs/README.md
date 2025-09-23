@@ -87,5 +87,7 @@ We follow the Github Flow methodology:
     - [Scrum 01](./meetings/sprint03/scrum01.md)
     - [Scrum 02](./meetings/sprint03/Scrum02.md)
     - [Scrum 03](./meetings/sprint03/Scrum03.md)
-
+    - [Scrum 04](./meetings/sprint03/Scrum04.md)
+    - [Scrum 05](./meetings/sprint03/Scrum05.md)
+    
 ---
