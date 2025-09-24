@@ -12,7 +12,7 @@ export default function DocumentsModal({ documents, onClose }) {
         &times;
       </button>
 
-      <h3 className="text-xl font-bold mb-4 text-green-900">Event Documents</h3>
+      <h3 className="text-xl font-bold mb-4 text-purple-900">Event Documents</h3>
 
       {documents && documents.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

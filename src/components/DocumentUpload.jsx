@@ -26,7 +26,7 @@ export default function DocumentUpload() {
 
   return (
     <div className="flex flex-col w-fit gap-2 items-center border-black/10 border p-2 mt-4 rounded-lg">
-      <span className="font-semibold text-green-700 mb-1">Upload Floor Plan</span>
+      <span className="font-semibold text-purple-700 mb-1">Upload Floor Plan</span>
       <div className="flex gap-2 items-center">
         <input
           type="file"
