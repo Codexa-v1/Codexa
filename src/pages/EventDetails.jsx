@@ -104,6 +104,16 @@ export default function EventDetails() {
     }
   };
 
+  const tabColors = {
+    overview: "text-green-700",
+    rsvp: "text-green-700",
+    vendors: "text-blue-700",
+    venues: "text-red-700",
+    schedule: "text-yellow-700",
+    floor: "text-pink-700",
+    documents: "text-purple-700",
+  };
+
   if (!event) {
     return (
       <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 to-green-900">
@@ -219,7 +229,9 @@ export default function EventDetails() {
             <button
               key={tab}
               className={`px-4 py-2 ${
-                activeTab === tab ? "text-green-700 font-bold" : "text-gray-500"
+                activeTab === tab
+                  ? `${tabColors[tab]} font-bold`
+                  : "text-gray-500"
               }`}
               onClick={() => setActiveTab(tab)}
             >
