@@ -160,9 +160,15 @@ export default function EventDetails() {
               </button>
               <button
                 className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
-                onClick={() => {
-                  setShowPastEventModal(false);
-                  setShowEditEventModal(true);
+                onClick={async () => {
+                  try {
+                    const updated = await updateEvent(event._id, { status: "Planning" });
+                    setEvent(updated);
+                    setShowPastEventModal(false);
+                    setShowEditEventModal(true);
+                  } catch (err) {
+                    console.error("Failed to complete event:", err);
+                  }
                 }}
               >
                 Re-open / Postpone

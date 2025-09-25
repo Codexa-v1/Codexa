@@ -65,8 +65,8 @@ export default function EventsPage() {
     const eventDate = dayjs(date);
 
     if (eventDate.isSame(today, "day")) return { text: "Ongoing", color: "bg-yellow-600" };
-    if (eventDate.isAfter(today, "day")) return { text: "Upcoming", color: "bg-green-700" };
-    return { text: "Past", color: "bg-gray-500" };
+    if (eventDate.isAfter(today, "day")) return { text: "Open", color: "bg-green-700" };
+    return { text: "Closed", color: "bg-gray-500" };
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -169,21 +169,6 @@ export default function EventsPage() {
                       {dayjs(event.date).format("DD MMM YYYY, HH:mm")}
                     </p>
                     <p className="text-sm mb-2">{event.location}</p>
-
-                    {/* RSVP Progress Bar */}
-                    <div className="bg-gray-300 h-1 rounded mt-1 mb-2">
-                      <div
-                        className="bg-green-900 h-1 rounded"
-                        style={{
-                          width: `${
-                            (event.rsvpCurrent / event.rsvpTotal) * 100
-                          }%`,
-                        }}
-                      ></div>
-                    </div>
-                    <p className="text-xs mb-2">
-                      RSVP: {event.rsvpCurrent}/{event.rsvpTotal}
-                    </p>
 
                     {/* Actions */}
                     <div className="flex justify-between mt-3">
