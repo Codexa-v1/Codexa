@@ -103,4 +103,7 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 - Our trello board as pf 11 September
 ![Alt text](../../assets/meetings/Sprint03/11_Sept.png)
 
+- Our trello board as pf 23 September
+![Alt text](../../assets/meetings/Sprint03/23Sept.png)
+
 ---

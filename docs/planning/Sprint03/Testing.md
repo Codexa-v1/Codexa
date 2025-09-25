@@ -83,6 +83,13 @@
   - Core upload logic is already tested in `VenueEditModal` and through E2E tests.  
   - Low ROI, UI-only tests here would be brittle and costly to maintain.  
 
+## 5️⃣ User Feedback and feedback gathering
+  - From the Google Form was distributed to peers for user reviews in the last sprint, Results were compiled and analyzed and the following features were added to the web app:
+    - Preventing invalid inputs on user input prompts
+    - Uploading and downloading documents
+    - Weather forecast
+    - Automatic refresh
+    
 ---
 
 ## ✅ Conclusion
