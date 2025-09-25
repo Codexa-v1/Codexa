@@ -9,8 +9,6 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
     venuePhone: "",
     capacity: "",
     venueStatus: "",
-    venueCost: "",
-    venueAvailability: "",
     venueImage: "",
   });
   const [venues, setVenues] = useState([]);
@@ -19,31 +17,29 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
+    setForm((f) => ({ ...f, [name]: value }));
   };
 
   const handleAddVenue = (e) => {
     e.preventDefault();
-    const { venueName, venueAddress, venueEmail, venuePhone, capacity, venueStatus, venueCost, venueAvailability } = form;
+    const { venueName, venueAddress, venueEmail, venuePhone, capacity, venueStatus } = form;
 
-    if (!venueName || !venueAddress || !venueEmail || !venuePhone || !capacity || !venueStatus || !venueCost || !venueAvailability) return;
+    if (!venueName || !venueAddress || !venueEmail || !venuePhone || !capacity || !venueStatus) return;
 
-    setVenues(prev => [
+    setVenues((prev) => [
       ...prev,
       {
-        ...form,
         venueName: venueName.trim(),
         venueAddress: venueAddress.trim(),
         venueEmail: venueEmail.trim(),
         venuePhone: venuePhone.trim(),
         capacity: Number(capacity),
         venueStatus,
-        venueCost: Number(venueCost),
-        venueAvailability,
         venueImage: form.venueImage?.trim() || "",
-      }
+      },
     ]);
 
+    // reset form
     setForm({
       venueName: "",
       venueAddress: "",
@@ -51,8 +47,6 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
       venuePhone: "",
       capacity: "",
       venueStatus: "",
-      venueCost: "",
-      venueAvailability: "",
       venueImage: "",
     });
   };
@@ -60,9 +54,14 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
   const handleSaveAll = async () => {
     if (venues.length === 0) return;
 
-    const validVenues = venues.filter(v =>
-      v.venueName && v.venueAddress && v.venueEmail && v.venuePhone &&
-      v.capacity && v.venueStatus && v.venueCost && v.venueAvailability
+    const validVenues = venues.filter(
+      (v) =>
+        v.venueName &&
+        v.venueAddress &&
+        v.venueEmail &&
+        v.venuePhone &&
+        v.capacity &&
+        v.venueStatus
     );
 
     if (validVenues.length === 0) {
@@ -106,23 +105,76 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
 
         <form onSubmit={handleAddVenue} className="space-y-4">
           <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input name="venueName" value={form.venueName} onChange={handleChange} placeholder="Venue Name" required className="px-3 py-2 border rounded w-full" />
-            <input name="venueAddress" value={form.venueAddress} onChange={handleChange} placeholder="Venue Address" required className="px-3 py-2 border rounded w-full" />
-            <input name="venueEmail" value={form.venueEmail} onChange={handleChange} placeholder="Email" required className="px-3 py-2 border rounded w-full" />
-            <input name="venuePhone" value={form.venuePhone} onChange={handleChange} placeholder="Phone" required className="px-3 py-2 border rounded w-full" />
-            <input name="capacity" value={form.capacity} onChange={handleChange} type="number" placeholder="Capacity" required className="px-3 py-2 border rounded w-full" />
-            <input name="venueCost" value={form.venueCost} onChange={handleChange} type="number" placeholder="Venue Cost" required className="px-3 py-2 border rounded w-full" />
-            <select name="venueStatus" value={form.venueStatus} onChange={handleChange} className="px-3 py-2 border rounded w-full">
-              <option value="" disabled hidden>Venue Status</option>
+            <input
+              name="venueName"
+              value={form.venueName}
+              onChange={handleChange}
+              placeholder="Venue Name"
+              required
+              className="px-3 py-2 border rounded w-full"
+            />
+            <input
+              name="venueAddress"
+              value={form.venueAddress}
+              onChange={handleChange}
+              placeholder="Venue Address"
+              required
+              className="px-3 py-2 border rounded w-full"
+            />
+            <input
+              name="venueEmail"
+              value={form.venueEmail}
+              onChange={handleChange}
+              placeholder="Email"
+              required
+              className="px-3 py-2 border rounded w-full"
+            />
+            <input
+              name="venuePhone"
+              value={form.venuePhone}
+              onChange={handleChange}
+              placeholder="Phone"
+              required
+              className="px-3 py-2 border rounded w-full"
+            />
+            <input
+              name="capacity"
+              value={form.capacity}
+              onChange={handleChange}
+              type="number"
+              placeholder="Capacity"
+              required
+              className="px-3 py-2 border rounded w-full"
+            />
+            <select
+              name="venueStatus"
+              value={form.venueStatus}
+              onChange={handleChange}
+              className="px-3 py-2 border rounded w-full"
+              required
+            >
+              <option value="" disabled hidden>
+                Venue Status
+              </option>
               <option value="Pending">Pending</option>
               <option value="Accepted">Accepted</option>
               <option value="Declined">Declined</option>
             </select>
-            <input name="venueAvailability" value={form.venueAvailability} onChange={handleChange} placeholder="Availability (e.g. Available, Booked)" required className="px-3 py-2 border rounded w-full" />
           </section>
-          <textarea name="venueImage" value={form.venueImage} onChange={handleChange} placeholder="Venue Image URL (optional)" className="px-3 py-2 border rounded w-full" />
+          <textarea
+            name="venueImage"
+            value={form.venueImage}
+            onChange={handleChange}
+            placeholder="Venue Image URL (optional)"
+            className="px-3 py-2 border rounded w-full"
+          />
 
-          <button type="submit" className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700">+ Add Venue</button>
+          <button
+            type="submit"
+            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+          >
+            + Add Venue
+          </button>
         </form>
 
         {venues.length > 0 && (
@@ -136,9 +188,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                   <th className="border px-2">Email</th>
                   <th className="border px-2">Phone</th>
                   <th className="border px-2">Capacity</th>
-                  <th className="border px-2">Cost</th>
                   <th className="border px-2">Status</th>
-                  <th className="border px-2">Availability</th>
                   <th className="border px-2">Image</th>
                 </tr>
               </thead>
@@ -150,9 +200,7 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                     <td className="border px-2">{v.venueEmail}</td>
                     <td className="border px-2">{v.venuePhone}</td>
                     <td className="border px-2">{v.capacity}</td>
-                    <td className="border px-2">{v.venueCost}</td>
                     <td className="border px-2">{v.venueStatus}</td>
-                    <td className="border px-2">{v.venueAvailability}</td>
                     <td className="border px-2">{v.venueImage}</td>
                   </tr>
                 ))}
@@ -162,8 +210,20 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
         )}
 
         <section className="flex justify-end gap-2 mt-6">
-          <button type="button" className="px-4 py-2 rounded bg-gray-200 text-gray-700" onClick={onClose} disabled={loading}>Cancel</button>
-          <button type="button" className="px-4 py-2 rounded bg-red-700 text-white hover:bg-red-800" onClick={handleSaveAll} disabled={loading || venues.length === 0}>
+          <button
+            type="button"
+            className="px-4 py-2 rounded bg-gray-200 text-gray-700"
+            onClick={onClose}
+            disabled={loading}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="px-4 py-2 rounded bg-red-700 text-white hover:bg-red-800"
+            onClick={handleSaveAll}
+            disabled={loading || venues.length === 0}
+          >
             {loading ? "Saving..." : "Save All Venues"}
           </button>
         </section>

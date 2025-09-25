@@ -19,7 +19,6 @@ const HomePage = ({ onSeeMore }) => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Fetch events for the logged in user from backend
       getAllEvents(user.sub)
         .then((data) => setEvents(data))
         .catch((err) => console.error("Failed to fetch events:", err));
@@ -30,6 +29,25 @@ const HomePage = ({ onSeeMore }) => {
   const handleDayClick = (date) => {
     setSelectedDate(date);
     setIsModalOpen(true);
+  };
+
+  // Filter only upcoming events
+  const upcomingEvents = events.filter(
+    (event) =>
+      dayjs(event.date).isAfter(dayjs(), "day") ||
+      dayjs(event.date).isSame(dayjs(), "day")
+  );
+
+  // Delete event and refresh list
+  const handleDelete = async (id) => {
+    try {
+      await deleteEvent(id);
+      setEvents((prev) => prev.filter((e) => e._id !== id));
+      setConfirmDeleteId(null);
+    } catch (err) {
+      alert("Error cancelling event: " + err.message);
+      setConfirmDeleteId(null);
+    }
   };
 
   return (
@@ -49,6 +67,7 @@ const HomePage = ({ onSeeMore }) => {
             Add New Event
           </button>
         </section>
+
         {/* Modal with overlay */}
         {isModalOpen && (
           <>
@@ -77,17 +96,22 @@ const HomePage = ({ onSeeMore }) => {
             <h3 className="mb-3 text-xl font-semibold text-center text-green-900">
               Upcoming Events
             </h3>
-            {Array.isArray(events) && events.length > 0 ? (
-              events
-                .slice(0, 3)
-                .map((event, index) => <EventCard key={index} event={event} setConfirmDeleteId={setConfirmDeleteId} />)
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.slice(0, 3).map((event, index) => (
+                <EventCard
+                  key={index}
+                  event={event}
+                  setConfirmDeleteId={setConfirmDeleteId}
+                />
+              ))
             ) : (
-              <p className="text-center text-gray-500">No events found.</p>
+              <p className="text-center text-gray-500">No upcoming events.</p>
             )}
-            {Array.isArray(events) && events.length > 3 && (
+
+            {upcomingEvents.length > 3 && (
               <button
                 className="mt-2 w-full bg-green-700 text-white py-2 rounded hover:bg-green-900 font-semibold"
-                onClick={() => navigate('/events')}
+                onClick={() => navigate("/events")}
               >
                 See more...
               </button>
@@ -108,17 +132,7 @@ const HomePage = ({ onSeeMore }) => {
               </p>
               <button
                 className="bg-red-600 text-white px-4 py-2 rounded mr-2"
-                onClick={async () => {
-                  try {
-                    const res = await deleteEvent(confirmDeleteId);
-                    setConfirmDeleteId(null);
-                    // Optionally refresh events list
-                    window.location.reload();
-                  } catch (err) {
-                    alert("Error cancelling event: " + err.message);
-                    setConfirmDeleteId(null);
-                  }
-                }}
+                onClick={() => handleDelete(confirmDeleteId)}
               >
                 Yes, Cancel
               </button>

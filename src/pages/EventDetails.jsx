@@ -4,8 +4,6 @@ import dayjs from "dayjs";
 import Navbar from "../components/Navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 
-
-
 // Modals
 import RSVPModal from "../components/RSVPModal";
 import EditEventModal from "../components/EditEventModal";
@@ -19,10 +17,11 @@ import DocumentsModal from "../components/DocumentsModal";
 import AddGuestsModal from "../components/AddGuestsModal";
 
 // Backend API
-import { getAllEvents } from "../backend/api/EventData";
+import { getAllEvents, updateEvent } from "../backend/api/EventData";
 import { getVendors } from "../backend/api/EventVendor";
 import { getGuests } from "../backend/api/EventGuest";
 import WeatherCard from "../components/WeatherCard";
+import { getDocuments } from "../backend/api/EventDocuments";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -42,15 +41,21 @@ export default function EventDetails() {
   const [showEditEventModal, setShowEditEventModal] = useState(false);
   const [showAddVenuesModal, setShowAddVenuesModal] = useState(false);
   const [showAddScheduleModal, setShowAddScheduleModal] = useState(false);
+  const [showPastEventModal, setShowPastEventModal] = useState(false);
 
   // Fetch events and select current
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const allEvents = await getAllEvents(user.sub); // adjust if Auth0 user id needed
+        const allEvents = await getAllEvents(user.sub);
         setEvents(allEvents);
         const ev = allEvents.find((e) => e._id === id);
-        if (ev) setEvent(ev);
+        if (ev) {
+          setEvent(ev);
+          if (dayjs(ev.date).isBefore(dayjs(), "day")) {
+            setShowPastEventModal(true);
+          }
+        }
       } catch (err) {
         console.error("Error fetching events:", err);
       }
@@ -64,14 +69,15 @@ export default function EventDetails() {
 
     const fetchData = async () => {
       try {
-        const [guestData, vendorData] = await Promise.all([
+        const [guestData, vendorData, documentData] = await Promise.all([
           getGuests(event._id),
           getVendors(event._id),
+          getDocuments(user.sub, event._id),
         ]);
         setGuests(guestData);
         setVendors(vendorData);
         setSchedules([]); // placeholder until backend ready
-        setDocuments([]); // placeholder until backend ready
+        setDocuments(documentData);
       } catch (err) {
         console.error("Error fetching event data:", err);
       }
@@ -86,7 +92,7 @@ export default function EventDetails() {
   };
 
   const handleSendInvites = (eventId) => {
-    const link = `${window.location.origin}/rsvp/${eventId}`;
+    const link = `${window.location.origin}/invite/${eventId}`;
     const shareData = {
       title: event.title,
       text: `You're invited to ${event.title} on ${dayjs(event.date).format(
@@ -126,6 +132,45 @@ export default function EventDetails() {
   return (
     <section className="min-h-screen bg-gradient-to-b from-sky-100 to-green-900 pb-8">
       <Navbar />
+
+      {/* Past Event Confirmation Modal */}
+      {showPastEventModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h3 className="text-lg font-bold text-green-900 mb-4">
+              Past Event Detected
+            </h3>
+            <p className="text-gray-700 mb-6">
+              This event has already passed. Do you want to confirm it as closed, or re-open it with a new date?
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                onClick={async () => {
+                  try {
+                    const updated = await updateEvent(event._id, { status: "Completed" });
+                    setEvent(updated);
+                    setShowPastEventModal(false);
+                  } catch (err) {
+                    console.error("Failed to complete event:", err);
+                  }
+                }}
+              >
+                Confirm Closing
+              </button>
+              <button
+                className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+                onClick={() => {
+                  setShowPastEventModal(false);
+                  setShowEditEventModal(true);
+                }}
+              >
+                Re-open / Postpone
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Event Header */}
       <section className="p-6 w-10/12 max-w-screen-xl mx-auto bg-white rounded-lg shadow mt-8">
@@ -183,9 +228,9 @@ export default function EventDetails() {
             <h4 className="font-semibold">Guests</h4>
             <p className="text-2xl font-bold">{guests.length}</p>
             <p className="text-sm text-gray-500">
-              Accepted: {guests.filter(g => g.rsvpStatus === "Accepted").length} | 
-              Declined: {guests.filter(g => g.rsvpStatus === "Declined").length} | 
-              Pending: {guests.filter(g => g.rsvpStatus === "Pending").length}
+              Accepted: {guests.filter((g) => g.rsvpStatus === "Accepted").length} | Declined:{" "}
+              {guests.filter((g) => g.rsvpStatus === "Declined").length} | Pending:{" "}
+              {guests.filter((g) => g.rsvpStatus === "Pending").length}
             </p>
           </div>
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
@@ -209,15 +254,7 @@ export default function EventDetails() {
       {/* Tabs Navigation */}
       <section className="p-6 w-10/12 max-w-screen-xl mx-auto bg-white rounded-lg shadow mt-8">
         <section className="flex overflow-x-auto gap-2 sm:gap-4 mb-6 bg-gray-100 rounded-lg px-2 py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          {[
-            "overview",
-            "rsvp",
-            "vendors",
-            "venues",
-            "schedule",
-            "floor",
-            "documents",
-          ].map((tab) => (
+          {["overview", "rsvp", "vendors", "venues", "schedule", "floor", "documents"].map((tab) => (
             <button
               key={tab}
               className={`px-4 py-2 ${
@@ -225,8 +262,7 @@ export default function EventDetails() {
               }`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab.charAt(0).toUpperCase() +
-                tab.slice(1).replace(/([A-Z])/g, " $1")}
+              {tab.charAt(0).toUpperCase() + tab.slice(1).replace(/([A-Z])/g, " $1")}
             </button>
           ))}
         </section>
@@ -242,12 +278,19 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">RSVP Progress</h3>
                 <p className="text-xs mb-2">
-                  Progress: {guests.filter(g => g.rsvpStatus === "Accepted").length}/{guests.length}
+                  Progress: {guests.filter((g) => g.rsvpStatus === "Accepted").length}/{guests.length}
                 </p>
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section
                     className="bg-green-900 h-2 rounded"
-                    style={{ width: `${guests.length > 0 ? (guests.filter(g => g.rsvpStatus === "Accepted").length / guests.length) * 100 : 0}%` }}
+                    style={{
+                      width: `${
+                        guests.length > 0
+                          ? (guests.filter((g) => g.rsvpStatus === "Accepted").length / guests.length) *
+                            100
+                          : 0
+                      }%`,
+                    }}
                   ></section>
                 </section>
                 <p className="text-xs text-green-900">Click to view guest list</p>
@@ -261,9 +304,7 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">Vendors</h3>
                 <p className="text-xs mb-2">Total Vendors: {vendors.length}</p>
-                <p className="text-xs text-blue-900 mt-2">
-                  Click to view vendor details
-                </p>
+                <p className="text-xs text-blue-900 mt-2">Click to view vendor details</p>
               </section>
 
               {/* Venues Card */}
@@ -282,9 +323,7 @@ export default function EventDetails() {
                 onClick={() => setActiveTab("schedule")}
               >
                 <h3 className="text-lg font-semibold mb-2">Schedule</h3>
-                <p className="text-xs text-yellow-900">
-                  Click to view schedule
-                </p>
+                <p className="text-xs text-yellow-900">Click to view schedule</p>
               </section>
 
               {/* Floor Plan Card */}
@@ -293,9 +332,7 @@ export default function EventDetails() {
                 onClick={() => setActiveTab("floor")}
               >
                 <h3 className="text-lg font-semibold mb-2">Floor Plan</h3>
-                <p className="text-xs mb-2">
-                  Venue layout and seating arrangement
-                </p>
+                <p className="text-xs mb-2">Venue layout and seating arrangement</p>
                 <p className="text-xs text-pink-900">Click to view</p>
               </section>
 
@@ -313,18 +350,10 @@ export default function EventDetails() {
 
           {/* Tab Modals */}
           {activeTab === "rsvp" && (
-            <RSVPModal
-              eventId={event._id}
-              guests={guests}
-              onClose={() => setActiveTab("overview")}
-            />
+            <RSVPModal eventId={event._id} guests={guests} onClose={() => setActiveTab("overview")} />
           )}
           {activeTab === "vendors" && (
-            <VendorsModal
-              vendors={vendors}
-              eventId={event._id}
-              onClose={() => setActiveTab("overview")}
-            />
+            <VendorsModal vendors={vendors} eventId={event._id} onClose={() => setActiveTab("overview")} />
           )}
           {activeTab === "venues" && (
             <VenuesModal
@@ -334,10 +363,7 @@ export default function EventDetails() {
             />
           )}
           {showAddVenuesModal && (
-            <AddVenuesModal
-              eventId={event._id}
-              onClose={() => setShowAddVenuesModal(false)}
-            />
+            <AddVenuesModal eventId={event._id} onClose={() => setShowAddVenuesModal(false)} />
           )}
           {activeTab === "schedule" && (
             <ScheduleModal
@@ -348,24 +374,13 @@ export default function EventDetails() {
             />
           )}
           {showAddScheduleModal && (
-            <AddScheduleModal
-              eventId={event._id}
-              onClose={() => setShowAddScheduleModal(false)}
-            />
+            <AddScheduleModal eventId={event._id} onClose={() => setShowAddScheduleModal(false)} />
           )}
           {activeTab === "floor" && (
-            <FloorPlanModal
-              eventId={event._id}
-              floorPlanUrl={event.floorPlanUrl}
-              onClose={() => setActiveTab("overview")}
-            />
+            <FloorPlanModal eventId={event._id} floorPlanUrl={event.floorPlanUrl} onClose={() => setActiveTab("overview")} />
           )}
           {activeTab === "documents" && (
-            <DocumentsModal
-              eventId={event._id}
-              documents={documents}
-              onClose={() => setActiveTab("overview")}
-            />
+            <DocumentsModal eventId={event._id} documents={documents} onClose={() => setActiveTab("overview")} />
           )}
         </section>
       </section>

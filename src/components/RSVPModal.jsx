@@ -10,23 +10,22 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
   const [exportType, setExportType] = useState("CSV");
   const [guests, setGuests] = useState(initialGuests || []);
   const [showAddGuestsModal, setShowAddGuestsModal] = useState(false);
-
-  // Edit Guest Modal state
   const [editingGuest, setEditingGuest] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  // Fetch guests
-  useEffect(() => {
-    async function fetchGuests() {
-      if (!eventId) return;
-      try {
-        getGuests(eventId)
-          .then((data) => setGuests(data))
-          .catch((err) => console.error(err));
-      } catch (error) {
-        console.error(error);
-      }
+  // Fetch guests function (reusable)
+  const fetchGuests = async () => {
+    if (!eventId) return;
+    try {
+      const data = await getGuests(eventId);
+      setGuests(data);
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  // Initial fetch
+  useEffect(() => {
     fetchGuests();
   }, [eventId]);
 
@@ -35,10 +34,40 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     if (!eventId) return;
     try {
       await deleteGuest(eventId, guestId);
-      const updatedGuests = await getGuests(eventId);
-      setGuests(updatedGuests);
+      fetchGuests();
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  // Remind a guest
+  const handleRemindGuest = async (guestId) => {
+    try {
+      const res = await fetch(
+        `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}/guest/${guestId}/remind`,
+        { method: "POST" }
+      );
+      if (!res.ok) throw new Error("Failed to send reminder");
+      alert("Reminder sent!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to send reminder. Please try again.");
+    }
+  };
+
+  // Re-invite a guest
+  const handleReinviteGuest = async (guestId) => {
+    try {
+      const res = await fetch(
+        `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}/guest/${guestId}/reinvite`,
+        { method: "POST" }
+      );
+      if (!res.ok) throw new Error("Failed to re-invite guest");
+      fetchGuests();
+      alert("Guest re-invited!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to re-invite guest. Please try again.");
     }
   };
 
@@ -128,7 +157,7 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
 
         <h3 className="text-xl font-bold mb-4 text-green-900">Guest List</h3>
 
-        {/* Search + Filters */}
+        {/* Search + Filters + Buttons */}
         <section className="flex flex-col md:flex-row gap-2 mb-4">
           <input
             type="text"
@@ -163,7 +192,13 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
             >
               Export
             </button>
-
+            <button
+              className="bg-blue-700 text-white px-3 py-2 rounded hover:bg-blue-800 text-xs"
+              onClick={fetchGuests}
+              type="button"
+            >
+              Refresh
+            </button>
             <button
               className="bg-green-700 text-white px-3 py-2 rounded hover:bg-green-800 text-xs"
               onClick={() => setShowAddGuestsModal(true)}
@@ -225,12 +260,18 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                           Remove
                         </button>
                         {guest.rsvpStatus === "Pending" && (
-                          <button className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200">
+                          <button
+                            className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200"
+                            onClick={() => handleRemindGuest(guest._id)}
+                          >
                             Remind
                           </button>
                         )}
                         {guest.rsvpStatus === "Declined" && (
-                          <button className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200">
+                          <button
+                            className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200"
+                            onClick={() => handleReinviteGuest(guest._id)}
+                          >
                             Re-invite
                           </button>
                         )}
