@@ -152,4 +152,30 @@ router.delete('/event/:eventId/vendors/:vendorId', async (req, res) => {
     }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const { category, city } = req.query;
+
+    if (!category && !city) {
+      return res.status(400).json({ error: "At least one of category or city is required" });
+    }
+
+    // Build search query
+    const query = {};
+    if (category) {
+      query.vendorType = { $regex: category, $options: "i" }; // case-insensitive match
+    }
+    if (city) {
+      query.address = { $regex: city, $options: "i" }; // partial match on address
+    }
+
+    const vendors = await Vendor.find(query);
+    res.json(vendors);
+  } catch (err) {
+    console.error("Error searching vendors:", err);
+    res.status(500).json({ error: "Failed to search vendors" });
+  }
+});
+    
+
 export default router;
