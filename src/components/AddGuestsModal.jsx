@@ -201,8 +201,8 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
 
         {/* CSV Upload */}
         <section className="mt-6">
-          <label className="block font-medium mb-2">Or upload CSV file</label>
-          <input type="file" accept=".csv" onChange={handleCSVUpload} />
+          <label htmlFor="csvUpload" className="block font-medium mb-2">Or upload CSV file</label>
+          <input id = "csvUpload" type="file" accept=".csv" onChange={handleCSVUpload} />
           <p className="text-sm text-gray-500 mt-1">
             CSV format: <code>name,phone,email,rsvpStatus,dietaryPreferences</code>
           </p>

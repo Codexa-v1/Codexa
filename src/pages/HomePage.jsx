@@ -5,17 +5,18 @@ import Calendar from "@/components/CalendarBox";
 import EventPopup from "@/components/EventPopup";
 import EventCard from "@/components/EventCard";
 import { useEffect, useState } from "react";
-import { deleteEvent, getAllEvents } from "../backend/api/EventData";
+import { getAllEvents } from "@/backend/api/EventData";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
-const HomePage = ({ onSeeMore }) => {
+const HomePage = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated } = useAuth0();
   const [events, setEvents] = useState([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -53,9 +54,9 @@ const HomePage = ({ onSeeMore }) => {
   return (
     <section className="home-page min-h-screen bg-gradient-to-b from-sky-100 to-green-900">
       <Navbar />
-      <section className="p-2 sm:p-6 max-w-screen-xl mx-auto min-h-screen font-sans">
+      <section className="p-6 bg-gradient-to-b from-sky-100 to-green-900 min-h-screen font-sans">
         {/* Header */}
-        <section className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+        <section className="flex justify-between items-center">
           <h2 className="text-3xl font-bold text-green-900">
             Welcome back, {user.name}!
           </h2>

@@ -4,19 +4,29 @@ import dayjs from "dayjs";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { getAllEvents } from "@/backend/api/EventData";
 
+
 const Calendar = ({ onDayClick }) => {
   // Color mapping for event categories
   const eventColors = React.useMemo(
     () => ({
       Wedding: "bg-pink-500",
-      Conference: "bg-yellow-700",
       Birthday: "bg-blue-500",
+      Party: "bg-red-500",
+      Conference: "bg-yellow-500",
       Meeting: "bg-green-500",
-      Party: "bg-purple-500",
-      Other: "bg-gray-400",
+      Sport: "bg-purple-500",
+      Concert: "bg-indigo-500",
+      Festival: "bg-orange-500",
+      Workshop: "bg-teal-500",
+      Networking: "bg-lime-500",
+      Holiday: "bg-rose-500",
+      Fundraiser: "bg-amber-500",
+      Graduation: "bg-cyan-500",
+      Other: "bg-gray-500",
     }),
     []
   );
+
 
   // Helper to get color for event
   const getBgColor = React.useCallback(
