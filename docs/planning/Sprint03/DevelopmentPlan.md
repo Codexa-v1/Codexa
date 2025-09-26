@@ -70,15 +70,16 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 ## 3. 👤 User Stories with Acceptance Criteria
 
 ### User Story 1: Guest Management
-**As an event planner,** I want to add guests, so that they can accept or decline my invitation
+**As an event planner,** I want to sent an invite to my guests, **so that** they can accept or decline my invitation
 - **Acceptance Criteria:**  
   - Guests can be added without duplicate errors.  
-  - Each guest has a unique ID scoped to an event.  
+  - Each Guest recieves an invite link via emial
+  - Guests can click on the link and accept or decline my invitation
 
 ---
 
 ### User Story 2: Vendor Management
-**As an event planner,** I want to compare vendors by availability and affordability, so that I can make cost-effective and conflict-free choices.  
+**As an event planner,** I want to compare vendors by availability and affordability, **so that** I can make cost-effective and conflict-free choices.  
 - **Acceptance Criteria:**  
   - Alerts if required vendor details are missing.   
   - Vendors can be filtered by budget.  
@@ -87,10 +88,18 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 ---
 
 ### User Story 3: App Performance
-**As a user,** I want the app to refresh automatically after changes, so that I can see updated information without manually reloading.  
+**As an event planner,** I want the app to refresh automatically after changes, **so that** I can see updated information without manually reloading.  
 - **Acceptance Criteria:**  
   - Pages refresh automatically after guest/vendor changes.  
   - No noticeable performance lag
+
+---
+
+### User Story 4: Document management
+**As an event planner,** I want to upload documents to my event **so that** I can keep event relevant information like reciepts as documents on the web app  
+- **Acceptance Criteria:**  
+  - Users can delete or download documents they have uploaded
+  - Users can view the documents they have uploaded onto an event
 
 ---
 
