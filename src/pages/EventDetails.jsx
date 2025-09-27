@@ -194,7 +194,7 @@ export default function EventDetails() {
       )}
 
       {/* Event Header */}
-      <section className="p-6 sm:w-full md:w-10/12  mx-auto bg-white rounded-lg shadow mt-8">
+      <section className="p-6 sm:w-11/12 md:w-10/12  mx-auto bg-white rounded-lg shadow mt-8">
         <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
           <section className="flex flex-wrap items-center gap-2">
             <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
@@ -275,8 +275,8 @@ export default function EventDetails() {
       </section>
 
       {/* Tabs Navigation */}
-      <section className="p-6 sm:w-full md:w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
-        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
+      <section className="p-6 sm:w-11/12 md:w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
+        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg overflow-x-scroll">
           {[
             "overview",
             "rsvp",
