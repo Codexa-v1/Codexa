@@ -151,14 +151,17 @@ export default function EventDetails() {
               Past Event Detected
             </h3>
             <p className="text-gray-700 mb-6">
-              This event has already passed. Do you want to confirm it as closed, or re-open it with a new date?
+              This event has already passed. Do you want to confirm it as
+              closed, or re-open it with a new date?
             </p>
             <div className="flex justify-end gap-3">
               <button
                 className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
                 onClick={async () => {
                   try {
-                    const updated = await updateEvent(event._id, { status: "Completed" });
+                    const updated = await updateEvent(event._id, {
+                      status: "Completed",
+                    });
                     setEvent(updated);
                     setShowPastEventModal(false);
                   } catch (err) {
@@ -172,7 +175,9 @@ export default function EventDetails() {
                 className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
                 onClick={async () => {
                   try {
-                    const updated = await updateEvent(event._id, { status: "Planning" });
+                    const updated = await updateEvent(event._id, {
+                      status: "Planning",
+                    });
                     setEvent(updated);
                     setShowPastEventModal(false);
                     setShowEditEventModal(true);
@@ -189,7 +194,7 @@ export default function EventDetails() {
       )}
 
       {/* Event Header */}
-      <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
+      <section className="p-6 sm:w-full md:w-10/12  mx-auto bg-white rounded-lg shadow mt-8">
         <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
           <section className="flex flex-wrap items-center gap-2">
             <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
@@ -244,9 +249,11 @@ export default function EventDetails() {
             <h4 className="font-semibold">Total Guests</h4>
             <p className="text-2xl font-bold">{event.rsvpTotal}</p>
             <p className="text-sm text-gray-500">
-              Accepted: {guests.filter((g) => g.rsvpStatus === "Accepted").length} | Declined:{" "}
-              {guests.filter((g) => g.rsvpStatus === "Declined").length} | Pending:{" "}
-              {guests.filter((g) => g.rsvpStatus === "Pending").length}
+              Accepted:{" "}
+              {guests.filter((g) => g.rsvpStatus === "Accepted").length} |
+              Declined:{" "}
+              {guests.filter((g) => g.rsvpStatus === "Declined").length} |
+              Pending: {guests.filter((g) => g.rsvpStatus === "Pending").length}
             </p>
           </div>
           <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
@@ -268,7 +275,7 @@ export default function EventDetails() {
       </section>
 
       {/* Tabs Navigation */}
-      <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
+      <section className="p-6 sm:w-full md:w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
         <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
           {[
             "overview",
@@ -288,7 +295,8 @@ export default function EventDetails() {
               }`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1).replace(/([A-Z])/g, " $1")}
+              {tab.charAt(0).toUpperCase() +
+                tab.slice(1).replace(/([A-Z])/g, " $1")}
             </button>
           ))}
         </section>
@@ -296,7 +304,7 @@ export default function EventDetails() {
         {/* Tab Content */}
         <section className="display">
           {activeTab === "overview" && (
-            <section className="grid grid-cols-2 gap-6 mb-8">
+            <section className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* RSVP Card */}
               <section
                 className="bg-green-100 rounded-lg shadow p-6 cursor-pointer hover:bg-green-200 transition"
@@ -304,7 +312,9 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">RSVP Progress</h3>
                 <p className="text-xs mb-2">
-                  Progress: {guests.filter((g) => g.rsvpStatus === "Accepted").length}/{guests.length}
+                  Progress:{" "}
+                  {guests.filter((g) => g.rsvpStatus === "Accepted").length}/
+                  {guests.length}
                 </p>
                 <section className="bg-gray-300 h-2 rounded mb-2">
                   <section
@@ -312,7 +322,9 @@ export default function EventDetails() {
                     style={{
                       width: `${
                         guests.length > 0
-                          ? (guests.filter((g) => g.rsvpStatus === "Accepted").length / guests.length) *
+                          ? (guests.filter((g) => g.rsvpStatus === "Accepted")
+                              .length /
+                              guests.length) *
                             100
                           : 0
                       }%`,
@@ -332,7 +344,9 @@ export default function EventDetails() {
               >
                 <h3 className="text-lg font-semibold mb-2">Vendors</h3>
                 <p className="text-xs mb-2">Total Vendors: {vendors.length}</p>
-                <p className="text-xs text-blue-900 mt-2">Click to view vendor details</p>
+                <p className="text-xs text-blue-900 mt-2">
+                  Click to view vendor details
+                </p>
               </section>
 
               {/* Venues Card */}
@@ -351,7 +365,9 @@ export default function EventDetails() {
                 onClick={() => setActiveTab("schedule")}
               >
                 <h3 className="text-lg font-semibold mb-2">Schedule</h3>
-                <p className="text-xs text-yellow-900">Click to view schedule</p>
+                <p className="text-xs text-yellow-900">
+                  Click to view schedule
+                </p>
               </section>
 
               {/* Floor Plan Card */}
@@ -360,7 +376,9 @@ export default function EventDetails() {
                 onClick={() => setActiveTab("floor")}
               >
                 <h3 className="text-lg font-semibold mb-2">Floor Plan</h3>
-                <p className="text-xs mb-2">Venue layout and seating arrangement</p>
+                <p className="text-xs mb-2">
+                  Venue layout and seating arrangement
+                </p>
                 <p className="text-xs text-pink-900">Click to view</p>
               </section>
 
@@ -378,10 +396,18 @@ export default function EventDetails() {
 
           {/* Tab Modals */}
           {activeTab === "rsvp" && (
-            <RSVPModal eventId={event._id} guests={guests} onClose={() => setActiveTab("overview")} />
+            <RSVPModal
+              eventId={event._id}
+              guests={guests}
+              onClose={() => setActiveTab("overview")}
+            />
           )}
           {activeTab === "vendors" && (
-            <VendorsModal vendors={vendors} eventId={event._id} onClose={() => setActiveTab("overview")} />
+            <VendorsModal
+              vendors={vendors}
+              eventId={event._id}
+              onClose={() => setActiveTab("overview")}
+            />
           )}
           {activeTab === "venues" && (
             <VenuesModal
@@ -391,7 +417,10 @@ export default function EventDetails() {
             />
           )}
           {showAddVenuesModal && (
-            <AddVenuesModal eventId={event._id} onClose={() => setShowAddVenuesModal(false)} />
+            <AddVenuesModal
+              eventId={event._id}
+              onClose={() => setShowAddVenuesModal(false)}
+            />
           )}
           {activeTab === "schedule" && (
             <ScheduleModal
@@ -402,13 +431,24 @@ export default function EventDetails() {
             />
           )}
           {showAddScheduleModal && (
-            <AddScheduleModal eventId={event._id} onClose={() => setShowAddScheduleModal(false)} />
+            <AddScheduleModal
+              eventId={event._id}
+              onClose={() => setShowAddScheduleModal(false)}
+            />
           )}
           {activeTab === "floor" && (
-            <FloorPlanModal eventId={event._id} floorPlanUrl={event.floorPlanUrl} onClose={() => setActiveTab("overview")} />
+            <FloorPlanModal
+              eventId={event._id}
+              floorPlanUrl={event.floorPlanUrl}
+              onClose={() => setActiveTab("overview")}
+            />
           )}
           {activeTab === "documents" && (
-            <DocumentsModal eventId={event._id} documents={documents} onClose={() => setActiveTab("overview")} />
+            <DocumentsModal
+              eventId={event._id}
+              documents={documents}
+              onClose={() => setActiveTab("overview")}
+            />
           )}
         </section>
       </section>
