@@ -93,4 +93,6 @@ test.describe("EventsPage", () => {
     await page.getByRole("button", { name: "No, Go Back" }).click();
     await expect(page.getByRole("heading", { name: "Cancel Event?" })).toHaveCount(0);
   });
+
+  
 });

@@ -3,10 +3,16 @@ import { act } from "react-dom/test-utils";
 import ScheduleModal from "../../components/ScheduleModal";
 import AddScheduleModal from "../../components/AddScheduleModal";
 import EditScheduleModal from "../../components/EditScheduleModal";
-import { updateEventSchedule } from "../../backend/api/EventSchedule";
+import {
+  updateEventSchedule,
+  deleteEventSchedule,
+  getSchedule,
+} from "../../backend/api/EventSchedule";
 
 vi.mock("../../backend/api/EventSchedule", () => ({
   updateEventSchedule: vi.fn(),
+  deleteEventSchedule: vi.fn(),
+  getSchedule: vi.fn(),
 }));
 
 beforeAll(() => {
@@ -18,7 +24,13 @@ beforeAll(() => {
 describe("ScheduleModal", () => {
   it("calls onAddSchedule when Add button clicked", async () => {
     const onAddSchedule = vi.fn();
-    render(<ScheduleModal eventId="evt123" onClose={vi.fn()} onAddSchedule={onAddSchedule} />);
+    render(
+      <ScheduleModal
+        eventId="evt123"
+        onClose={vi.fn()}
+        onAddSchedule={onAddSchedule}
+      />
+    );
 
     await act(async () => {
       fireEvent.click(screen.getByText(/\+ Add Schedule Item/i));
@@ -29,7 +41,13 @@ describe("ScheduleModal", () => {
 
   it("calls onClose when × clicked", async () => {
     const onClose = vi.fn();
-    render(<ScheduleModal eventId="evt123" onClose={onClose} onAddSchedule={vi.fn()} />);
+    render(
+      <ScheduleModal
+        eventId="evt123"
+        onClose={onClose}
+        onAddSchedule={vi.fn()}
+      />
+    );
 
     await act(async () => {
       fireEvent.click(screen.getByText("×"));
@@ -39,13 +57,145 @@ describe("ScheduleModal", () => {
   });
 
   it("exports to Word", async () => {
-    render(<ScheduleModal eventId="evt123" onClose={vi.fn()} onAddSchedule={vi.fn()} />);
+    render(
+      <ScheduleModal
+        eventId="evt123"
+        onClose={vi.fn()}
+        onAddSchedule={vi.fn()}
+      />
+    );
     fireEvent.click(screen.getByText(/Export to Word/i));
 
     await waitFor(() => {
       expect(global.URL.createObjectURL).toHaveBeenCalled();
       expect(global.URL.revokeObjectURL).toHaveBeenCalled();
     });
+  });
+
+  it("calls onEditSchedule and updates item", async () => {
+    getSchedule.mockResolvedValue([
+      { _id: "1", description: "Meeting", startTime: "09:00", endTime: "10:00" },
+    ]);
+    updateEventSchedule.mockResolvedValue({
+      _id: "1",
+      description: "Updated",
+      startTime: "09:00",
+      endTime: "10:30",
+    });
+
+    const onEditSchedule = vi.fn((item, cb) => {
+      cb({
+        _id: "1",
+        description: "Updated",
+        startTime: "09:00",
+        endTime: "10:30",
+      });
+    });
+
+    render(
+      <ScheduleModal
+        eventId="evt123"
+        onClose={vi.fn()}
+        onAddSchedule={vi.fn()}
+        onEditSchedule={onEditSchedule}
+      />
+    );
+
+    await screen.findByText("Meeting");
+    fireEvent.click(screen.getByText("Edit"));
+
+    await waitFor(() => {
+      expect(onEditSchedule).toHaveBeenCalled();
+      expect(updateEventSchedule).toHaveBeenCalledWith("evt123", "1", {
+        _id: "1",
+        description: "Updated",
+        startTime: "09:00",
+        endTime: "10:30",
+      });
+    });
+  });
+
+  it("logs error if updateEventSchedule fails", async () => {
+    getSchedule.mockResolvedValue([
+      { _id: "1", description: "Meeting", startTime: "09:00", endTime: "10:00" },
+    ]);
+    updateEventSchedule.mockRejectedValue(new Error("Update failed"));
+
+    const onEditSchedule = vi.fn((item, cb) => {
+      cb({
+        _id: "1",
+        description: "Still Broken",
+        startTime: "09:00",
+        endTime: "10:00",
+      });
+    });
+
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <ScheduleModal
+        eventId="evt123"
+        onClose={vi.fn()}
+        onAddSchedule={vi.fn()}
+        onEditSchedule={onEditSchedule}
+      />
+    );
+
+    await screen.findByText("Meeting");
+    fireEvent.click(screen.getByText("Edit"));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Error updating schedule item:",
+        expect.any(Error)
+      );
+    });
+
+    consoleSpy.mockRestore();
+  });
+
+  it("removes a schedule item", async () => {
+    getSchedule.mockResolvedValue([
+      { _id: "1", description: "Meeting", startTime: "09:00", endTime: "10:00" },
+    ]);
+    deleteEventSchedule.mockResolvedValue({});
+
+    render(
+      <ScheduleModal eventId="evt123" onClose={vi.fn()} onAddSchedule={vi.fn()} />
+    );
+
+    await screen.findByText("Meeting");
+    fireEvent.click(screen.getByText("Remove"));
+
+    await waitFor(() => {
+      expect(deleteEventSchedule).toHaveBeenCalledWith("evt123", "1");
+      expect(screen.queryByText("Meeting")).not.toBeInTheDocument();
+    });
+  });
+
+  it("logs error if deleteEventSchedule fails", async () => {
+    getSchedule.mockResolvedValue([
+      { _id: "1", description: "Meeting", startTime: "09:00", endTime: "10:00" },
+    ]);
+    deleteEventSchedule.mockRejectedValue(new Error("Delete failed"));
+
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      <ScheduleModal eventId="evt123" onClose={vi.fn()} onAddSchedule={vi.fn()} />
+    );
+
+    await screen.findByText("Meeting");
+    fireEvent.click(screen.getByText("Remove"));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "Error removing schedule item:",
+        expect.any(Error)
+      );
+    });
+
+    consoleSpy.mockRestore();
   });
 });
 
