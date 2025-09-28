@@ -1,3 +1,5 @@
+// need to change mockEvent to match your event structure in model
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { getEvent } from "../../backend/api/EventExport"; // adjust path
 
@@ -15,7 +17,30 @@ beforeEach(() => {
 
 describe("getEvent with CSV download", () => {
   it("should fetch event, convert to CSV, and trigger download", async () => {
-    const mockEvent = { id: "1", theme: "Party" };
+    const mockEvent = {
+      id: "1",
+      eventPlanner: "auth0|abc123",
+      title: "Annual Gala",
+      date: "2025-09-21T18:00:00.000Z",
+      endDate: "2025-09-21T22:00:00.000Z",
+      location: "Grand Ballroom",
+      description: "A formal event for all members.",
+      status: "Planned",
+      budget: 5000,
+      capacity: 200,
+      category: "Corporate",
+      organizer: {
+        name: "Jane Doe",
+        contact: "123-456-7890",
+        email: "jane@example.com"
+      },
+      startTime: "18:00",
+      endTime: "22:00",
+      rsvpCurrent: 50,
+      rsvpTotal: 200,
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    };
 
     fetch.mockResolvedValueOnce({
       ok: true,

@@ -78,4 +78,4 @@ Full documentation (meeting minutes, sprints, design decisions) is available on 
 - Ntando: Testing + Frontend
 - Ntobeko: Frontend Development
 
-[![codecov](https://codecov.io/github/Codexa-v1/Codexa/graph/badge.svg?token=A79VJR62ZH)](https://codecov.io/github/Codexa-v1/Codexa)
+[![codecov](https://codecov.io/gh/Codexa-v1/Codexa/branch/Tests/graph/badge.svg?token=A79VJR62ZH)](https://codecov.io/gh/Codexa-v1/Codexa/branch/Tests)

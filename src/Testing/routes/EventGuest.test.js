@@ -31,8 +31,28 @@ describe('EventGuest Router', () => {
       { guestId: 'guest2' },
     ];
     const guestDocs = [
-      { _id: 'guest1', name: 'Alice' },
-      { _id: 'guest2', name: 'Bob' },
+      {
+        _id: 'guest1',
+        name: 'Alice',
+        email: 'alice@example.com',
+        phone: '123-456-7890',
+        eventId,
+        rsvpStatus: 'Accepted',
+        dietaryPreferences: 'Vegetarian',
+        createdAt: '2025-09-01T10:00:00.000Z',
+        updatedAt: '2025-09-10T10:00:00.000Z'
+      },
+      {
+        _id: 'guest2',
+        name: 'Bob',
+        email: 'bob@example.com',
+        phone: '987-654-3210',
+        eventId,
+        rsvpStatus: 'Pending',
+        dietaryPreferences: '',
+        createdAt: '2025-09-01T10:00:00.000Z',
+        updatedAt: '2025-09-10T10:00:00.000Z'
+      }
     ];
 
     EventGuest.find.mockResolvedValue(eventGuestDocs);
@@ -65,10 +85,17 @@ describe('EventGuest Router', () => {
   // ========================
   it('should create a guest for an event', async () => {
     const eventId = 'event123';
-    const guestData = { name: 'Alice', email: 'alice@example.com', phone: '123' };
+    const guestData = {
+      name: 'Alice',
+      email: 'alice@example.com',
+      phone: '123-456-7890',
+      eventId,
+      rsvpStatus: 'Pending',
+      dietaryPreferences: 'Vegetarian'
+    };
 
     Event.findById.mockResolvedValue({ _id: eventId });
-    Guest.prototype.save = vi.fn().mockResolvedValue({ _id: 'guest123', ...guestData });
+    Guest.prototype.save = vi.fn().mockResolvedValue({ _id: 'guest123', ...guestData, createdAt: '2025-09-01T10:00:00.000Z', updatedAt: '2025-09-10T10:00:00.000Z' });
     EventGuest.prototype.save = vi.fn().mockResolvedValue({});
 
     const res = await request(app).post(`/event/${eventId}`).send(guestData);
@@ -92,17 +119,27 @@ describe('EventGuest Router', () => {
   it('should update a guest', async () => {
     const eventId = 'event123';
     const guestId = 'guest123';
-    const reqBody = { name: 'Alice Updated', rsvpStatus: 'accepted' };
+    const reqBody = { name: 'Alice Updated', rsvpStatus: 'Accepted', dietaryPreferences: 'Vegan' };
 
     EventGuest.findOne.mockResolvedValue({ _id: 'eventGuest123', eventId, guestId });
-    Guest.findByIdAndUpdate.mockResolvedValue({ _id: guestId, name: 'Alice Updated', rsvpStatus: 'accepted' });
-    EventGuest.findByIdAndUpdate.mockResolvedValue({ rsvpStatus: 'accepted' });
+    Guest.findByIdAndUpdate.mockResolvedValue({
+      _id: guestId,
+      name: 'Alice Updated',
+      email: 'alice@example.com',
+      phone: '123-456-7890',
+      eventId,
+      rsvpStatus: 'Accepted',
+      dietaryPreferences: 'Vegan',
+      createdAt: '2025-09-01T10:00:00.000Z',
+      updatedAt: '2025-09-10T10:00:00.000Z'
+    });
+    EventGuest.findByIdAndUpdate.mockResolvedValue({ rsvpStatus: 'Accepted' });
 
     const res = await request(app).patch(`/event/${eventId}/guest/${guestId}`).send(reqBody);
 
     expect(res.status).toBe(200);
     expect(res.body.guest.name).toBe('Alice Updated');
-    expect(res.body.eventGuest.rsvpStatus).toBe('accepted');
+    expect(res.body.eventGuest.rsvpStatus).toBe('Accepted');
   });
 
   it('should return 404 if EventGuest not found', async () => {
@@ -122,7 +159,17 @@ describe('EventGuest Router', () => {
     EventGuest.findOne.mockResolvedValue({ _id: 'eventGuest123', eventId, guestId });
     EventGuest.deleteOne.mockResolvedValue({});
     EventGuest.exists.mockResolvedValue(false);
-    Guest.findByIdAndDelete.mockResolvedValue({});
+    Guest.findByIdAndDelete.mockResolvedValue({
+      _id: guestId,
+      name: 'Alice',
+      email: 'alice@example.com',
+      phone: '123-456-7890',
+      eventId,
+      rsvpStatus: 'Accepted',
+      dietaryPreferences: 'Vegetarian',
+      createdAt: '2025-09-01T10:00:00.000Z',
+      updatedAt: '2025-09-10T10:00:00.000Z'
+    });
 
     const res = await request(app).delete(`/event/${eventId}/guest/${guestId}`);
 

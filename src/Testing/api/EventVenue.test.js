@@ -1,3 +1,5 @@
+// need to change mockVenue to match your venue structure in model
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock the environment variable BEFORE importing the module
@@ -18,10 +20,13 @@ describe('Venue API Functions', () => {
   const mockEventId = '123';
   const mockVenueId = '456';
   const mockVenue = {
-    name: 'Grand Ballroom',
-    location: '123 Main St',
+    venueName: 'Grand Ballroom',
+    venueAddress: '123 Main St',
+    venueEmail: 'grandballroom@example.com',
+    venuePhone: '123-456-7890',
     capacity: 200,
-    price: 1500
+    venueStatus: 'Available',
+    venueImage: 'https://example.com/image.jpg'
   };
 
   beforeEach(() => {
@@ -35,8 +40,8 @@ describe('Venue API Functions', () => {
   describe('getVenues', () => {
     it('should fetch venues successfully', async () => {
       const mockVenues = [
-        { id: '1', name: 'Venue 1', capacity: 100 },
-        { id: '2', name: 'Venue 2', capacity: 200 }
+        { id: '1', ...mockVenue },
+        { id: '2', ...mockVenue, venueName: 'Conference Hall', capacity: 300 }
       ];
 
       fetch.mockResolvedValueOnce({
@@ -118,7 +123,7 @@ describe('Venue API Functions', () => {
 
   describe('updateVenue', () => {
     it('should update venue successfully', async () => {
-      const updatedVenue = { ...mockVenue, name: 'Updated Venue Name' };
+      const updatedVenue = { ...mockVenue, venueName: 'Updated Venue Name' };
       const mockResponse = { id: mockVenueId, ...updatedVenue };
 
       fetch.mockResolvedValueOnce({
@@ -263,20 +268,23 @@ describe('Venue API Integration Tests', () => {
     
     // Create
     const newVenue = await addVenue(eventId, {
-      name: 'Test Venue',
-      location: 'Test Location',
-      capacity: 100
+      venueName: 'Test Venue',
+      venueAddress: 'Test Location',
+      venueEmail: 'testvenue@example.com',
+      venuePhone: '555-555-5555',
+      capacity: 100,
+      venueStatus: 'Available'
     });
     
     // Read
     const venues = await getVenues(eventId);
-    expect(venues).toContain(newVenue);
+    expect(venues).toContainEqual(newVenue);
     
     // Update
     const updatedVenue = await updateVenue(eventId, newVenue.id, {
-      name: 'Updated Test Venue'
+      venueName: 'Updated Test Venue'
     });
-    expect(updatedVenue.name).toBe('Updated Test Venue');
+    expect(updatedVenue.venueName).toBe('Updated Test Venue');
     
     // Delete
     await deleteVenue(eventId, newVenue.id);

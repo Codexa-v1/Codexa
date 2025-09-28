@@ -1,3 +1,5 @@
+// need to change mockVendor to match your vendor structure in model
+
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   getVendors,
@@ -15,7 +17,20 @@ beforeEach(() => {
 
 describe("Vendors API", () => {
   it("getVendors should return vendor list", async () => {
-    const mockVendors = [{ id: "v1", name: "Venue Co." }];
+    const mockVendors = [{
+      id: "v1",
+      name: "Venue Co.",
+      vendorType: "Venue",
+      contactPerson: "John Smith",
+      phone: "123-456-7890",
+      email: "venue@example.com",
+      website: "https://venueco.com",
+      address: "123 Main St",
+      rating: 5,
+      notes: "Preferred partner",
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    }];
 
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -47,8 +62,23 @@ describe("Vendors API", () => {
   });
 
   it("addVendor should POST and return new vendor", async () => {
-    const vendor = { name: "Catering Co." };
-    const mockResponse = { id: "v2", ...vendor };
+    const vendor = {
+      name: "Catering Co.",
+      vendorType: "Catering",
+      contactPerson: "Jane Doe",
+      phone: "987-654-3210",
+      email: "catering@example.com",
+      website: "https://cateringco.com",
+      address: "456 Side St",
+      rating: 4,
+      notes: "Vegetarian options available"
+    };
+    const mockResponse = {
+      id: "v2",
+      ...vendor,
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    };
 
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -69,8 +99,23 @@ describe("Vendors API", () => {
   });
 
   it("updateVendor should PATCH and return updated vendor", async () => {
-    const vendor = { name: "Updated Vendor" };
-    const mockResponse = { id: "v3", ...vendor };
+    const vendor = {
+      name: "Updated Vendor",
+      vendorType: "Decor",
+      contactPerson: "Sam Lee",
+      phone: "555-555-5555",
+      email: "decor@example.com",
+      website: "https://decorco.com",
+      address: "789 Market St",
+      rating: 3,
+      notes: "Seasonal discounts"
+    };
+    const mockResponse = {
+      id: "v3",
+      ...vendor,
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    };
 
     fetch.mockResolvedValueOnce({
       ok: true,

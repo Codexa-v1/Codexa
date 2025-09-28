@@ -1,7 +1,7 @@
 // src/Testing/routes/venue.test.js
 import request from "supertest";
 import express from "express";
-import router from "../../backend/routes/EventVenue.js"; // adjust path
+import router from "../../backend/routes/EventVenue.js";
 import Event from "../../backend/models/event.js";
 import Venue from "../../backend/models/venue.js";
 import EventVenue from "../../backend/models/eventvenue.js";
@@ -27,7 +27,32 @@ describe("Venue Router", () => {
   it("should return all venues for an event", async () => {
     const eventId = "event123";
     const eventVenues = [{ venueId: "venue1" }, { venueId: "venue2" }];
-    const venues = [{ _id: "venue1", venueName: "V1" }, { _id: "venue2", venueName: "V2" }];
+    const venues = [
+      {
+        _id: "venue1",
+        venueName: "Grand Ballroom",
+        venueAddress: "123 Main St",
+        venueEmail: "grandballroom@example.com",
+        venuePhone: "123-456-7890",
+        capacity: 200,
+        venueStatus: "Available",
+        venueImage: "https://example.com/image1.jpg",
+        createdAt: "2025-09-01T10:00:00.000Z",
+        updatedAt: "2025-09-10T10:00:00.000Z"
+      },
+      {
+        _id: "venue2",
+        venueName: "Conference Hall",
+        venueAddress: "456 Side St",
+        venueEmail: "conferencehall@example.com",
+        venuePhone: "987-654-3210",
+        capacity: 300,
+        venueStatus: "Booked",
+        venueImage: "https://example.com/image2.jpg",
+        createdAt: "2025-09-01T10:00:00.000Z",
+        updatedAt: "2025-09-10T10:00:00.000Z"
+      }
+    ];
 
     EventVenue.find.mockResolvedValue(eventVenues);
     Venue.find.mockResolvedValue(venues);
@@ -63,7 +88,15 @@ describe("Venue Router", () => {
   // ========================
   it("should create a new venue for an event", async () => {
     const eventId = "event123";
-    const venueData = { venueName: "Venue X", venueAddress: "123 Street" };
+    const venueData = {
+      venueName: "Venue X",
+      venueAddress: "123 Street",
+      venueEmail: "venuex@example.com",
+      venuePhone: "555-555-5555",
+      capacity: 150,
+      venueStatus: "Available",
+      venueImage: "https://example.com/imagex.jpg"
+    };
 
     Event.findById.mockResolvedValue({ _id: eventId });
     Venue.prototype.save = vi.fn().mockResolvedValue({ _id: "venue123", ...venueData });
@@ -93,7 +126,15 @@ describe("Venue Router", () => {
   it("should update a venue", async () => {
     const eventId = "event123";
     const venueId = "venue123";
-    const updateFields = { venueName: "Updated Venue" };
+    const updateFields = {
+      venueName: "Updated Venue",
+      venueAddress: "789 Market St",
+      venueEmail: "updatedvenue@example.com",
+      venuePhone: "111-222-3333",
+      capacity: 180,
+      venueStatus: "Booked",
+      venueImage: "https://example.com/imageupdated.jpg"
+    };
 
     EventVenue.findOne.mockResolvedValue({ eventId, venueId });
     Venue.findByIdAndUpdate.mockResolvedValue({ _id: venueId, ...updateFields });
@@ -125,7 +166,18 @@ describe("Venue Router", () => {
     EventVenue.findOne.mockResolvedValue({ eventId, venueId });
     EventVenue.deleteOne.mockResolvedValue({});
     EventVenue.exists.mockResolvedValue(false);
-    Venue.findByIdAndDelete.mockResolvedValue({ _id: venueId });
+    Venue.findByIdAndDelete.mockResolvedValue({
+      _id: venueId,
+      venueName: "Venue X",
+      venueAddress: "123 Street",
+      venueEmail: "venuex@example.com",
+      venuePhone: "555-555-5555",
+      capacity: 150,
+      venueStatus: "Available",
+      venueImage: "https://example.com/imagex.jpg",
+      createdAt: "2025-09-01T10:00:00.000Z",
+      updatedAt: "2025-09-10T10:00:00.000Z"
+    });
 
     const res = await request(app).delete(`/event/${eventId}/venue/${venueId}`);
 
