@@ -9,7 +9,7 @@ const eventSchema = new mongoose.Schema({
     venueStatus: { type: String, required: true },
     venueCost: { type: Number, required: true },
     //venueAvailability: { type: String, required: true },
-    venueImage: { type: String }, // Optional
+    notes: { type: String },
 }, {timestamps: true});
 
 const Venue = mongoose.model("Venue", eventSchema);
