@@ -146,7 +146,10 @@ export default function LandingPage() {
                 Because perfect events don't happen by accident.
               </p>
               <button
-                onClick={scrollToFeatures}
+                onClick={() => {
+                    setMobileNavOpen(false);
+                    loginWithRedirect();
+                  }}
                 className="bg-green-700 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-800 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Get Started
@@ -239,6 +242,10 @@ export default function LandingPage() {
                   <a
                     href="#"
                     className="hover:text-white transition-colors duration-200"
+                    onClick={() => {
+                      setMobileNavOpen(false);
+                      navigate("/about");
+                    }}
                   >
                     About
                   </a>

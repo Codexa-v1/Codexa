@@ -83,7 +83,7 @@ const Navbar = () => {
               className="w-8 h-8 rounded-full object-cover"
             />
           ) : (
-            <FaUserCircle className="text-gray-700 text-2xl" />
+            <FaUserCircle data-testid="fallback-user-icon" className="text-gray-700 text-2xl" />
           )}
           <span className="text-gray-700 font-medium">
             {isAuthenticated && user ? user.name || user.email : "Guest"}
