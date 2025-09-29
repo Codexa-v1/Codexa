@@ -52,9 +52,9 @@ router.post('/event/:eventId', async (req, res) => {
 
     let vendor;
 
-    if (req.body.vendorId) {
+    if (req.body._id) {
       // ✅ Case 1: Existing vendor
-      vendor = await Vendor.findById(req.body.vendorId);
+      vendor = await Vendor.findById(req.body._id);
       if (!vendor) return res.status(404).send('Vendor not found');
     } else {
       // ✅ Case 2: Create a new vendor
