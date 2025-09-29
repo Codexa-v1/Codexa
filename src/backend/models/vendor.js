@@ -10,7 +10,8 @@ const vendorSchema = new mongoose.Schema({
     address: { type: String, required: true },
     rating: {type: Number, min: 1, max: 5},
     vendorCost: { type: Number, required: true },
-    notes: { type: String }
+    notes: { type: String },
+    contacted: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const Vendor = mongoose.model("Vendor", vendorSchema);
