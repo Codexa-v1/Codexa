@@ -6,6 +6,7 @@ const vendorSchema = new mongoose.Schema({
     contactPerson: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String, required: true },
+    vendorCost: { type: Number, required: true },
     website: String,
     address: { type: String, required: true },
     rating: {type: Number, min: 1, max: 5},

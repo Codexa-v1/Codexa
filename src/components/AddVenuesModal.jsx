@@ -7,10 +7,9 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
     venueAddress: "",
     venueEmail: "",
     venuePhone: "",
-    capacity: "",
-    venueStatus: "",
-    venueImage: "",
+    notes: "",
   });
+
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -22,9 +21,9 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
 
   const handleAddVenue = (e) => {
     e.preventDefault();
-    const { venueName, venueAddress, venueEmail, venuePhone, capacity, venueStatus } = form;
+    const { venueName, venueAddress, venueEmail, venuePhone } = form;
 
-    if (!venueName || !venueAddress || !venueEmail || !venuePhone || !capacity || !venueStatus) return;
+    if (!venueName || !venueAddress || !venueEmail || !venuePhone) return;
 
     setVenues((prev) => [
       ...prev,
@@ -33,9 +32,10 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
         venueAddress: venueAddress.trim(),
         venueEmail: venueEmail.trim(),
         venuePhone: venuePhone.trim(),
-        capacity: Number(capacity),
-        venueStatus,
-        venueImage: form.venueImage?.trim() || "",
+        capacity: 0,          // Default capacity
+        venueCost: 0,         // Default cost
+        venueStatus: "Pending", // Automatically set status
+        notes: form.notes?.trim() || "",
       },
     ]);
 
@@ -45,35 +45,18 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
       venueAddress: "",
       venueEmail: "",
       venuePhone: "",
-      capacity: "",
-      venueStatus: "",
-      venueImage: "",
+      notes: "",
     });
   };
 
   const handleSaveAll = async () => {
     if (venues.length === 0) return;
 
-    const validVenues = venues.filter(
-      (v) =>
-        v.venueName &&
-        v.venueAddress &&
-        v.venueEmail &&
-        v.venuePhone &&
-        v.capacity &&
-        v.venueStatus
-    );
-
-    if (validVenues.length === 0) {
-      alert("No valid venues to save.");
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
     try {
-      for (const venue of validVenues) {
+      for (const venue of venues) {
         await addVenue(eventId, venue);
       }
 
@@ -138,36 +121,13 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
               className="px-3 py-2 border rounded w-full"
             />
             <input
-              name="capacity"
-              value={form.capacity}
+              name="notes"
+              value={form.notes}
               onChange={handleChange}
-              type="number"
-              placeholder="Capacity"
-              required
-              className="px-3 py-2 border rounded w-full"
+              placeholder="Notes (optional)"
+              className="px-3 py-2 border rounded w-full md:col-span-2"
             />
-            <select
-              name="venueStatus"
-              value={form.venueStatus}
-              onChange={handleChange}
-              className="px-3 py-2 border rounded w-full"
-              required
-            >
-              <option value="" disabled hidden>
-                Venue Status
-              </option>
-              <option value="Pending">Pending</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Declined">Declined</option>
-            </select>
           </section>
-          <textarea
-            name="venueImage"
-            value={form.venueImage}
-            onChange={handleChange}
-            placeholder="Venue Image URL (optional)"
-            className="px-3 py-2 border rounded w-full"
-          />
 
           <button
             type="submit"
@@ -188,8 +148,9 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                   <th className="border px-2">Email</th>
                   <th className="border px-2">Phone</th>
                   <th className="border px-2">Capacity</th>
+                  <th className="border px-2">Cost</th>
                   <th className="border px-2">Status</th>
-                  <th className="border px-2">Image</th>
+                  <th className="border px-2">Notes</th>
                 </tr>
               </thead>
               <tbody>
@@ -200,8 +161,9 @@ export default function AddVenuesModal({ eventId, onClose, onVenuesUpdated }) {
                     <td className="border px-2">{v.venueEmail}</td>
                     <td className="border px-2">{v.venuePhone}</td>
                     <td className="border px-2">{v.capacity}</td>
+                    <td className="border px-2">{v.venueCost}</td>
                     <td className="border px-2">{v.venueStatus}</td>
-                    <td className="border px-2">{v.venueImage}</td>
+                    <td className="border px-2">{v.notes}</td>
                   </tr>
                 ))}
               </tbody>

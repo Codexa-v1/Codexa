@@ -18,10 +18,12 @@ import AddGuestsModal from "../components/AddGuestsModal";
 
 // Backend API
 import { getAllEvents, updateEvent } from "../backend/api/EventData";
+import { getVenues } from "../backend/api/EventVenue";
 import { getVendors } from "../backend/api/EventVendor";
 import { getGuests } from "../backend/api/EventGuest";
 import WeatherCard from "../components/WeatherCard";
 import { getDocuments } from "../backend/api/EventDocuments";
+import { get } from "mongoose";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -33,6 +35,7 @@ export default function EventDetails() {
   const [event, setEvent] = useState(null);
   const [guests, setGuests] = useState([]);
   const [vendors, setVendors] = useState([]);
+  const [venues, setVenues] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [documents, setDocuments] = useState([]);
 
@@ -69,15 +72,17 @@ export default function EventDetails() {
 
     const fetchData = async () => {
       try {
-        const [guestData, vendorData, documentData] = await Promise.all([
+        const [guestData, vendorData, documentData, venueData] = await Promise.all([
           getGuests(event._id),
           getVendors(event._id),
           getDocuments(user.sub, event._id),
+          getVenues(event._id)
         ]);
         setGuests(guestData);
         setVendors(vendorData);
         setSchedules([]); // placeholder until backend ready
         setDocuments(documentData);
+        setVenues(venueData);
       } catch (err) {
         console.error("Error fetching event data:", err);
       }
@@ -87,8 +92,8 @@ export default function EventDetails() {
   }, [event?._id]);
 
   const handleEditEventSave = (updated) => {
-    Object.assign(event, updated);
-    setShowEditEventModal(false);
+    setEvent((prev) => ({ ...prev, ...updated }));
+    setShowPastEventModal(false);
   };
 
   const handleSendInvites = (eventId) => {
@@ -109,6 +114,32 @@ export default function EventDetails() {
       alert("Link copied to clipboard!");
     }
   };
+
+  const refreshData = async () => {
+    if (!event?._id) return;
+    try {
+      const [guestData, vendorData, documentData, venueData] = await Promise.all([
+        getGuests(event._id),
+        getVendors(event._id),
+        getDocuments(user.sub, event._id),
+        getVenues(event._id)
+      ]);
+      setGuests(guestData);
+      setVendors(vendorData);
+      setDocuments(documentData);
+      setVenues(venueData);
+      setSchedules([]); // placeholder until backend ready
+    } catch (err) {
+      console.error("Error refreshing event data:", err);
+    }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    refreshData(); // fetch latest data for modal
+  };
+
+
 
   if (!event) {
     return (
@@ -194,6 +225,13 @@ export default function EventDetails() {
           </section>
           <section className="flex gap-2">
             <button
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-sm font-semibold shadow flex items-center gap-2"
+              type="button"
+              onClick={refreshData}
+            >
+              Refresh
+            </button>
+            <button
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm font-semibold shadow flex items-center gap-2"
               type="button"
               onClick={() => handleSendInvites(event._id)}
@@ -254,6 +292,25 @@ export default function EventDetails() {
             <p className="text-2xl font-bold">R{event.budget}</p>
             <p className="text-sm text-gray-500">Total allocated</p>
           </div>
+          <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
+            <h4 className="font-semibold">Budget Usage</h4>
+            {event.budget ? (
+              (() => {
+                const totalVendorCost = vendors.reduce((sum, v) => sum + (v.vendorCost || 0), 0);
+                const totalVenueCost = venues.reduce((sum, v) => sum + (v.venueCost || 0), 0);
+                const totalUsed = totalVendorCost + totalVenueCost;
+                const remaining = event.budget - totalUsed;
+                return (
+                  <>
+                    <p className="text-2xl font-bold">R{totalUsed}</p>
+                    <p className="text-sm text-gray-500">Remaining: R{remaining.toFixed(2)}</p>
+                  </>
+                );
+              })()
+            ) : (
+              <p className="text-sm text-gray-500">No budget set</p>
+            )}
+          </div>
         </section>
       </section>
 
@@ -266,7 +323,7 @@ export default function EventDetails() {
               className={`px-4 py-2 ${
                 activeTab === tab ? "text-green-700 font-bold" : "text-gray-500"
               }`}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => handleTabChange(tab)}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1).replace(/([A-Z])/g, " $1")}
             </button>

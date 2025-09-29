@@ -1,110 +1,123 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { updateVendor, getVendors } from "@/backend/api/EventVendor";
+import { getVenues } from "@/backend/api/EventVenue";
 
-export default function EditVendorModal({ eventId, onClose, onVendorsUpdated, vendor }) {
-  const [form, setForm] = useState({
-    name: vendor.name || "",
-    vendorType: vendor.vendorType || "",
-    contactPerson: vendor.contactPerson || "",
-    phone: vendor.phone || "",
-    email: vendor.email || "",
-    website: vendor.website || "",
-    address: vendor.address || "",
-    rating: vendor.rating || "",
-    notes: vendor.notes || ""
-  });
-
+export default function EditVendorModal({ vendor, eventId, eventBudget, onClose, onSave }) {
+  const [vendorCost, setVendorCost] = useState(vendor.vendorCost?.toString() || "");
+  const [notes, setNotes] = useState(vendor.notes || "");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [remainingBudget, setRemainingBudget] = useState(eventBudget || 0);
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
-  }
+  // Compute remaining budget dynamically
+  useEffect(() => {
+    const fetchRemaining = async () => {
+      try {
+        const vendors = await getVendors(eventId);
+        const venues = await getVenues(eventId);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+        // Ensure numeric values
+        const totalVendorCost = vendors.reduce(
+          (sum, v) => sum + (parseFloat(v.vendorCost) || 0),
+          0
+        );
+        const totalVenueCost = venues.reduce(
+          (sum, v) => sum + (parseFloat(v.venueCost) || 0),
+          0
+        );
+
+        // Subtract the current vendor cost only once if editing
+        const remaining =
+          eventBudget - totalVenueCost - (totalVendorCost - (parseFloat(vendor.vendorCost) || 0));
+
+        setRemainingBudget(Math.max(Math.round(remaining * 100) / 100, 0));
+      } catch (err) {
+        console.error("Error fetching vendors/venues:", err);
+        setRemainingBudget(eventBudget || 0);
+      }
+    };
+
+    fetchRemaining();
+  }, [eventId, eventBudget, vendor.vendorCost]);
+
+
+  const handleSave = async () => {
+    const numericCost = parseFloat(vendorCost) || 0;
+
+    if (numericCost > remainingBudget) {
+      alert(`Cost exceeds remaining budget of R${remainingBudget.toFixed(2)}`);
+      return;
+    }
 
     try {
-      await updateVendor(eventId, vendor._id, form);
-      const vendors = await getVendors(eventId);
-      if (onVendorsUpdated) onVendorsUpdated(vendors);
+      setLoading(true);
+      await updateVendor(eventId, vendor._id, { vendorCost: numericCost, notes, contacted: true });
+      onSave({ ...vendor, vendorCost: numericCost, notes, contacted: true });
       onClose();
     } catch (err) {
-      setError(err.message || "Failed to update vendor.");
+      console.error("Error updating vendor:", err);
+      alert("Failed to update vendor.");
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const handleCostChange = (val) => {
+    // Allow only digits and a single dot with up to 2 decimals
+    if (/^\d*\.?\d{0,2}$/.test(val) || val === "") {
+      setVendorCost(val);
+    }
+  };
 
   return (
-    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <section className="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full relative">
-        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={onClose}>&times;</button>
-        <h3 className="text-xl font-bold mb-10 text-blue-900">Edit Vendor</h3>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+        <h3 className="text-lg font-bold mb-4">Edit Vendor</h3>
 
-        {error && <p className="text-red-600 mb-3">{error}</p>}
+        <p className="text-sm text-red-600 mb-2">
+          Remaining budget: R{(remainingBudget || 0).toFixed(2)}
+        </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <label className="block mb-2">
+          <span className="font-medium">Cost (R)</span>
+          <input
+            type="text"
+            value={vendorCost}
+            onChange={(e) => handleCostChange(e.target.value)}
+            placeholder="Enter cost (e.g., 1200.50)"
+            className="mt-1 block w-full rounded border-gray-300 focus:ring focus:ring-blue-300 px-3 py-2"
+          />
+        </label>
 
-          {/* Grid of inputs */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-7">
-            <section className="relative">
-              {form.name && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Name</label>}
-              <input name="name" value={form.name} onChange={handleChange} required placeholder={form.name ? "" : "Name"} className="px-3 py-2 border rounded w-full" />
-            </section>
+        <label className="block mb-4">
+          <span className="font-medium">Notes</span>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            className="mt-1 block w-full rounded border-gray-300 focus:ring focus:ring-blue-300 px-3 py-2"
+            rows={3}
+          />
+        </label>
 
-            <section className="relative">
-              {form.vendorType && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Type</label>}
-              <input name="vendorType" value={form.vendorType} onChange={handleChange} required placeholder={form.vendorType ? "" : "Type"} className="px-3 py-2 border rounded w-full" />
-            </section>
-
-            <section className="relative">
-              {form.contactPerson && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Contact Person</label>}
-              <input name="contactPerson" value={form.contactPerson} onChange={handleChange} required placeholder={form.contactPerson ? "" : "Contact Person"} className="px-3 py-2 border rounded w-full" />
-            </section>
-
-            <section className="relative">
-              {form.phone && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Phone</label>}
-              <input name="phone" value={form.phone} onChange={handleChange} required placeholder={form.phone ? "" : "Phone"} className="px-3 py-2 border rounded w-full" />
-            </section>
-
-            <section className="relative">
-              {form.email && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Email</label>}
-              <input name="email" value={form.email} onChange={handleChange} required placeholder={form.email ? "" : "Email"} className="px-3 py-2 border rounded w-full" />
-            </section>
-
-            <section className="relative">
-              {form.website && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Website</label>}
-              <input name="website" value={form.website} onChange={handleChange} placeholder={form.website ? "" : "Website"} className="px-3 py-2 border rounded w-full" />
-            </section>
-
-            <section className="relative">
-              {form.address && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Address</label>}
-              <input name="address" value={form.address} onChange={handleChange} required placeholder={form.address ? "" : "Address"} className="px-3 py-2 border rounded w-full" />
-            </section>
-
-            <section className="relative">
-              {form.rating && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Rating (1-5)</label>}
-              <input name="rating" value={form.rating} onChange={handleChange} type="number" min="1" max="5" placeholder={form.rating ? "" : "Rating (1-5)"} className="px-3 py-2 border rounded w-full" />
-            </section>
-          </section>
-
-          {/* Notes textarea */}
-          <section className="relative">
-            {form.notes && <label className="absolute left-3 -top-5 text-xs font-semibold text-blue-900 bg-white px-1">Notes</label>}
-            <textarea name="notes" value={form.notes} onChange={handleChange} placeholder={form.notes ? "" : "Notes"} className="px-3 py-2 border rounded w-full" />
-          </section>
-
-          {/* Footer buttons */}
-          <section className="flex justify-end gap-2">
-            <button type="button" className="px-4 py-2 rounded bg-gray-200 text-gray-700" onClick={onClose} disabled={loading}>Cancel</button>
-            <button type="submit" className="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-800" disabled={loading}>{loading ? "Saving..." : "Save Vendor"}</button>
-          </section>
-        </form>
-      </section>
-    </section>
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={loading || (remainingBudget || 0) <= 0}
+            className={`px-4 py-2 rounded text-white ${
+              (remainingBudget || 0) <= 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+          >
+            {loading ? "Saving..." : (remainingBudget || 0) <= 0 ? "Budget Full" : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

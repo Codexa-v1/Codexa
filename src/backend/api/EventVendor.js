@@ -56,6 +56,16 @@ export function deleteVendor(eventId, vendorId) {
         });
 }
 
+export function searchVendors(category, city) {
+    return fetch(`${url}/api/vendors/search?category=${encodeURIComponent(category)}&city=${encodeURIComponent(city)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error searching vendors');
+            }
+            return response.json();
+        });
+}
+
 export default {
     getVendors,
     addVendor,
