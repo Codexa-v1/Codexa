@@ -18,7 +18,7 @@ jobs:
           node-version: 22 # your version
 
       - name: Install deps
-        run: npm ci
+        run: npm install
 
       - name: Run tests with coverage
         run: npm run test:coverage
@@ -30,4 +30,5 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }} # set this in repo secrets
           flags: unittests
           fail_ci_if_error: true
+
 
