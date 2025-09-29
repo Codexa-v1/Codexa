@@ -100,10 +100,13 @@ router.post('/event/:eventId', async (req, res) => {
 
 // This is to edit the details of a specific vendor in a particular event
 router.patch('/event/:eventId/vendors/:vendorId', async (req, res) => {
-    console.log('Received body:', req.body);
     try {
         const { eventId, vendorId } = req.params;
         const updateFields = req.body;
+
+        if (updateFields.vendorCost !== undefined || updateFields.notes !== undefined) {
+            updateFields.contacted = true;
+        }
 
         // Validate EventVendor exists and belongs to this event and vendor
         const eventVendor = await EventVendor.findOne({ eventId, vendorId });
