@@ -86,41 +86,33 @@ router.post('/event/:eventId', async (req, res) => {
 });
 
 
-// This is to edit the details of a specific venue in a particular event
+// Edit specific venue fields: capacity, cost, status, notes
 router.patch('/event/:eventId/venue/:venueId', async (req, res) => {
     try {
         const { eventId, venueId } = req.params;
-        const updateFields = req.body;
+        const { capacity, venueCost, venueStatus, notes } = req.body;
 
-        // Validate EventVenue exists and belongs to this event and venue
-        const eventVenue = await EventVenue.findOne({ eventId, venueId });
-
-        if (!eventVenue) {
-            return res.status(404).send('Venue not found for this event');
-        }
-
-        // Update Venue fields
-        const updatedVenue = await Venue.findByIdAndUpdate(
-            venueId,
-            updateFields,
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedVenue) {
+        // Ensure the venue exists
+        const venue = await Venue.findById(venueId);
+        if (!venue) {
             return res.status(404).send('Venue not found');
         }
 
-        // If you have event-specific fields in EventVenue, update them here - but we don't have such information
-        // Example: if (updateFields.notes) { eventVenue.notes = updateFields.notes; await eventVenue.save(); }
+        // Update only the editable fields
+        venue.capacity = capacity !== undefined ? Number(capacity) : venue.capacity;
+        venue.venueCost = venueCost !== undefined ? Number(venueCost) : venue.venueCost;
+        venue.venueStatus = venueStatus || venue.venueStatus;
+        venue.notes = notes !== undefined ? notes : venue.notes;
 
-        res.status(200).json({
-            venue: updatedVenue
-        });
+        await venue.save();
+
+        res.status(200).json({ venue });
     } catch (error) {
         console.error('Error updating venue:', error);
         res.status(500).send('Error updating venue');
     }
 });
+
 
 // This is to delete a specific venue in a particular event
 router.delete('/event/:eventId/venue/:venueId', async (req, res) => {
