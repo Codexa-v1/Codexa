@@ -15,9 +15,9 @@ export default function EventsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("All");
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [activeTab, setActiveTab] = useState("upcoming");
   const navigate = useNavigate();
 
-  // Fetch events once user is loaded
   useEffect(() => {
     if (isAuthenticated && user) {
       getAllEvents(user.sub)
@@ -26,10 +26,11 @@ export default function EventsPage() {
     }
   }, [isAuthenticated, user]);
 
-  // Get unique event categories for filter dropdown
-  const eventCategories = ["All", ...Array.from(new Set(events.map((e) => e.category)))];
+  const eventCategories = [
+    "All",
+    ...Array.from(new Set(events.map((e) => e.category))),
+  ];
 
-  // Filter and search logic
   const filteredEvents = events.filter((event) => {
     const matchesType = filterType === "All" || event.category === filterType;
     const matchesSearch =
@@ -37,6 +38,36 @@ export default function EventsPage() {
       event.location.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesType && matchesSearch;
   });
+
+  const upcomingEvents = filteredEvents.filter(
+    (event) =>
+      dayjs(event.date).isAfter(dayjs(), "day") ||
+      dayjs(event.date).isSame(dayjs(), "day")
+  );
+
+  const pastEvents = filteredEvents.filter((event) =>
+    dayjs(event.date).isBefore(dayjs(), "day")
+  );
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteEvent(id);
+      setEvents((prev) => prev.filter((e) => e._id !== id));
+      setConfirmDeleteId(null);
+    } catch (err) {
+      alert("Error cancelling event: " + err.message);
+      setConfirmDeleteId(null);
+    }
+  };
+
+  const getEventStatus = (date) => {
+    const today = dayjs();
+    const eventDate = dayjs(date);
+
+    if (eventDate.isSame(today, "day")) return { text: "Ongoing", color: "bg-yellow-600" };
+    if (eventDate.isAfter(today, "day")) return { text: "Open", color: "bg-green-700" };
+    return { text: "Closed", color: "bg-gray-500" };
+  };
 
   if (isLoading) return <p>Loading...</p>;
 
@@ -74,116 +105,133 @@ export default function EventsPage() {
               Add New Event
             </button>
           </section>
+        </section>
 
-          {/* Modal with overlay */}
-          {isModalOpen && (
-            <>
-              <section
-              data-testid="overlay"
-                className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
-                onClick={() => setIsModalOpen(false)}
-              ></section>
-              <section className="fixed inset-0 flex items-center justify-center z-50">
-                <EventPopup onClose={() => setIsModalOpen(false)} />
-              </section>
-            </>
-          )}
+
+        {/* Tabs */}
+        <section className="flex gap-4 mb-6">
+          <button
+            onClick={() => setActiveTab("upcoming")}
+            className={`px-4 py-2 rounded ${
+              activeTab === "upcoming"
+                ? "bg-green-900 text-white"
+                : "bg-gray-200"
+            }`}
+          >
+            Upcoming Events
+          </button>
+          <button
+            onClick={() => setActiveTab("past")}
+            className={`px-4 py-2 rounded ${
+              activeTab === "past" ? "bg-green-900 text-white" : "bg-gray-200"
+            }`}
+          >
+            Past Events
+          </button>
         </section>
 
         {/* Events Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredEvents.length === 0 ? (
-            <p className="col-span-3 text-center text-gray-600">No events found.</p>
+          {(activeTab === "upcoming" ? upcomingEvents : pastEvents).length ===
+          0 ? (
+            <p className="col-span-3 text-center text-gray-600">
+              No events found.
+            </p>
           ) : (
-            filteredEvents.map((event) => {
-              const { bgColor, labelColor } =
-                eventColors[event.category] || eventColors.Other;
+            (activeTab === "upcoming" ? upcomingEvents : pastEvents).map(
+              (event) => {
+                const { bgColor, labelColor } =
+                  eventColors[event.category] || eventColors.Other;
+                const status = getEventStatus(event.date);
 
-              return (
-                <div
-                  key={event._id}
-                  className={`${bgColor} p-6 rounded-lg shadow flex flex-col justify-between 
-                              transform transition-transform duration-200 hover:scale-105 hover:shadow-xl`}
-                >
-                  <span
-                    className={`${labelColor} text-white px-3 py-1 rounded-full text-xs w-fit mb-2`}
+                return (
+                  <div
+                    key={event._id}
+                    className={`${bgColor} p-6 rounded-lg shadow flex flex-col justify-between 
+                                transform transition-transform duration-200 hover:scale-105 hover:shadow-xl`}
                   >
-                    {event.category}
-                  </span>
-                  <h4 className="text-lg font-bold mt-2 mb-1">{event.title}</h4>
-                  <p className="text-sm mb-1">
-                    {dayjs(event.date).format("DD MMM YYYY, HH:mm")}
-                  </p>
-                  <p className="text-sm mb-2">{event.location}</p>
+                    <div className="flex justify-between items-center mb-2">
+                      <span
+                        className={`${labelColor} text-white px-3 py-1 rounded-full text-xs`}
+                      >
+                        {event.category}
+                      </span>
+                      <span
+                        className={`${status.color} text-white px-3 py-1 rounded-full text-xs`}
+                      >
+                        {status.text}
+                      </span>
+                    </div>
 
-                  {/* RSVP Progress Bar */}
-                  <div className="bg-gray-300 h-1 rounded mt-1 mb-2">
-                    <div
-                      className="bg-green-900 h-1 rounded"
-                      style={{
-                        width: `${(event.rsvpCurrent / event.rsvpTotal) * 100}%`,
-                      }}
-                    ></div>
+                    <h4 className="text-lg font-bold mt-2 mb-1">
+                      {event.title}
+                    </h4>
+                    <p className="text-sm mb-1">
+                      {dayjs(event.date).format("DD MMM YYYY, HH:mm")}
+                    </p>
+                    <p className="text-sm mb-2">{event.location}</p>
+
+                    {/* Actions */}
+                    <div className="flex justify-between mt-3">
+                      <button
+                        className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90"
+                        onClick={() => navigate(`/events/${event._id}`)}
+                      >
+                        View
+                      </button>
+                      <button
+                        className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90"
+                        onClick={() => setConfirmDeleteId(event._id)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+
+                    {/* Cancel Confirmation */}
+                    {confirmDeleteId === event._id && (
+                      <section className="fixed inset-0 flex items-center justify-center z-50">
+                        <div className="bg-white border border-red-600 rounded-lg shadow-lg p-6 text-center">
+                          <h3 className="text-red-700 text-xl font-bold mb-2">
+                            Cancel Event?
+                          </h3>
+                          <p className="mb-4">
+                            Are you sure you want to cancel this event? This
+                            action cannot be undone.
+                          </p>
+                          <button
+                            className="bg-red-600 text-white px-4 py-2 rounded mr-2"
+                            onClick={() => handleDelete(confirmDeleteId)}
+                          >
+                            Yes, Cancel
+                          </button>
+                          <button
+                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                            onClick={() => setConfirmDeleteId(null)}
+                          >
+                            No, Go Back
+                          </button>
+                        </div>
+                      </section>
+                    )}
                   </div>
-                  <p className="text-xs mb-2">
-                    RSVP: {event.rsvpCurrent}/{event.rsvpTotal}
-                  </p>
-
-                  {/* Actions */}
-                  <div className="flex justify-between mt-3">
-                    <button
-                      className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90"
-                      onClick={() => navigate(`/events/${event._id}`)}
-                    >
-                      View
-                    </button>
-                    <button
-                      className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90"
-                      onClick={() => setConfirmDeleteId(event._id)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-
-                  {/* Cancel Confirmation */}
-                  {confirmDeleteId === event._id && (
-                    <section className="fixed inset-0 flex items-center justify-center z-50">
-                      <div className="bg-white border border-red-600 rounded-lg shadow-lg p-6 text-center">
-                        <h3 className="text-red-700 text-xl font-bold mb-2">
-                          Cancel Event?
-                        </h3>
-                        <p className="mb-4">
-                          Are you sure you want to cancel this event? This action cannot be undone.
-                        </p>
-                        <button
-                          className="bg-red-600 text-white px-4 py-2 rounded mr-2"
-                          onClick={async () => {
-                            try {
-                              const res = await deleteEvent(confirmDeleteId);
-                              setConfirmDeleteId(null);
-                              window.location.reload();
-                            } catch (err) {
-                              alert("Error cancelling event: " + err.message);
-                              setConfirmDeleteId(null);
-                            }
-                          }}
-                        >
-                          Yes, Cancel
-                        </button>
-                        <button
-                          className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
-                          onClick={() => setConfirmDeleteId(null)}
-                        >
-                          No, Go Back
-                        </button>
-                      </div>
-                    </section>
-                  )}
-                </div>
-              );
-            })
+                );
+              }
+            )
           )}
         </section>
+
+        {/* Modal */}
+        {isModalOpen && (
+          <>
+            <section
+              className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
+              onClick={() => setIsModalOpen(false)}
+            ></section>
+            <section className="fixed inset-0 flex items-center justify-center z-50">
+              <EventPopup onClose={() => setIsModalOpen(false)} />
+            </section>
+          </>
+        )}
       </section>
     </section>
   );

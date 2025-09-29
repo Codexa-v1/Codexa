@@ -30,6 +30,7 @@ const RSVPPage = () => {
 
   const handleChange = (e) => {
     setSelectedStatus(e.target.value);
+
   };
 
   const handleConfirm = async () => {
@@ -46,13 +47,21 @@ const RSVPPage = () => {
     }
   };
 
+  const formatDateOnly = (isoString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(isoString).toLocaleDateString(undefined, options);
+  };
+
   if (!event) return <p>Loading...</p>;
 
   return (
     <div className="max-w-xl mx-auto bg-white rounded-lg shadow p-8 mt-8">
       <h1 className="text-2xl font-bold text-green-900 mb-4">RSVP for {event.title}</h1>
       <div className="mb-4">
-        <p className="text-gray-700 mb-1">From: <span className="font-semibold">{event.date}</span> to <span className="font-semibold">{event.endDate}</span></p>
+        <p className="text-gray-700 mb-1">
+          From: <span className="font-semibold">{formatDateOnly(event.date) }</span> 
+           {" "}to <span className="font-semibold">{formatDateOnly(event.endDate)}</span>
+        </p>
         <p className="text-gray-700 mb-1">Start Time: <span className="font-semibold">{event.startTime}</span></p>
         <p className="text-gray-700 mb-1">End Time: <span className="font-semibold">{event.endTime}</span></p>
         <p className="text-gray-700 mb-1">Location: <span className="font-semibold">{event.location}</span></p>
@@ -102,5 +111,6 @@ const RSVPPage = () => {
     </div>
   );
 };
+
 
 export default RSVPPage;

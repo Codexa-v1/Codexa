@@ -6,7 +6,6 @@ export function getGuests(eventId) {
         .then(response => {
             if (!response.ok) {
                 if (response.status === 404) return []; // treat "no guests" as empty array
-                throw new Error('Network response was not ok');
             }
             return response.json();
         });

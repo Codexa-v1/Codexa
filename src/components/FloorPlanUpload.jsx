@@ -1,14 +1,12 @@
-import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 
-
-
-export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
-  const [docType, setDocType] = useState("Other");
+export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
+
+  const docType = "FloorPlan"; // fixed type
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -82,7 +80,7 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
       // Reset inputs
       handleRemoveFile();
 
-      // Refresh documents in modal
+      // Refresh floor plans in modal
       if (onUploadSuccess) onUploadSuccess();
     } catch (err) {
       console.error("Upload error:", err);
@@ -94,24 +92,7 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
 
   return (
     <div className="p-4 border rounded-lg bg-gray-50">
-      <h4 className="text-lg font-semibold mb-2">Upload Document</h4>
-
-      {/* File type */}
-      <label className="block mb-2 font-medium text-sm">
-        Document Type
-        <select
-          value={docType}
-          onChange={(e) => setDocType(e.target.value)}
-          className="block w-full border rounded p-2 mt-1"
-        >
-          <option value="FloorPlan">Floor Plan</option>
-          <option value="Agenda">Agenda</option>
-          <option value="Budget">Budget</option>
-          <option value="VendorContract">Vendor Contract</option>
-          <option value="Photos">Photos</option>
-          <option value="Other">Other</option>
-        </select>
-      </label>
+      <h4 className="text-lg font-semibold mb-2">Upload Floor Plan</h4>
 
       {/* File input */}
       <label className="block mb-2 font-medium text-sm">
