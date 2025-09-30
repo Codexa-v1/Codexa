@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.46% </span>
+                <span class="strong">84.26% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>313/375</span>
+                <span class='fraction'>332/394</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.46% </span>
+                <span class="strong">84.26% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>313/375</span>
+                <span class='fraction'>332/394</span>
             </div>
         
             
@@ -519,7 +519,25 @@
 <a name='L454'></a><a href='#L454'>454</a>
 <a name='L455'></a><a href='#L455'>455</a>
 <a name='L456'></a><a href='#L456'>456</a>
-<a name='L457'></a><a href='#L457'>457</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L457'></a><a href='#L457'>457</a>
+<a name='L458'></a><a href='#L458'>458</a>
+<a name='L459'></a><a href='#L459'>459</a>
+<a name='L460'></a><a href='#L460'>460</a>
+<a name='L461'></a><a href='#L461'>461</a>
+<a name='L462'></a><a href='#L462'>462</a>
+<a name='L463'></a><a href='#L463'>463</a>
+<a name='L464'></a><a href='#L464'>464</a>
+<a name='L465'></a><a href='#L465'>465</a>
+<a name='L466'></a><a href='#L466'>466</a>
+<a name='L467'></a><a href='#L467'>467</a>
+<a name='L468'></a><a href='#L468'>468</a>
+<a name='L469'></a><a href='#L469'>469</a>
+<a name='L470'></a><a href='#L470'>470</a>
+<a name='L471'></a><a href='#L471'>471</a>
+<a name='L472'></a><a href='#L472'>472</a>
+<a name='L473'></a><a href='#L473'>473</a>
+<a name='L474'></a><a href='#L474'>474</a>
+<a name='L475'></a><a href='#L475'>475</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -663,6 +681,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
@@ -793,7 +821,6 @@
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
@@ -837,7 +864,14 @@
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">27x</span>
@@ -845,6 +879,8 @@
 <span class="cline-any cline-yes">105x</span>
 <span class="cline-any cline-yes">105x</span>
 <span class="cline-any cline-yes">105x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">90x</span>
 <span class="cline-any cline-yes">105x</span>
 <span class="cline-any cline-yes">105x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1118,6 +1154,16 @@ export default function EventDetails() {
 &nbsp;
 &nbsp;
 &nbsp;
+  const tabColors = {
+    overview: "text-green-700",
+    rsvp: "text-green-700",
+    vendors: "text-blue-700",
+    venues: "text-red-700",
+    schedule: "text-yellow-700",
+    floor: "text-pink-700",
+    documents: "text-purple-700",
+  };
+&nbsp;
   if (!event) {
     return (
       &lt;section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 to-green-900"&gt;
@@ -1249,7 +1295,6 @@ export default function EventDetails() {
             &lt;h4 className="font-semibold"&gt;Total Guests&lt;/h4&gt;
             &lt;p className="text-2xl font-bold"&gt;{event.rsvpTotal}&lt;/p&gt;
             &lt;p className="text-sm text-gray-500"&gt;
-&nbsp;
               Accepted: {guests.filter((g) =&gt; g.rsvpStatus === "Accepted").length} | Declined:{" "}
               {guests.filter((g) =&gt; g.rsvpStatus === "Declined").length} | Pending:{" "}
               {guests.filter((g) =&gt; g.rsvpStatus === "Pending").length}
@@ -1293,14 +1338,23 @@ export default function EventDetails() {
       &lt;/section&gt;
 &nbsp;
       {/* Tabs Navigation */}
-&nbsp;
-      &lt;section className="p-6 w-10/12 max-w-screen-xl mx-auto bg-white rounded-lg shadow mt-8"&gt;
-        &lt;section className="flex overflow-x-auto gap-2 sm:gap-4 mb-6 bg-gray-100 rounded-lg px-2 py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"&gt;
-          {["overview", "rsvp", "vendors", "venues", "schedule", "floor", "documents"].map((tab) =&gt; (
+      &lt;section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8"&gt;
+        &lt;section className="flex justify-between mb-6 bg-gray-100 rounded-lg"&gt;
+          {[
+            "overview",
+            "rsvp",
+            "vendors",
+            "venues",
+            "schedule",
+            "floor",
+            "documents",
+          ].map((tab) =&gt; (
             &lt;button
               key={tab}
               className={`px-4 py-2 ${
-                activeTab === tab ? "text-green-700 font-bold" : "text-gray-500"
+                activeTab === tab
+                  ? `${tabColors[tab]} font-bold`
+                  : "text-gray-500"
               }`}
               onClick={() =&gt; handleTabChange(tab)}
             &gt;
@@ -1438,7 +1492,7 @@ export default function EventDetails() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-30T07:36:38.584Z
+                at 2025-09-30T08:12:06.225Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
