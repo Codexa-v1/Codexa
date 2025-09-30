@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.26% </span>
+                <span class="strong">83.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>332/394</span>
+                <span class='fraction'>334/400</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.26% </span>
+                <span class="strong">83.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>332/394</span>
+                <span class='fraction'>334/400</span>
             </div>
         
             
@@ -537,7 +537,15 @@
 <a name='L472'></a><a href='#L472'>472</a>
 <a name='L473'></a><a href='#L473'>473</a>
 <a name='L474'></a><a href='#L474'>474</a>
-<a name='L475'></a><a href='#L475'>475</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L475'></a><a href='#L475'>475</a>
+<a name='L476'></a><a href='#L476'>476</a>
+<a name='L477'></a><a href='#L477'>477</a>
+<a name='L478'></a><a href='#L478'>478</a>
+<a name='L479'></a><a href='#L479'>479</a>
+<a name='L480'></a><a href='#L480'>480</a>
+<a name='L481'></a><a href='#L481'>481</a>
+<a name='L482'></a><a href='#L482'>482</a>
+<a name='L483'></a><a href='#L483'>483</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -846,7 +854,15 @@
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
@@ -1032,7 +1048,7 @@ import AddGuestsModal from "../components/AddGuestsModal";
 // Backend API
 import { getAllEvents, updateEvent } from "../backend/api/EventData";
 import { getVenues } from "../backend/api/EventVenue";
-import { getVendors } from "../backend/api/EventVendor";
+import { getVendors, getEventVendorDetails } from "../backend/api/EventVendor";
 import { getGuests } from "../backend/api/EventGuest";
 import WeatherCard from "../components/WeatherCard";
 import { getDocuments } from "../backend/api/EventDocuments";
@@ -1087,7 +1103,7 @@ export default function EventDetails() {
       try {
         const [guestData, vendorData, documentData, venueData] = await Promise.all([
           getGuests(event._id),
-          getVendors(event._id),
+          getEventVendorDetails(event._id),
           getDocuments(user.sub, event._id),
           getVenues(event._id)
         ]<span class="branch-0 cbranch-no" title="branch not covered" >);</span>
@@ -1319,10 +1335,18 @@ export default function EventDetails() {
             &lt;h4 className="font-semibold"&gt;Budget Usage&lt;/h4&gt;
             {event.budget ? (
               (() =&gt; {
-                const totalVendorCost = vendors.reduce((sum, v) =&gt; sum + (v.vendorCost || 0), 0);
-                const totalVenueCost = venues.reduce((sum, v) =&gt; sum + (v.venueCost || 0), 0);
-                const totalUsed = totalVendorCost + totalVenueCost;
-                const remaining = event.budget - totalUsed;
+                const totalVendorCost = vendors.reduce((sum, v) =&gt; {
+<span class="cstat-no" title="statement not covered" >                const cost = v.eventVendor?.vendorCost ?? 0;</span>
+<span class="cstat-no" title="statement not covered" >                return sum + (typeof cost === "string" ? parseFloat(cost) : cost);</span>
+              }, 0);
+&nbsp;
+              const totalVenueCost = venues.reduce((sum, v) =&gt; {
+<span class="cstat-no" title="statement not covered" >                const cost = v.venueCost ?? 0;</span>
+<span class="cstat-no" title="statement not covered" >                return sum + (typeof cost === "string" ? parseFloat(cost) : cost);</span>
+              }, 0);
+&nbsp;
+              const totalUsed = totalVendorCost + totalVenueCost;
+              const remaining = event.budget - totalUsed;
                 return (
                   &lt;&gt;
                     &lt;p className="text-2xl font-bold"&gt;R{totalUsed}&lt;/p&gt;
@@ -1492,7 +1516,7 @@ export default function EventDetails() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-30T08:32:42.721Z
+                at 2025-09-30T14:28:24.225Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.88% </span>
+                <span class="strong">86.39% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>140/163</span>
+                <span class='fraction'>146/169</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.88% </span>
+                <span class="strong">86.39% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>140/163</span>
+                <span class='fraction'>146/169</span>
             </div>
         
             
@@ -256,7 +256,20 @@
 <a name='L191'></a><a href='#L191'>191</a>
 <a name='L192'></a><a href='#L192'>192</a>
 <a name='L193'></a><a href='#L193'>193</a>
-<a name='L194'></a><a href='#L194'>194</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -351,7 +364,17 @@
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
@@ -411,6 +434,7 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">15x</span>
@@ -437,8 +461,11 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
@@ -448,8 +475,7 @@
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useEffect, useState, useCallback } from "react";
+<span class="cline-any cline-yes">22x</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useEffect, useState, useCallback } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import DocumentUpload from "@/components/DocumentUpload";
 &nbsp;
@@ -541,115 +567,128 @@ export default function DocumentsModal({ onClose, eventId }) {
     });
 &nbsp;
   return (
-    &lt;section className="bg-white rounded-lg shadow-lg p-8 w-full relative"&gt;
-      &lt;button
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-        onClick={onClose}
+    &lt;section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-2 sm:px-4"&gt;
+      &lt;section
+        className="
+          bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8
+          max-w-5xl w-full relative
+          max-h-[95vh] overflow-y-auto
+        "
       &gt;
-        &amp;times;
-      &lt;/button&gt;
-&nbsp;
-      &lt;h3 className="text-xl font-bold mb-4 text-green-900"&gt;Your Documents&lt;/h3&gt;
-&nbsp;
-      {/* Search + Filter + Sort controls */}
-      &lt;div className="flex flex-wrap gap-4 mb-4"&gt;
-        &lt;input
-          type="text"
-          placeholder="Search by name..."
-          value={searchTerm}
-          onChange={(e) =&gt; setSearchTerm(e.target.value)}
-          className="border rounded p-2 flex-1 min-w-[150px]"
-        /&gt;
-        &lt;select
-          value={filterType}
-          onChange={(e) =&gt; setFilterType(e.target.value)}
-          className="border rounded p-2"
+        {/* Close button */}
+        &lt;button
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl sm:text-xl"
+          onClick={onClose}
         &gt;
-          &lt;option value="All"&gt;All Types&lt;/option&gt;
-          &lt;option value="FloorPlan"&gt;Floor Plan&lt;/option&gt;
-          &lt;option value="Agenda"&gt;Agenda&lt;/option&gt;
-          &lt;option value="Budget"&gt;Budget&lt;/option&gt;
-          &lt;option value="VendorContract"&gt;Vendor Contract&lt;/option&gt;
-          &lt;option value="Photos"&gt;Photos&lt;/option&gt;
-          &lt;option value="Other"&gt;Other&lt;/option&gt;
-        &lt;/select&gt;
-        &lt;select
-          value={sortOption}
-          onChange={(e) =&gt; setSortOption(e.target.value)}
-          className="border rounded p-2"
-        &gt;
-          &lt;option value="date-desc"&gt;Newest First&lt;/option&gt;
-          &lt;option value="date-asc"&gt;Oldest First&lt;/option&gt;
-          &lt;option value="name-asc"&gt;Name (A–Z)&lt;/option&gt;
-          &lt;option value="name-desc"&gt;Name (Z–A)&lt;/option&gt;
-          &lt;option value="type-asc"&gt;Type (A–Z)&lt;/option&gt;
-          &lt;option value="type-desc"&gt;Type (Z–A)&lt;/option&gt;
-        &lt;/select&gt;
-      &lt;/div&gt;
+          &amp;times;
+        &lt;/button&gt;
 &nbsp;
-      {loading ? (
-        &lt;p&gt;Loading documents...&lt;/p&gt;
-      ) : filteredDocs.length === 0 ? (
-        &lt;p className="text-gray-500"&gt;No documents found.&lt;/p&gt;
-      ) : (
-        &lt;table className="min-w-full border border-gray-300 rounded-lg overflow-hidden"&gt;
-          &lt;thead className="bg-gray-100"&gt;
-            &lt;tr&gt;
-              &lt;th className="px-4 py-2 text-left text-gray-700"&gt;Name&lt;/th&gt;
-              &lt;th className="px-4 py-2 text-left text-gray-700"&gt;Type&lt;/th&gt;
-              &lt;th className="px-4 py-2 text-left text-gray-700"&gt;Date&lt;/th&gt;
-              &lt;th className="px-4 py-2 text-left text-gray-700"&gt;Download&lt;/th&gt;
-              &lt;th className="px-4 py-2 text-left text-gray-700"&gt;Delete&lt;/th&gt;
-            &lt;/tr&gt;
-          &lt;/thead&gt;
-          &lt;tbody&gt;
-            {filteredDocs.map((doc, idx) =&gt; (
-              &lt;tr key={idx} className="border-t"&gt;
-                &lt;td className="px-4 py-2"&gt;{doc.name}&lt;/td&gt;
-                &lt;td className="px-4 py-2"&gt;{doc.type}&lt;/td&gt;
-                &lt;td className="px-4 py-2"&gt;{new Date(doc.date).toLocaleString()}&lt;/td&gt;
-                &lt;td className="px-4 py-2"&gt;
-                  &lt;a
-                    href={doc.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
-                  &gt;
-                    Download
-                  &lt;/a&gt;
-                &lt;/td&gt;
-                &lt;td className="px-4 py-2"&gt;
-                  &lt;button
-                    onClick={<span class="fstat-no" title="function not covered" >() =&gt; handleDelete(doc)}</span>
-                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  &gt;
-                    Delete
-                  &lt;/button&gt;
-                &lt;/td&gt;
-              &lt;/tr&gt;
-            ))}
-          &lt;/tbody&gt;
-        &lt;/table&gt;
-      )}
+        &lt;h3 className="text-lg sm:text-xl font-bold mb-4 text-green-900"&gt;
+          Your Documents
+        &lt;/h3&gt;
 &nbsp;
-      &lt;div className="mt-6"&gt;
-        &lt;DocumentUpload 
-          userId={user?.sub} 
-          eventId={eventId} 
-          onUploadSuccess={fetchDocuments} 
-        /&gt;
-      &lt;/div&gt;
+        {/* Search + Filter + Sort controls */}
+        &lt;div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 mb-4"&gt;
+          &lt;input
+            type="text"
+            placeholder="Search by name..."
+            value={searchTerm}
+            onChange={(e) =&gt; setSearchTerm(e.target.value)}
+            className="border rounded px-3 py-2 flex-1 min-w-[150px] text-sm sm:text-base"
+          /&gt;
+          &lt;select
+            value={filterType}
+            onChange={(e) =&gt; setFilterType(e.target.value)}
+            className="border rounded px-3 py-2 text-sm sm:text-base"
+          &gt;
+            &lt;option value="All"&gt;All Types&lt;/option&gt;
+            &lt;option value="FloorPlan"&gt;Floor Plan&lt;/option&gt;
+            &lt;option value="Agenda"&gt;Agenda&lt;/option&gt;
+            &lt;option value="Budget"&gt;Budget&lt;/option&gt;
+            &lt;option value="VendorContract"&gt;Vendor Contract&lt;/option&gt;
+            &lt;option value="Photos"&gt;Photos&lt;/option&gt;
+            &lt;option value="Other"&gt;Other&lt;/option&gt;
+          &lt;/select&gt;
+          &lt;select
+            value={sortOption}
+            onChange={(e) =&gt; setSortOption(e.target.value)}
+            className="border rounded px-3 py-2 text-sm sm:text-base"
+          &gt;
+            &lt;option value="date-desc"&gt;Newest First&lt;/option&gt;
+            &lt;option value="date-asc"&gt;Oldest First&lt;/option&gt;
+            &lt;option value="name-asc"&gt;Name (A–Z)&lt;/option&gt;
+            &lt;option value="name-desc"&gt;Name (Z–A)&lt;/option&gt;
+            &lt;option value="type-asc"&gt;Type (A–Z)&lt;/option&gt;
+            &lt;option value="type-desc"&gt;Type (Z–A)&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+&nbsp;
+        {loading ? (
+          &lt;p&gt;Loading documents...&lt;/p&gt;
+        ) : filteredDocs.length === 0 ? (
+          &lt;p className="text-gray-500"&gt;No documents found.&lt;/p&gt;
+        ) : (
+          &lt;div className="overflow-x-auto"&gt;
+            &lt;table className="w-full border text-xs sm:text-sm md:text-base rounded-lg overflow-hidden"&gt;
+              &lt;thead className="bg-gray-100"&gt;
+                &lt;tr&gt;
+                  &lt;th className="px-2 sm:px-4 py-2 text-left text-gray-700"&gt;Name&lt;/th&gt;
+                  &lt;th className="px-2 sm:px-4 py-2 text-left text-gray-700"&gt;Type&lt;/th&gt;
+                  &lt;th className="px-2 sm:px-4 py-2 text-left text-gray-700"&gt;Date&lt;/th&gt;
+                  &lt;th className="px-2 sm:px-4 py-2 text-left text-gray-700"&gt;Download&lt;/th&gt;
+                  &lt;th className="px-2 sm:px-4 py-2 text-left text-gray-700"&gt;Delete&lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody&gt;
+                {filteredDocs.map((doc, idx) =&gt; (
+                  &lt;tr key={idx} className="border-t odd:bg-gray-50"&gt;
+                    &lt;td className="px-2 sm:px-4 py-2"&gt;{doc.name}&lt;/td&gt;
+                    &lt;td className="px-2 sm:px-4 py-2"&gt;{doc.type}&lt;/td&gt;
+                    &lt;td className="px-2 sm:px-4 py-2"&gt;{new Date(doc.date).toLocaleString()}&lt;/td&gt;
+                    &lt;td className="px-2 sm:px-4 py-2"&gt;
+                      &lt;a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      &gt;
+                        Download
+                      &lt;/a&gt;
+                    &lt;/td&gt;
+                    &lt;td className="px-2 sm:px-4 py-2"&gt;
+                      &lt;button
+                        onClick={<span class="fstat-no" title="function not covered" >() =&gt; handleDelete(doc)}</span>
+                        className="px-2 sm:px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs sm:text-sm"
+                      &gt;
+                        Delete
+                      &lt;/button&gt;
+                    &lt;/td&gt;
+                  &lt;/tr&gt;
+                ))}
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+        )}
+&nbsp;
+        {/* Upload */}
+        &lt;div className="mt-6"&gt;
+          &lt;DocumentUpload 
+            userId={user?.sub} 
+            eventId={eventId} 
+            onUploadSuccess={fetchDocuments} 
+          /&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
     &lt;/section&gt;
   );
-}
-&nbsp;</pre></td></tr></table></pre>
+}</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-30T08:32:42.721Z
+                at 2025-09-30T14:28:24.225Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
