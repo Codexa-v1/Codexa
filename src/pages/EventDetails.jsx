@@ -141,6 +141,16 @@ export default function EventDetails() {
 
 
 
+  const tabColors = {
+    overview: "text-green-700",
+    rsvp: "text-green-700",
+    vendors: "text-blue-700",
+    venues: "text-red-700",
+    schedule: "text-yellow-700",
+    floor: "text-pink-700",
+    documents: "text-purple-700",
+  };
+
   if (!event) {
     return (
       <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 to-green-900">
@@ -272,7 +282,6 @@ export default function EventDetails() {
             <h4 className="font-semibold">Total Guests</h4>
             <p className="text-2xl font-bold">{event.rsvpTotal}</p>
             <p className="text-sm text-gray-500">
-
               Accepted: {guests.filter((g) => g.rsvpStatus === "Accepted").length} | Declined:{" "}
               {guests.filter((g) => g.rsvpStatus === "Declined").length} | Pending:{" "}
               {guests.filter((g) => g.rsvpStatus === "Pending").length}
@@ -316,14 +325,23 @@ export default function EventDetails() {
       </section>
 
       {/* Tabs Navigation */}
-
-      <section className="p-6 w-10/12 max-w-screen-xl mx-auto bg-white rounded-lg shadow mt-8">
-        <section className="flex overflow-x-auto gap-2 sm:gap-4 mb-6 bg-gray-100 rounded-lg px-2 py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-          {["overview", "rsvp", "vendors", "venues", "schedule", "floor", "documents"].map((tab) => (
+      <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
+        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
+          {[
+            "overview",
+            "rsvp",
+            "vendors",
+            "venues",
+            "schedule",
+            "floor",
+            "documents",
+          ].map((tab) => (
             <button
               key={tab}
               className={`px-4 py-2 ${
-                activeTab === tab ? "text-green-700 font-bold" : "text-gray-500"
+                activeTab === tab
+                  ? `${tabColors[tab]} font-bold`
+                  : "text-gray-500"
               }`}
               onClick={() => handleTabChange(tab)}
             >

@@ -59,7 +59,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/rsvp/:eventId/:guestId" element={<RSVPPage />} />
         <Route path="/invite/:eventId" element={<InvitePage />} />
-          
       </Routes>
     </Router>
   );

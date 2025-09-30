@@ -112,5 +112,4 @@ const RSVPPage = () => {
   );
 };
 
-
 export default RSVPPage;

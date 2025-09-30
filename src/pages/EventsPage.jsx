@@ -107,7 +107,6 @@ export default function EventsPage() {
           </section>
         </section>
 
-
         {/* Tabs */}
         <section className="flex gap-4 mb-6">
           <button
