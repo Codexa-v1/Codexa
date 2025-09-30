@@ -40,6 +40,47 @@ router.get('/event/:eventId', async (req, res) => {
     }
 });
 
+// GET: Fetch all EventVendor details for a specific event
+router.get("/event/:eventId/details", async (req, res) => {
+  const { eventId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(eventId)) {
+    return res.status(400).send("Invalid event ID");
+  }
+
+  try {
+    // Step 1: Find all EventVendor entries for this event
+    const eventVendors = await EventVendor.find({ eventId });
+
+    if (eventVendors.length === 0) {
+      return res.status(404).send("No vendors found for this event");
+    }
+
+    // Step 2: Populate vendor details for each EventVendor
+    const detailedVendors = await Promise.all(
+      eventVendors.map(async (ev) => {
+        const vendor = await Vendor.findById(ev.vendorId);
+        if (!vendor) return null; // Skip if vendor not found
+
+        return {
+          vendorId: vendor._id,
+          vendor: vendor,           // Global vendor info
+          eventVendor: ev           // Event-specific info: vendorCost, notes, contacted
+        };
+      })
+    );
+
+    // Filter out nulls in case some vendors were missing
+    const result = detailedVendors.filter(v => v !== null);
+
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("Error fetching event vendor details:", err);
+    res.status(500).send("Error fetching event vendor details");
+  }
+});
+
+
 // This is to create a new vendor for a particular event - if need be, we will implement a post request to create a
 // vendor with a specific id
 router.post('/event/:eventId', async (req, res) => {
