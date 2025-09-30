@@ -19,7 +19,8 @@ const port = process.env.PORT || 3000;
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://victorious-ground-09423c310.1.azurestaticapps.net'
+    'https://victorious-ground-09423c310.1.azurestaticapps.net',
+    'https://sdp-project-zilb.onrender.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true,
