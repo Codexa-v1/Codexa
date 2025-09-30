@@ -79,11 +79,10 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 ---
 
 ### User Story 2: Vendor Management
-**As an event planner,** I want to compare vendors by availability and affordability, **so that** I can make cost-effective and conflict-free choices.  
+**As an event planner,** I want to search for vendors on the app, **so that** I can select the one that is most suitable for my event.  
 - **Acceptance Criteria:**  
-  - Alerts if required vendor details are missing.   
-  - Vendors can be filtered by budget.  
-  - When a vendor is added, the budget reduces accordingly.   
+  - I can search vendors from the search bar.   
+  - Added vendors can be seen by other users on the platform.  
 
 ---
 
@@ -103,7 +102,7 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 
 ---
 
- ## 3. ⌛ Sprint Timeline
+## 3. ⌛ Sprint Timeline
 - Below are snapshots of our Trello board as we progress through the entire sprint. The trello board can be accessed via this [Link](https://trello.com/invite/b/688926a06672f847b26eadd8/ATTI44809ab9733ae3526b4a7133a7e97f41E5E6470D/codexa)
 
 - Our trello board as pf 09 September

@@ -31,7 +31,10 @@ This structure helps keep all project documentation organized and easy to naviga
 - **Deployment:** Microsoft Azure
 - **Project Management:** Trello
 - **Documentation:** Markdown + GitHub Pages
-- **[Testing](./planning/Sprint02/Testing.md):** Frontend, Backend, Manual Testing, User testing
+
+## Testing and Third Party Documentation
+- **[Sprint 2 Testing](./planning/Sprint02/Testing.md):** Frontend, Backend, Manual Testing, User testing
+- **[Sprint 3 Testing](./planning/Sprint03/Testing.md):** Expands Sprint 3 testing across frontend components, backend APIs, and Express routes.
 - **[Third Party code](./development/ThirdPartyCode.md):** Auth0, OpenWeather API
 - **[Our Backend API Documentation](./development/BackendApi.md)**
 

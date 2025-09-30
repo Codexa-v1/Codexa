@@ -84,17 +84,18 @@
   - Low ROI, UI-only tests here would be brittle and costly to maintain.  
 
 ## 5️⃣ User Feedback and feedback gathering
-  - From the Google Form was distributed to peers for user reviews in the last sprint, Results were compiled and analyzed and the following features were added to the web app:
+  - From the Google Form was distributed to peers for user reviews in the **last sprint**, Results were compiled and analyzed and the following features were added to the web app:
     - Preventing invalid inputs on user input prompts
     - Uploading and downloading documents
     - Weather forecast
     - Automatic refresh
+  - A **[Google](https://docs.google.com/forms/d/e/1FAIpQLSfnbSk-mVmbTe7POyPOyKJUpOHtltyV6CUdkj3B0tY866lujQ/viewform?usp=header)** as distributed to gather user feedback for this sprint, the results were compiled and analyzed, feedback that may be integrated into next sprint include:4
+    - Budget Planning
+    - AI chat bot
+    - Event reminders
+    - Unique identification for guests ie. ID number
+  - ![alt text](../../assets/development/Sprint03/Screenshot%202025-09-30%20081050.png)
     
 ---
 
-## ✅ Conclusion
-- **Frontend:** Components and user flows tested with Vitest + RTL.  
-- **Backend:** APIs and routes tested with Vitest + Supertest.  
-- **Coverage Goal:** Aim for ≥80% across frontend + backend.  
-- **Documentation:** Testing scope, exclusions, and methodology recorded here and on GitHub.  
 
