@@ -1,4 +1,7 @@
-function EditGuestModal({ guest, onClose, onSave }) {
+// EditGuestModal.jsx
+import { useState } from "react";
+
+export default function EditGuestModal({ guest, onClose, onSave }) {
   const [form, setForm] = useState({ ...guest });
 
   const handleChange = (e) => {
