@@ -1,6 +1,17 @@
 // Manage venues, catering, and other services.
 const url = import.meta.env.VITE_BACKEND_URL;
 
+export function getEventVendorDetails(eventId) {
+  return fetch(`${url}/api/vendors/event/${eventId}/details`)
+    .then((response) => {
+      if (!response.ok) {
+        if (response.status === 404) return []; // treat "no vendors" as empty array
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    });
+}
+
 export function getVendors(eventId) {
     return fetch(`${url}/api/vendors/event/${eventId}`)
         .then(response => {
@@ -65,6 +76,7 @@ export function searchVendors(category, city) {
             return response.json();
         });
 }
+
 
 export default {
     getVendors,

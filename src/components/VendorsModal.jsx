@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import NewVendorModal from "@/components/NewVendorModal";
 import EditVendorModal from "@/components/EditVendorModal";
-import { deleteVendor, getVendors } from "@/backend/api/EventVendor";
-import { getEvent } from "@/backend/api/EventData"; // make sure you have an API to fetch the event
+import { deleteVendor, getEventVendorDetails } from "@/backend/api/EventVendor";
+import { getEvent } from "@/backend/api/EventData";
 
 export default function VendorsModal({ eventId, onClose }) {
   const [vendorList, setVendorList] = useState([]);
@@ -28,26 +28,33 @@ export default function VendorsModal({ eventId, onClose }) {
     fetchEvent();
   }, [eventId]);
 
-  // Fetch vendors whenever eventId, add modal, or edit modal changes
-  useEffect(() => {
+  // Fetch combined EventVendor + Vendor data
+  const fetchVendors = async () => {
     if (!eventId) return;
-    const fetchVendors = async () => {
-      setLoading(true);
-      try {
-        const data = await getVendors(eventId);
-        setVendorList(data);
-      } catch (err) {
-        console.error("Error fetching vendors:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setLoading(true);
+    try {
+      const data = await getEventVendorDetails(eventId);
+      // data = [{ vendor: {...}, eventVendor: {...} }]
+      setVendorList(data);
+    } catch (err) {
+      console.error("Error fetching vendors:", err);
+      setVendorList([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchVendors();
   }, [eventId, showNewVendorModal, editingVendor]);
 
-  const vendorTypes = ["All", ...Array.from(new Set(vendorList.map(v => v.vendorType).filter(Boolean)))];
+  const vendorTypes = [
+    "All",
+    ...Array.from(new Set(vendorList.map(item => item.vendor.vendorType).filter(Boolean)))
+  ];
 
-  const filteredVendors = vendorList.filter(vendor => {
+  const filteredVendors = vendorList.filter(item => {
+    const { vendor } = item;
     const matchesType = filterType === "All" || vendor.vendorType === filterType;
     const matchesSearch =
       vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -59,24 +66,10 @@ export default function VendorsModal({ eventId, onClose }) {
     if (!eventId) return;
     try {
       await deleteVendor(eventId, vendorId);
-      setVendorList(prev => prev.filter(v => v._id !== vendorId));
+      setVendorList(prev => prev.filter(item => item.vendor._id !== vendorId));
     } catch (err) {
       console.error("Error deleting vendor:", err);
       alert("Failed to delete vendor. Please try again.");
-    }
-  };
-
-  const handleRefresh = async () => {
-    if (!eventId) return;
-    setLoading(true);
-    try {
-      const data = await getVendors(eventId);
-      setVendorList(data);
-    } catch (err) {
-      console.error("Error refreshing vendors:", err);
-      alert("Failed to refresh vendors. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -94,7 +87,7 @@ export default function VendorsModal({ eventId, onClose }) {
         <EditVendorModal
           vendor={editingVendor}
           eventId={eventId}
-          eventBudget={eventBudget} // pass the actual budget
+          eventBudget={eventBudget}
           onClose={() => setEditingVendor(null)}
           onSave={() => setEditingVendor(null)}
         />
@@ -133,7 +126,7 @@ export default function VendorsModal({ eventId, onClose }) {
         <button
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm font-semibold shadow"
           type="button"
-          onClick={handleRefresh}
+          onClick={fetchVendors}
           disabled={loading}
         >
           {loading ? "Refreshing..." : "Refresh"}
@@ -147,54 +140,57 @@ export default function VendorsModal({ eventId, onClose }) {
           <p className="text-gray-500 text-center py-4">No vendors for this event.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredVendors.map((vendor, idx) => (
-              <div
-                key={idx}
-                className="border border-gray-200 rounded-2xl shadow-sm p-4 flex flex-col justify-between relative"
-              >
-                <span
-                  className={`absolute top-2 right-2 text-xs font-semibold px-2 py-1 rounded-full ${
-                    vendor.contacted ? "bg-green-500 text-white" : "bg-red-400 text-white"
-                  }`}
+            {filteredVendors.map((item, idx) => {
+              const { vendor, eventVendor } = item;
+              return (
+                <div
+                  key={idx}
+                  className="border border-gray-200 rounded-2xl shadow-sm p-4 flex flex-col justify-between relative"
                 >
-                  {vendor.contacted ? "Contacted" : "Not Contacted"}
-                </span>
-
-                <div className="mb-2">
-                  <h3 className="text-lg font-semibold">{vendor.name}</h3>
-                  <p className="text-sm text-gray-500">{vendor.vendorType}</p>
-                </div>
-
-                <div className="space-y-1 text-sm text-gray-700">
-                  <p><span className="font-medium">Contact:</span> {vendor.contactPerson}</p>
-                  <p><span className="font-medium">Phone:</span> {vendor.phone}</p>
-                  <p><span className="font-medium">Email:</span> {vendor.email}</p>
-                  <p><span className="font-medium">Rating:</span> {vendor.rating} out of 5</p>
-                  <p>
-                    <span className="font-medium">Cost:</span>{" "}
-                    {vendor.vendorCost > 0 
-                      ? `R ${vendor.vendorCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
-                      : "Not obtained"}
-                  </p>
-                  <p><span className="font-medium">Notes:</span> {vendor.notes}</p>
-                </div>
-
-                <div className="flex gap-2 mt-4">
-                  <button
-                    className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-sm font-semibold"
-                    onClick={() => setEditingVendor(vendor)}
+                  <span
+                    className={`absolute top-2 right-2 text-xs font-semibold px-2 py-1 rounded-full ${
+                      eventVendor.contacted ? "bg-green-500 text-white" : "bg-red-400 text-white"
+                    }`}
                   >
-                    Edit
-                  </button>
-                  <button
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold"
-                    onClick={() => handleRemoveVendor(vendor._id)}
-                  >
-                    Remove
-                  </button>
+                    {eventVendor.contacted ? "Contacted" : "Not Contacted"}
+                  </span>
+
+                  <div className="mb-2">
+                    <h3 className="text-lg font-semibold">{vendor.name}</h3>
+                    <p className="text-sm text-gray-500">{vendor.vendorType}</p>
+                  </div>
+
+                  <div className="space-y-1 text-sm text-gray-700">
+                    <p><span className="font-medium">Contact:</span> {vendor.contactPerson}</p>
+                    <p><span className="font-medium">Phone:</span> {vendor.phone}</p>
+                    <p><span className="font-medium">Email:</span> {vendor.email}</p>
+                    <p><span className="font-medium">Rating:</span> {vendor.rating || "-"} out of 5</p>
+                    <p>
+                      <span className="font-medium">Cost:</span>{" "}
+                      {eventVendor.vendorCost > 0 
+                        ? `R ${eventVendor.vendorCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
+                        : "Not obtained"}
+                    </p>
+                    <p><span className="font-medium">Notes:</span> {eventVendor.notes || "-"}</p>
+                  </div>
+
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-sm font-semibold"
+                      onClick={() => setEditingVendor(item)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-semibold"
+                      onClick={() => handleRemoveVendor(vendor._id)}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>

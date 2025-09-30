@@ -1,165 +1,207 @@
-import { useState } from "react";
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import DocumentUpload from "@/components/DocumentUpload";
 
+export default function DocumentsModal({ onClose, eventId }) {
+  const { user, isAuthenticated } = useAuth0();
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // Search, filter, sort state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState("All");
+  const [sortOption, setSortOption] = useState("date-desc");
 
-export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
-  const [docType, setDocType] = useState("Other");
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("");
-  const [error, setError] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const fetchDocuments = useCallback(async () => {
+    if (!isAuthenticated || !user?.sub || !eventId) return;
+    setLoading(true);
+    try {
+      const docTypes = ["FloorPlan", "Agenda", "Budget", "VendorContract", "Photos", "Other"];
+      const allDocs = [];
 
-  // Handle file selection
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (!selectedFile) return;
+      for (const type of docTypes) {
+        const res = await fetch(
+          `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/azure/list-user-documents?userId=${encodeURIComponent(
+            user.sub
+          )}&eventId=${encodeURIComponent(eventId)}&docType=${type}`
+        );
+        if (!res.ok) continue;
+        const data = await res.json();
+        allDocs.push(...data);
+      }
 
-    setFile(selectedFile);
-    setFileName(selectedFile.name.replace(/\.[^/.]+$/, "")); // remove extension
-    setError("");
-  };
+      const uniqueDocs = Array.from(
+        new Map(allDocs.map(d => [`${d.name}-${d.type}`, d])).values()
+      );
 
-  // Remove file
-  const handleRemoveFile = () => {
-    setFile(null);
-    setFileName("");
-    setError("");
-  };
-
-  // Validate filename
-  const validateFileName = (name) => {
-    if (!name.trim()) return "File name cannot be empty.";
-    if (/[<>:"/\\|?*]/.test(name)) return "File name contains invalid characters.";
-    return "";
-  };
-
-  // Handle upload
-  const handleUpload = async () => {
-    if (!file || !userId || !eventId) {
-      setError("Missing required information.");
-      return;
+      setDocuments(uniqueDocs);
+    } catch (err) {
+      console.error("Failed to fetch documents:", err);
+    } finally {
+      setLoading(false);
     }
+  }, [isAuthenticated, user, eventId]);
 
-    const validationError = validateFileName(fileName);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+  useEffect(() => {
+    fetchDocuments();
+  }, [fetchDocuments]);
 
-    setUploading(true);
-    setError("");
-
-    const extension = file.name.includes(".")
-      ? file.name.substring(file.name.lastIndexOf("."))
-      : "";
-
-    // Rename file if user changed filename
-    const uploadFile =
-      fileName.trim() && fileName.trim() !== file.name.replace(extension, "")
-        ? new File([file], `${fileName.trim()}${extension}`, { type: file.type })
-        : file;
-
-    const formData = new FormData();
-    formData.append("file", uploadFile);
-    formData.append("userId", userId);
-    formData.append("eventId", eventId);
-    formData.append("docType", docType);
+  // Delete a document
+  const handleDelete = async (doc) => {
+    if (!confirm(`Are you sure you want to delete "${doc.name}"?`)) return;
 
     try {
       const res = await fetch(
-        "https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/azure/upload",
+        `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/azure/delete-user-document`,
         {
           method: "POST",
-          body: formData,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user.sub,
+            eventId,
+            docType: doc.type,
+            fileName: doc.name,
+          }),
         }
       );
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) throw new Error("Failed to delete document");
 
-      alert("Upload successful!");
-
-      // Reset inputs
-      handleRemoveFile();
-
-      // Refresh documents in modal
-      if (onUploadSuccess) onUploadSuccess();
+      // Refresh list
+      fetchDocuments();
     } catch (err) {
-      console.error("Upload error:", err);
-      setError("Failed to upload file. Please try again.");
-    } finally {
-      setUploading(false);
+      console.error("Delete error:", err);
+      alert("Failed to delete document. Please try again.");
     }
   };
 
+  // Apply search, filter, and sort
+  const filteredDocs = documents
+    .filter(doc => filterType === "All" ? true : doc.type === filterType)
+    .filter(doc => doc.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      if (sortOption === "name-asc") return a.name.localeCompare(b.name);
+      if (sortOption === "name-desc") return b.name.localeCompare(a.name);
+      if (sortOption === "type-asc") return a.type.localeCompare(b.type);
+      if (sortOption === "type-desc") return b.type.localeCompare(a.type);
+      if (sortOption === "date-asc") return new Date(a.date) - new Date(b.date);
+      if (sortOption === "date-desc") return new Date(b.date) - new Date(a.date);
+      return 0;
+    });
+
   return (
-    <div className="p-4 border rounded-lg bg-gray-50">
-      <h4 className="text-lg font-semibold mb-2">Upload Document</h4>
-
-      {/* File type */}
-      <label className="block mb-2 font-medium text-sm">
-        Document Type
-        <select
-          value={docType}
-          onChange={(e) => setDocType(e.target.value)}
-          className="block w-full border rounded p-2 mt-1"
-        >
-          <option value="FloorPlan">Floor Plan</option>
-          <option value="Agenda">Agenda</option>
-          <option value="Budget">Budget</option>
-          <option value="VendorContract">Vendor Contract</option>
-          <option value="Photos">Photos</option>
-          <option value="Other">Other</option>
-        </select>
-      </label>
-
-      {/* File input */}
-      <label className="block mb-2 font-medium text-sm">
-        Choose File
-        <input
-          type="file"
-          onChange={handleFileChange}
-          className="block w-full mt-1"
-        />
-      </label>
-
-      {/* Optional file name override */}
-      {file && (
-        <div className="mb-2">
-          <label className="block font-medium text-sm">
-            File Name (optional)
-            <input
-              type="text"
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
-              className="block w-full border rounded p-2 mt-1"
-            />
-          </label>
-
-          {/* Remove file button */}
-          <button
-            type="button"
-            onClick={handleRemoveFile}
-            className="mt-2 px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-          >
-            Remove File
-          </button>
-        </div>
-      )}
-
-      {/* Error message */}
-      {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
-
-      {/* Upload button */}
-      <button
-        onClick={handleUpload}
-        disabled={!file || uploading}
-        className={`px-4 py-2 rounded-lg text-white ${
-          uploading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
-        }`}
+    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-2 sm:px-4">
+      <section
+        className="
+          bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8
+          max-w-5xl w-full relative
+          max-h-[95vh] overflow-y-auto
+        "
       >
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
-    </div>
+        {/* Close button */}
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl sm:text-xl"
+          onClick={onClose}
+        >
+          &times;
+        </button>
+
+        <h3 className="text-lg sm:text-xl font-bold mb-4 text-green-900">
+          Your Documents
+        </h3>
+
+        {/* Search + Filter + Sort controls */}
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 mb-4">
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border rounded px-3 py-2 flex-1 min-w-[150px] text-sm sm:text-base"
+          />
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="border rounded px-3 py-2 text-sm sm:text-base"
+          >
+            <option value="All">All Types</option>
+            <option value="FloorPlan">Floor Plan</option>
+            <option value="Agenda">Agenda</option>
+            <option value="Budget">Budget</option>
+            <option value="VendorContract">Vendor Contract</option>
+            <option value="Photos">Photos</option>
+            <option value="Other">Other</option>
+          </select>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="border rounded px-3 py-2 text-sm sm:text-base"
+          >
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="name-asc">Name (A–Z)</option>
+            <option value="name-desc">Name (Z–A)</option>
+            <option value="type-asc">Type (A–Z)</option>
+            <option value="type-desc">Type (Z–A)</option>
+          </select>
+        </div>
+
+        {loading ? (
+          <p>Loading documents...</p>
+        ) : filteredDocs.length === 0 ? (
+          <p className="text-gray-500">No documents found.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full border text-xs sm:text-sm md:text-base rounded-lg overflow-hidden">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-2 sm:px-4 py-2 text-left text-gray-700">Name</th>
+                  <th className="px-2 sm:px-4 py-2 text-left text-gray-700">Type</th>
+                  <th className="px-2 sm:px-4 py-2 text-left text-gray-700">Date</th>
+                  <th className="px-2 sm:px-4 py-2 text-left text-gray-700">Download</th>
+                  <th className="px-2 sm:px-4 py-2 text-left text-gray-700">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredDocs.map((doc, idx) => (
+                  <tr key={idx} className="border-t odd:bg-gray-50">
+                    <td className="px-2 sm:px-4 py-2">{doc.name}</td>
+                    <td className="px-2 sm:px-4 py-2">{doc.type}</td>
+                    <td className="px-2 sm:px-4 py-2">{new Date(doc.date).toLocaleString()}</td>
+                    <td className="px-2 sm:px-4 py-2">
+                      <a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        Download
+                      </a>
+                    </td>
+                    <td className="px-2 sm:px-4 py-2">
+                      <button
+                        onClick={() => handleDelete(doc)}
+                        className="px-2 sm:px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs sm:text-sm"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Upload */}
+        <div className="mt-6">
+          <DocumentUpload 
+            userId={user?.sub} 
+            eventId={eventId} 
+            onUploadSuccess={fetchDocuments} 
+          />
+        </div>
+      </section>
+    </section>
   );
 }

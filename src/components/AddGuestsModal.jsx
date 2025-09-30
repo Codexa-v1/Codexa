@@ -85,7 +85,6 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
     setError(null);
 
     try {
-      // Save all guests sequentially
       const savedGuests = [];
       for (const guest of validGuests) {
         const saved = await addGuest(eventId, guest);
@@ -94,13 +93,10 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
 
       const guests = await getGuests(eventId);  
 
-  // Pass back the updated guests list to the parent
-  if (onGuestsUpdated) onGuestsUpdated(guests);
-
-  // Clear local preview list
-  setGuests([]);
-  window.location.reload(); // reload page after success
-  onClose(); // close modal after success
+      if (onGuestsUpdated) onGuestsUpdated(guests);
+      setGuests([]);
+      window.location.reload();
+      onClose();
     } catch (err) {
       setError(err.message || "Failed to save guests.");
       console.error(err);
@@ -109,36 +105,37 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
     }
   }
 
-
-    function downloadSampleCSV() {
-      const sample = `name,phone,email,rsvpStatus,dietaryPreferences
-  Alice,1234567890,alice@email.com,Pending,Vegan
-  Bob,0987654321,bob@email.com,Declined,Gluten-free`;
-      const blob = new Blob([sample], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "guest_template.csv";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+  function downloadSampleCSV() {
+    const sample = `name,phone,email,rsvpStatus,dietaryPreferences
+Alice,1234567890,alice@email.com,Pending,Vegan
+Bob,0987654321,bob@email.com,Declined,Gluten-free`;
+    const blob = new Blob([sample], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "guest_template.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
-    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-2 sm:px-0">
+    <section className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-2 sm:px-4">
       {loading && (
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-30 z-50">
           <SpinnerIcon />
           <span className="mt-4 text-white text-lg font-semibold">Loading...</span>
         </div>
       )}
-      <section className="bg-white rounded-lg shadow-lg p-4 sm:p-8 max-w-3xl w-full relative max-h-screen overflow-y-auto">
+      <section className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8 max-w-3xl w-full relative max-h-[95vh] overflow-y-auto">
+        {/* Close button */}
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl sm:text-xl"
           onClick={onClose}
         >
           &times;
         </button>
-        <h3 className="text-xl font-bold mb-4 text-green-900">
+
+        <h3 className="text-lg sm:text-xl font-bold mb-4 text-green-900">
           Add New Guest(s)
         </h3>
 
@@ -146,20 +143,20 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
 
         {/* Manual Guest Form */}
         <form onSubmit={handleAddGuest} className="space-y-4">
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input
               name="name"
               value={form.name}
               onChange={handleChange}
               required
               placeholder="Name"
-              className="px-3 py-2 border rounded w-full"
+              className="px-3 py-2 border rounded w-full text-sm sm:text-base"
             />
             <select
               name="rsvpStatus"
               value={form.rsvpStatus}
               onChange={handleChange}
-              className="px-3 py-2 border rounded w-full"
+              className="px-3 py-2 border rounded w-full text-sm sm:text-base"
             >
               <option value="" disabled hidden>
                 RSVP Status
@@ -173,7 +170,7 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
               value={form.phone}
               onChange={handleChange}
               placeholder="Phone"
-              className="px-3 py-2 border rounded w-full"
+              className="px-3 py-2 border rounded w-full text-sm sm:text-base"
             />
             <input
               name="email"
@@ -181,7 +178,7 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
               onChange={handleChange}
               required
               placeholder="Email"
-              className="px-3 py-2 border rounded w-full"
+              className="px-3 py-2 border rounded w-full text-sm sm:text-base"
             />
           </section>
           <textarea
@@ -189,11 +186,11 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
             value={form.dietaryPreferences}
             onChange={handleChange}
             placeholder="Dietary Preferences"
-            className="px-3 py-2 border rounded w-full"
+            className="px-3 py-2 border rounded w-full text-sm sm:text-base"
           />
           <button
             type="submit"
-            className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700"
+            className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto"
           >
             + Add Guest
           </button>
@@ -201,53 +198,58 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
 
         {/* CSV Upload */}
         <section className="mt-6">
-          <label htmlFor="csvUpload" className="block font-medium mb-2">Or upload CSV file</label>
-          <input id = "csvUpload" type="file" accept=".csv" onChange={handleCSVUpload} />
-          <p className="text-sm text-gray-500 mt-1">
+          <label htmlFor="csvUpload" className="block font-medium mb-2 text-sm sm:text-base">
+            Or upload CSV file
+          </label>
+          <input id="csvUpload" type="file" accept=".csv" onChange={handleCSVUpload} className="text-sm sm:text-base"/>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">
             CSV format: <code>name,phone,email,rsvpStatus,dietaryPreferences</code>
           </p>
-          <a
+          <button
+            type="button"
             onClick={downloadSampleCSV}
-            className="text-blue-600 underline text-sm"
+            className="text-blue-600 underline text-xs sm:text-sm mt-1"
           >
             Download sample file
-          </a>
+          </button>
         </section>
 
         {/* Guest Preview */}
         {guests.length > 0 && (
           <section className="mt-6">
-            <h4 className="font-bold mb-2">Guest List Preview</h4>
-            <table className="w-full border text-sm">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="border px-2">Name</th>
-                  <th className="border px-2">Phone</th>
-                  <th className="border px-2">Email</th>
-                  <th className="border px-2">RSVP</th>
-                  <th className="border px-2">Dietary</th>
-                </tr>
-              </thead>
-              <tbody>
-                {guests.map((g, i) => (
-                  <tr key={i}>
-                    <td className="border px-2">{g.name}</td>
-                    <td className="border px-2">{g.phone}</td>
-                    <td className="border px-2">{g.email}</td>
-                    <td className="border px-2">{g.rsvpStatus}</td>
-                    <td className="border px-2">{g.dietaryPreferences}</td>
+            <h4 className="font-bold mb-2 text-sm sm:text-base">Guest List Preview</h4>
+            <div className="overflow-x-auto">
+              <table className="w-full border text-xs sm:text-sm">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="border px-2 py-1">Name</th>
+                    <th className="border px-2 py-1">Phone</th>
+                    <th className="border px-2 py-1">Email</th>
+                    <th className="border px-2 py-1">RSVP</th>
+                    <th className="border px-2 py-1">Dietary</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {guests.map((g, i) => (
+                    <tr key={i} className="odd:bg-gray-50">
+                      <td className="border px-2 py-1">{g.name}</td>
+                      <td className="border px-2 py-1">{g.phone}</td>
+                      <td className="border px-2 py-1">{g.email}</td>
+                      <td className="border px-2 py-1">{g.rsvpStatus}</td>
+                      <td className="border px-2 py-1">{g.dietaryPreferences}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </section>
         )}
 
         {/* Actions */}
-        <section className="flex justify-end gap-2 mt-6">
+        <section className="flex flex-col sm:flex-row justify-end gap-2 mt-6">
           <button
             type="button"
-            className="px-4 py-2 rounded bg-gray-200 text-gray-700"
+            className="px-4 py-2 rounded bg-gray-200 text-gray-700 w-full sm:w-auto"
             onClick={onClose}
             disabled={loading}
           >
@@ -255,7 +257,7 @@ export default function NewGuestModal({ onClose, onGuestsUpdated, eventId }) {
           </button>
           <button
             type="button"
-            className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-800"
+            className="px-4 py-2 rounded bg-green-700 text-white hover:bg-green-800 w-full sm:w-auto"
             onClick={handleSaveAll}
             disabled={loading || guests.length === 0}
           >

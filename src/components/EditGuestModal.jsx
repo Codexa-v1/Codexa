@@ -1,4 +1,3 @@
-// EditGuestModal.jsx
 import { useState } from "react";
 
 export default function EditGuestModal({ guest, onClose, onSave }) {
@@ -14,61 +13,77 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg w-96">
-        <h3 className="text-lg font-bold mb-4">Edit Guest</h3>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <section className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-2 sm:px-4">
+      <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg w-full max-w-md shadow-lg relative">
+        {/* Close button */}
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl sm:text-2xl"
+          onClick={onClose}
+        >
+          &times;
+        </button>
+
+        <h3 className="text-lg sm:text-xl font-bold mb-6 text-green-900">
+          Edit Guest
+        </h3>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             name="name"
             value={form.name}
             onChange={handleChange}
             placeholder="Name"
-            className="border px-2 py-1 rounded"
+            className="border px-3 py-2 rounded w-full text-sm sm:text-base"
             required
           />
+
           <input
             name="email"
             type="email"
             value={form.email}
             onChange={handleChange}
             placeholder="Email"
-            className="border px-2 py-1 rounded"
+            className="border px-3 py-2 rounded w-full text-sm sm:text-base"
             required
           />
+
           <input
             name="phone"
             value={form.phone}
             onChange={handleChange}
             placeholder="Phone"
-            className="border px-2 py-1 rounded"
+            className="border px-3 py-2 rounded w-full text-sm sm:text-base"
           />
+
           <select
             name="rsvpStatus"
             value={form.rsvpStatus}
             onChange={handleChange}
-            className="border px-2 py-1 rounded"
+            className="border px-3 py-2 rounded w-full text-sm sm:text-base"
           >
             <option value="Pending">Pending</option>
             <option value="Accepted">Accepted</option>
             <option value="Declined">Declined</option>
           </select>
-          <div className="flex justify-end gap-2 mt-2">
+
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+              className="px-3 sm:px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm sm:text-base"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-3 py-1 rounded bg-green-700 text-white hover:bg-green-800"
+              className="px-3 sm:px-4 py-2 rounded bg-green-700 text-white hover:bg-green-800 text-sm sm:text-base"
             >
               Save
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </section>
   );
 }

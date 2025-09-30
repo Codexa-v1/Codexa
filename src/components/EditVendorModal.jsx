@@ -3,8 +3,8 @@ import { updateVendor, getVendors } from "@/backend/api/EventVendor";
 import { getVenues } from "@/backend/api/EventVenue";
 
 export default function EditVendorModal({ vendor, eventId, eventBudget, onClose, onSave }) {
-  const [vendorCost, setVendorCost] = useState(vendor.vendorCost?.toString() || "");
-  const [notes, setNotes] = useState(vendor.notes || "");
+  const [vendorCost, setVendorCost] = useState(vendor.eventVendor?.vendorCost?.toString() || vendor.vendorCost?.toString() || "");
+  const [notes, setNotes] = useState(vendor.eventVendor?.notes || vendor.notes || "");
   const [loading, setLoading] = useState(false);
   const [remainingBudget, setRemainingBudget] = useState(eventBudget || 0);
 
@@ -15,19 +15,19 @@ export default function EditVendorModal({ vendor, eventId, eventBudget, onClose,
         const vendors = await getVendors(eventId);
         const venues = await getVenues(eventId);
 
-        // Ensure numeric values
         const totalVendorCost = vendors.reduce(
-          (sum, v) => sum + (parseFloat(v.vendorCost) || 0),
-          0
-        );
-        const totalVenueCost = venues.reduce(
-          (sum, v) => sum + (parseFloat(v.venueCost) || 0),
+          (sum, v) => sum + (parseFloat(v.eventVendor?.vendorCost || 0)),
           0
         );
 
-        // Subtract the current vendor cost only once if editing
+        const totalVenueCost = venues.reduce(
+          (sum, v) => sum + (parseFloat(v.venueCost || 0)),
+          0
+        );
+
+        // Subtract current vendor cost only once
         const remaining =
-          eventBudget - totalVenueCost - (totalVendorCost - (parseFloat(vendor.vendorCost) || 0));
+          eventBudget - totalVenueCost - (totalVendorCost - (parseFloat(vendor.eventVendor?.vendorCost || 0)));
 
         setRemainingBudget(Math.max(Math.round(remaining * 100) / 100, 0));
       } catch (err) {
@@ -37,8 +37,7 @@ export default function EditVendorModal({ vendor, eventId, eventBudget, onClose,
     };
 
     fetchRemaining();
-  }, [eventId, eventBudget, vendor.vendorCost]);
-
+  }, [eventId, eventBudget, vendor.eventVendor?.vendorCost]);
 
   const handleSave = async () => {
     const numericCost = parseFloat(vendorCost) || 0;
@@ -50,8 +49,12 @@ export default function EditVendorModal({ vendor, eventId, eventBudget, onClose,
 
     try {
       setLoading(true);
-      await updateVendor(eventId, vendor._id, { vendorCost: numericCost, notes, contacted: true });
-      onSave({ ...vendor, vendorCost: numericCost, notes, contacted: true });
+
+      // Only send event-specific fields
+      const payload = { vendorCost: numericCost, notes, contacted: true };
+      await updateVendor(eventId, vendor._id, payload);
+
+      onSave({ ...vendor, eventVendor: { ...vendor.eventVendor, ...payload } });
       onClose();
     } catch (err) {
       console.error("Error updating vendor:", err);
