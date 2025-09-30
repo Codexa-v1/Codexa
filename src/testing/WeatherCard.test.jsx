@@ -1,9 +1,7 @@
 // src/Testing/WeatherCard.test.jsx
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import WeatherCard from "../components/WeatherCard";
 import React from "react";
-
-// Mock dayjs to ensure consistent behavior
 import dayjs from "dayjs";
 
 // Mock fetch globally
@@ -23,7 +21,8 @@ describe("WeatherCard", () => {
     });
 
     render(<WeatherCard eventDate={eventDate} location={location} />);
-    expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
+    // Use findByText for async state updates to avoid act warning
+    expect(await screen.findByText(/Loading.../i)).toBeInTheDocument();
   });
 
   it("renders forecast when API returns valid data", async () => {
@@ -121,14 +120,16 @@ describe("WeatherCard", () => {
   });
 
   it("renders nothing except header on fetch failure", async () => {
-  fetch.mockRejectedValueOnce(new Error("Network error"));
+    // Silence expected console error for test
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    fetch.mockRejectedValueOnce(new Error("Network error"));
 
-  render(<WeatherCard eventDate={eventDate} location={location} />);
+    render(<WeatherCard eventDate={eventDate} location={location} />);
 
-  // Only header remains
-  expect(await screen.findByText(/Event Day Forecast/i)).toBeInTheDocument();
-  expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
-  expect(screen.queryByText(/°C/)).not.toBeInTheDocument();
-});
+    expect(await screen.findByText(/Event Day Forecast/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/°C/)).not.toBeInTheDocument();
 
+    consoleSpy.mockRestore();
+  });
 });
