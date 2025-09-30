@@ -8,10 +8,7 @@ const vendorSchema = new mongoose.Schema({
     email: { type: String, required: true },
     website: String,
     address: { type: String, required: true },
-    rating: {type: Number, min: 1, max: 5},
-    vendorCost: { type: Number, required: true },
-    notes: { type: String },
-    contacted: { type: Boolean, default: false },
+    rating: { type: Number, min: 1, max: 5 },
 }, { timestamps: true });
 
 const Vendor = mongoose.model("Vendor", vendorSchema);

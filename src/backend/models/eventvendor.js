@@ -11,14 +11,16 @@ const eventVendorSchema = new mongoose.Schema({
         ref: 'Vendor',
         required: true
     },
-    // Optional: Add fields for contract details, status, etc.
-    contractDetails: {
+    vendorCost: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    notes: {
         type: String
     },
-    status: {
-        type: String,
-        enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
-        default: 'Pending'
+    contacted: { 
+        type: Boolean, default: false 
     },
 }, {timestamps: true});
 

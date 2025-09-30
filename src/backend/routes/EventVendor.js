@@ -100,42 +100,44 @@ router.post('/event/:eventId', async (req, res) => {
 
 // This is to edit the details of a specific vendor in a particular event
 router.patch('/event/:eventId/vendors/:vendorId', async (req, res) => {
-    try {
-        const { eventId, vendorId } = req.params;
-        const updateFields = req.body;
+  try {
+    const { eventId, vendorId } = req.params;
+    const { vendorCost, notes, contacted, ...vendorUpdates } = req.body;
 
-        if (updateFields.vendorCost !== undefined || updateFields.notes !== undefined) {
-            updateFields.contacted = true;
-        }
-
-        // Validate EventVendor exists and belongs to this event and vendor
-        const eventVendor = await EventVendor.findOne({ eventId, vendorId });
-
-        if (!eventVendor) {
-            return res.status(404).send('Vendor not found for this event');
-        }
-
-        // Update Vendor fields
-        const updatedVendor = await Vendor.findByIdAndUpdate(
-            vendorId,
-            updateFields,
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedVendor) {
-            return res.status(404).send('Vendor not found');
-        }
-
-        // If you have event-specific fields in EventVendor, update them here - but we don't have such information
-        // Example: if (updateFields.notes) { eventVendor.notes = updateFields.notes; await eventVendor.save(); }
-
-        res.status(200).json({
-            vendor: updatedVendor
-        });
-    } catch (error) {
-        console.error('Error updating vendor:', error);
-        res.status(500).send('Error updating vendor');
+    // Step 1: Validate EventVendor exists
+    const eventVendor = await EventVendor.findOne({ eventId, vendorId });
+    if (!eventVendor) {
+      return res.status(404).send('Vendor not found for this event');
     }
+
+    // Step 2: Update event-specific fields
+    if (vendorCost !== undefined) eventVendor.vendorCost = vendorCost;
+    if (notes !== undefined) eventVendor.notes = notes;
+    if (contacted !== undefined) eventVendor.contacted = contacted;
+
+    await eventVendor.save();
+
+    // Step 3: Update global vendor fields (if provided)
+    let updatedVendor = null;
+    if (Object.keys(vendorUpdates).length > 0) {
+      updatedVendor = await Vendor.findByIdAndUpdate(
+        vendorId,
+        vendorUpdates,
+        { new: true, runValidators: true }
+      );
+    } else {
+      updatedVendor = await Vendor.findById(vendorId);
+    }
+
+    res.status(200).json({
+      vendor: updatedVendor,
+      eventVendor
+    });
+
+  } catch (error) {
+    console.error('Error updating vendor:', error);
+    res.status(500).send('Error updating vendor');
+  }
 });
 
 // This is to delete a specific vendor in a particular event
