@@ -4,6 +4,21 @@ import { vi } from "vitest";
 import "@testing-library/jest-dom";
 import EventDetails from "../pages/EventDetails";
 
+vi.mock("axios", () => ({
+  default: {
+    get: vi.fn(() => Promise.resolve({ data: [] })),
+  },
+}));
+
+
+// ---- silence console.error in tests ----
+beforeAll(() => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+});
+afterAll(() => {
+  console.error.mockRestore();
+});
+
 // ---- single mock event ----
 const mockEvent = {
   _id: "789",
@@ -36,7 +51,8 @@ beforeAll(() => {
       } catch {}
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(userId === "test-user-id" ? [mockEvent] : []),
+        json: () =>
+          Promise.resolve(userId === "test-user-id" ? [mockEvent] : []),
       });
     }
     if (url.includes("/api/event/789")) {
@@ -45,22 +61,30 @@ beforeAll(() => {
         json: () => Promise.resolve(mockEvent),
       });
     }
-    if (url.includes("/api/guests/event/789") || url.includes("/api/eventguest/789")) {
+    if (
+      url.includes("/api/guests/event/789") ||
+      url.includes("/api/eventguest/789")
+    ) {
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve([
-          { _id: "g1", name: "Alice" },
-          { _id: "g2", name: "Bob" },
-        ]),
+        json: () =>
+          Promise.resolve([
+            { _id: "g1", name: "Alice" },
+            { _id: "g2", name: "Bob" },
+          ]),
       });
     }
-    if (url.includes("/api/vendors/event/789") || url.includes("/api/eventvendor/789")) {
+    if (
+      url.includes("/api/vendors/event/789") ||
+      url.includes("/api/eventvendor/789")
+    ) {
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve([
-          { _id: "v1", name: "DJ" },
-          { _id: "v2", name: "Caterer" },
-        ]),
+        json: () =>
+          Promise.resolve([
+            { _id: "v1", name: "DJ" },
+            { _id: "v2", name: "Caterer" },
+          ]),
       });
     }
     if (url.includes("/api/eventdocuments/789")) {
@@ -73,6 +97,12 @@ beforeAll(() => {
       return Promise.resolve({
         ok: true,
         json: () => Promise.resolve([{ _id: "f1", name: "Main Hall" }]),
+      });
+    }
+    if (url.includes("/api/eventvenue/789")) {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([{ _id: "venue1", name: "Main Venue" }]),
       });
     }
     return Promise.resolve({ ok: false, json: () => Promise.resolve({}) });
@@ -139,8 +169,10 @@ function renderWithRouter(initialPath = "/event/789") {
 }
 
 describe("EventDetails", () => {
-  it("renders 'Event Not Found' when id is invalid", () => {
-    renderWithRouter("/event/999");
+  it("renders 'Event Not Found' when id is invalid", async () => {
+    await act(async () => {
+      renderWithRouter("/event/999");
+    });
     expect(screen.getByText("Event Not Found")).toBeInTheDocument();
     expect(screen.getByText("Back to Events")).toBeInTheDocument();
   });
@@ -148,11 +180,12 @@ describe("EventDetails", () => {
   it("renders event details for valid id", async () => {
     renderWithRouter("/event/789");
 
-    expect(await screen.findByText("Emily & Jake’s Wedding")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Emily & Jake’s Wedding")
+    ).toBeInTheDocument();
     expect(await screen.findByText("Wedding")).toBeInTheDocument();
     expect(await screen.findByText("Budget")).toBeInTheDocument();
 
-    // handle duplicates
     const prices = await screen.findAllByText(/R\s?120000/);
     expect(prices.length).toBeGreaterThan(0);
   });
