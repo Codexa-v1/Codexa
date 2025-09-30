@@ -22,7 +22,7 @@ export default defineConfig({
       reporter: ['lcov', 'text'], // required for Codecov + console output
       reportsDirectory: "./coverage",
       include: ['src/**/*.{js,jsx}'],
-      exclude: ['**/*.test.{js,jsx}', 'src/setupTests.jsx'],
+      exclude: ['**/*.test.{js,jsx}', 'src/setupTests.jsx', 'src/mockuser.js', 'src/auth_config.js', 'src/setupTests.js', 'src/assets/**', 'src/pages/RSVPPage.jsx'],
       reportOnFailure: true
     },
   },

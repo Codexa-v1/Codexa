@@ -3,15 +3,7 @@
 <html lang="en">
 
 <head>
-<<<<<<< HEAD
     <title>Code coverage report for src/backend/mongodb.js</title>
-=======
-<<<<<<<< HEAD:coverage/lcov-report/src/backend/models/eventschedule.js.html
-    <title>Code coverage report for src/backend/models/eventschedule.js</title>
-========
-    <title>Code coverage report for src/backend/mongodb.js</title>
->>>>>>>> ui-enhancement-server-implementation-testing:coverage/lcov-report/src/backend/mongodb.js.html
->>>>>>> ui-enhancement-server-implementation-testing
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -27,50 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-<<<<<<< HEAD
         <h1><a href="../../index.html">All files</a> / <a href="index.html">src/backend</a> mongodb.js</h1>
-=======
-<<<<<<<< HEAD:coverage/lcov-report/src/backend/models/eventschedule.js.html
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/backend/models</a> eventschedule.js</h1>
-========
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/backend</a> mongodb.js</h1>
->>>>>>>> ui-enhancement-server-implementation-testing:coverage/lcov-report/src/backend/mongodb.js.html
->>>>>>> ui-enhancement-server-implementation-testing
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-<<<<<<< HEAD
-                <span class='fraction'>0/18</span>
-=======
-                <span class='fraction'>0/15</span>
->>>>>>> ui-enhancement-server-implementation-testing
+                <span class='fraction'>14/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-<<<<<<< HEAD
-                <span class='fraction'>0/18</span>
-=======
-                <span class='fraction'>0/15</span>
->>>>>>> ui-enhancement-server-implementation-testing
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -85,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -102,67 +78,45 @@
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
-<<<<<<< HEAD
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-=======
-<a name='L16'></a><a href='#L16'>16</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
->>>>>>> ui-enhancement-server-implementation-testing
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<<<<<<< HEAD
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >// db.js<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >import mongoose from 'mongoose';</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >const connectDB = async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  console.log('🔌 Starting MongoDB connection...');</span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    const conn = await mongoose.connect(process.env.MONGO_URI);</span>
-<span class="cstat-no" title="statement not covered" >    console.log(`✅ MongoDB connected: ${conn.connection.host}`);</span>
-<span class="cstat-no" title="statement not covered" >  } catch (err) {</span>
-<span class="cstat-no" title="statement not covered" >    console.error('❌ MongoDB connection failed:', err.message);</span>
-<span class="cstat-no" title="statement not covered" >    process.exit(1);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >};</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export default connectDB;</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >// Note for future connections - need to add to ip whitelist in MongoDB Atlas</span>
-=======
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >// A schedule object will simply have start-time, end-time, and some field to describe what will be happening between the two times<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >// An event will therefore have many schedule objects</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >import mongoose from "mongoose";</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >const scheduleSchema = new mongoose.Schema({</span>
-<span class="cstat-no" title="statement not covered" >  eventId: { type: mongoose.Schema.Types.ObjectId, ref: "Event", required: true },</span>
-<span class="cstat-no" title="statement not covered" >  description: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >  startTime: { type: String, required: true },</span>
-<span class="cstat-no" title="statement not covered" >  endTime: { type: String, required: true }</span>
-<span class="cstat-no" title="statement not covered" >}, { timestamps: true });</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >const Schedule = mongoose.model("Schedule", scheduleSchema);</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >export default Schedule;</span>
->>>>>>> ui-enhancement-server-implementation-testing
+<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// db.js
+import mongoose from 'mongoose';
+&nbsp;
+const connectDB = async () =&gt; {
+  console.log('🔌 Starting MongoDB connection...');
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`✅ MongoDB connected: ${conn.connection.host}`);
+  } catch (err) {
+    console.error('❌ MongoDB connection failed:', err.message);
+    process.exit(1);
+  }
+};
+&nbsp;
+&nbsp;
+export default connectDB;
+&nbsp;
+// Note for future connections - need to add to ip whitelist in MongoDB Atlas
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -170,15 +124,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-<<<<<<< HEAD
-                at 2025-09-01T17:42:07.433Z
-=======
-<<<<<<<< HEAD:coverage/lcov-report/src/backend/models/eventschedule.js.html
-                at 2025-09-01T17:42:07.433Z
-========
-                at 2025-09-17T08:47:28.801Z
->>>>>>>> ui-enhancement-server-implementation-testing:coverage/lcov-report/src/backend/mongodb.js.html
->>>>>>> ui-enhancement-server-implementation-testing
+                at 2025-09-30T07:36:38.584Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

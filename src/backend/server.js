@@ -14,7 +14,6 @@ import azureRouter from './routes/AzureRoutes.js';
 const server = express();
 const port = process.env.PORT || 3000;
 
-// ✅ Allow both localhost (dev) and Azure Static Web Apps (prod)
 server.use(cors({
   origin: [
     'http://localhost:5173',
@@ -24,16 +23,11 @@ server.use(cors({
   credentials: true,
 }));
 
-// Database connection setup
-connectDB();
-
+connectDB(); // will be mocked in tests
 server.use(express.json());
 
-server.get('/', (req, res) => {
-  res.send('Codexa backend is running.');
-});
+server.get('/', (req, res) => res.send('Codexa backend is running.'));
 
-// API routes
 server.use('/api/guests', guestRouter);
 server.use('/api/events', eventRouter);
 server.use('/api/export', exportRouter);
@@ -42,6 +36,11 @@ server.use('/api/venues', venueRouter);
 server.use('/api/schedules', scheduleRouter);
 server.use('/api/azure', azureRouter);
 
-server.listen(port, () => {
-  console.log(`Server is running on ${port}`);
-});
+// Only listen if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  server.listen(port, () => {
+    console.log(`Server is running on ${port}`);
+  });
+}
+
+export default server;
