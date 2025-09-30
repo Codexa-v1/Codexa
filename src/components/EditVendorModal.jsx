@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { updateVendor, getVendors } from "@/backend/api/EventVendor";
+import { updateVendor, getVendors, getEventVendorDetails } from "@/backend/api/EventVendor";
 import { getVenues } from "@/backend/api/EventVenue";
 
 export default function EditVendorModal({ vendor, eventId, eventBudget, onClose, onSave }) {
@@ -12,7 +12,7 @@ export default function EditVendorModal({ vendor, eventId, eventBudget, onClose,
   useEffect(() => {
     const fetchRemaining = async () => {
       try {
-        const vendors = await getVendors(eventId);
+        const vendors = await getEventVendorDetails(eventId);
         const venues = await getVenues(eventId);
 
         const totalVendorCost = vendors.reduce(
@@ -41,6 +41,7 @@ export default function EditVendorModal({ vendor, eventId, eventBudget, onClose,
 
   const handleSave = async () => {
     const numericCost = parseFloat(vendorCost) || 0;
+    console.log(vendor);
 
     if (numericCost > remainingBudget) {
       alert(`Cost exceeds remaining budget of R${remainingBudget.toFixed(2)}`);
@@ -52,7 +53,7 @@ export default function EditVendorModal({ vendor, eventId, eventBudget, onClose,
 
       // Only send event-specific fields
       const payload = { vendorCost: numericCost, notes, contacted: true };
-      await updateVendor(eventId, vendor._id, payload);
+      await updateVendor(eventId, vendor.vendor._id, payload);
 
       onSave({ ...vendor, eventVendor: { ...vendor.eventVendor, ...payload } });
       onClose();

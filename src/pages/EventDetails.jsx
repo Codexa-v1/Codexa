@@ -19,7 +19,7 @@ import AddGuestsModal from "../components/AddGuestsModal";
 // Backend API
 import { getAllEvents, updateEvent } from "../backend/api/EventData";
 import { getVenues } from "../backend/api/EventVenue";
-import { getVendors } from "../backend/api/EventVendor";
+import { getVendors, getEventVendorDetails } from "../backend/api/EventVendor";
 import { getGuests } from "../backend/api/EventGuest";
 import WeatherCard from "../components/WeatherCard";
 import { getDocuments } from "../backend/api/EventDocuments";
@@ -74,7 +74,7 @@ export default function EventDetails() {
       try {
         const [guestData, vendorData, documentData, venueData] = await Promise.all([
           getGuests(event._id),
-          getVendors(event._id),
+          getEventVendorDetails(event._id),
           getDocuments(user.sub, event._id),
           getVenues(event._id)
         ]);
@@ -306,10 +306,18 @@ export default function EventDetails() {
             <h4 className="font-semibold">Budget Usage</h4>
             {event.budget ? (
               (() => {
-                const totalVendorCost = vendors.reduce((sum, v) => sum + (v.vendorCost || 0), 0);
-                const totalVenueCost = venues.reduce((sum, v) => sum + (v.venueCost || 0), 0);
-                const totalUsed = totalVendorCost + totalVenueCost;
-                const remaining = event.budget - totalUsed;
+                const totalVendorCost = vendors.reduce((sum, v) => {
+                const cost = v.eventVendor?.vendorCost ?? 0;
+                return sum + (typeof cost === "string" ? parseFloat(cost) : cost);
+              }, 0);
+
+              const totalVenueCost = venues.reduce((sum, v) => {
+                const cost = v.venueCost ?? 0;
+                return sum + (typeof cost === "string" ? parseFloat(cost) : cost);
+              }, 0);
+
+              const totalUsed = totalVendorCost + totalVenueCost;
+              const remaining = event.budget - totalUsed;
                 return (
                   <>
                     <p className="text-2xl font-bold">R{totalUsed}</p>
