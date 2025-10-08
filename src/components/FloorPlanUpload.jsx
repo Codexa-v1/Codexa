@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { FiUpload, FiX, FiFile, FiAlertCircle } from "react-icons/fi"
+import { FiUpload, FiX, FiFile, FiAlertCircle, FiCheckCircle } from "react-icons/fi"
 import { AiOutlineLoading } from "react-icons/ai"
 
 export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
   const [file, setFile] = useState(null)
   const [fileName, setFileName] = useState("")
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
   const [uploading, setUploading] = useState(false)
 
   const docType = "FloorPlan"
@@ -25,6 +26,7 @@ export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
     setFile(null)
     setFileName("")
     setError("")
+    setSuccess(false) // Clear success message when removing file
   }
 
   const validateFileName = (name) => {
@@ -47,6 +49,7 @@ export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
 
     setUploading(true)
     setError("")
+    setSuccess(false) // Clear previous success message
 
     const extension = file.name.includes(".") ? file.name.substring(file.name.lastIndexOf(".")) : ""
 
@@ -71,6 +74,9 @@ export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
       )
 
       if (!res.ok) throw new Error("Upload failed")
+
+      setSuccess(true) // Show success message
+      setTimeout(() => setSuccess(false), 3000) // Auto-dismiss after 3 seconds
 
       handleRemoveFile()
       if (onUploadSuccess) onUploadSuccess()
@@ -137,6 +143,14 @@ export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
           <FiAlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
+
+      {/* Success message */}
+      {success && (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2 animate-fade-in">
+          <FiCheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-green-700 font-medium">Floor plan uploaded successfully!</p>
         </div>
       )}
 

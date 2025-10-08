@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { FiUpload, FiFile, FiX, FiCheck } from "react-icons/fi"
+import { FiUpload, FiFile, FiX, FiCheck, FiCheckCircle, FiAlertCircle } from "react-icons/fi"
 import { AiOutlineLoading } from "react-icons/ai"
 
 export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
@@ -9,6 +9,9 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
   const [docType, setDocType] = useState("Other")
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
+
+  const API_URL = import.meta.env.VITE_BACKEND_URL
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0]
@@ -26,6 +29,7 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
 
     setUploading(true)
     setError("")
+    setSuccess(false)
 
     try {
       const formData = new FormData()
@@ -44,11 +48,12 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
 
       if (!res.ok) throw new Error("Upload failed")
 
-      // Reset form
+      setSuccess(true)
+      setTimeout(() => setSuccess(false), 3000)
+
       setFile(null)
       setDocType("Other")
 
-      // Notify parent to refresh
       if (onUploadSuccess) onUploadSuccess()
     } catch (err) {
       console.error("Upload error:", err)
@@ -66,7 +71,6 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
       </h4>
 
       <div className="space-y-4">
-        {/* Document Type Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Document Type</label>
           <select
@@ -83,7 +87,6 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
           </select>
         </div>
 
-        {/* File Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Select File</label>
           <div className="flex items-center gap-3">
@@ -106,10 +109,20 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
           </div>
         </div>
 
-        {/* Error Message */}
-        {error && <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">{error}</div>}
+        {success && (
+          <div className="p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2 animate-fade-in">
+            <FiCheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-green-700 font-medium">Document uploaded successfully!</p>
+          </div>
+        )}
 
-        {/* Upload Button */}
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+            <FiAlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700">{error}</p>
+          </div>
+        )}
+
         <button
           onClick={handleUpload}
           disabled={!file || uploading}
