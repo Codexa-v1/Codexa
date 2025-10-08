@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth0 } from "@auth0/auth0-react"
-import { FiUser, FiMail, FiImage, FiSave, FiArrowLeft } from "react-icons/fi"
+import { FiUser, FiMail, FiImage, FiSave, FiArrowLeft, FiAlertCircle } from "react-icons/fi"
 import { AiOutlineLoading } from "react-icons/ai"
 import Navbar from "@/components/Navbar"
 import { updateUserProfile } from "@/backend/api/UserProfile"
@@ -20,6 +20,8 @@ const SettingsPage = () => {
 
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState({ type: "", text: "" })
+
+  const isSocialLogin = user?.sub && !user.sub.startsWith("auth0|")
 
   useEffect(() => {
     if (user) {
@@ -41,11 +43,15 @@ const SettingsPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (isSocialLogin) {
+      return
+    }
+
     setLoading(true)
     setMessage({ type: "", text: "" })
 
     try {
-      // Update user profile via backend API
       await updateUserProfile(user.sub, {
         name: formData.name,
         picture: formData.picture,
@@ -56,7 +62,6 @@ const SettingsPage = () => {
         text: "Profile updated successfully! Please refresh to see changes.",
       })
 
-      // Reload after 2 seconds to fetch updated user data
       setTimeout(() => {
         window.location.reload()
       }, 2000)
@@ -104,6 +109,20 @@ const SettingsPage = () => {
           <p className="text-gray-600">Manage your profile information and preferences</p>
         </div>
 
+        {isSocialLogin && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-6 flex items-start gap-4">
+            <FiAlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <h3 className="font-semibold text-amber-900 mb-1">Social Login Account</h3>
+              <p className="text-sm text-amber-800">
+                Your account is connected via social login (Google, Facebook, etc.). Profile information is managed by
+                your social provider and cannot be edited here. To update your profile, please visit your social
+                provider's settings.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Profile Card */}
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 mb-6">
           <div className="flex items-center gap-6 mb-8 pb-6 border-b border-gray-200">
@@ -144,7 +163,8 @@ const SettingsPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200"
+                disabled={isSocialLogin}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                 placeholder="Enter your full name"
                 required
               />
@@ -184,10 +204,15 @@ const SettingsPage = () => {
                 name="picture"
                 value={formData.picture}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200"
+                disabled={isSocialLogin}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                 placeholder="https://example.com/profile.jpg"
               />
-              <p className="text-xs text-gray-500 mt-1">Enter a URL to your profile picture</p>
+              <p className="text-xs text-gray-500 mt-1">
+                {isSocialLogin
+                  ? "Profile picture is managed by your social provider"
+                  : "Enter a URL to your profile picture"}
+              </p>
             </div>
 
             {/* Message Display */}
@@ -206,7 +231,7 @@ const SettingsPage = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || isSocialLogin}
               className="w-full bg-gradient-to-r from-teal-600 to-teal-700 text-white font-semibold py-3 px-6 rounded-xl hover:from-teal-700 hover:to-teal-800 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
@@ -217,7 +242,7 @@ const SettingsPage = () => {
               ) : (
                 <>
                   <FiSave className="w-5 h-5" />
-                  Save Changes
+                  {isSocialLogin ? "Editing Disabled" : "Save Changes"}
                 </>
               )}
             </button>
