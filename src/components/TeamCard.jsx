@@ -1,19 +1,22 @@
-import React from "react";
+import { FiMail, FiPhone } from "react-icons/fi"
 
-const TeamCard = ({ name, role, email, phone }) => (
-  <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-4 sm:p-6 flex flex-col items-center text-center hover:shadow-2xl transition-shadow duration-200">
-    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
-      <span className="text-3xl font-bold text-green-800">{name.split(' ')[0][0]}</span>
+export default function TeamCard({ name, role, email, phone }) {
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-teal-300 group hover:-translate-y-1">
+      <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center group-hover:from-teal-500 group-hover:to-teal-700 transition-all duration-300 shadow-md">
+        <span className="text-3xl font-bold text-white">{initials}</span>
+      </div>
+
+      {/* Name and Role */}
+      <h3 className="text-xl font-bold text-gray-900 text-center mb-1">{name}</h3>
+      <p className="text-teal-600 font-semibold text-center mb-4 text-lg">{role}</p>
+
     </div>
-  <h3 className="text-lg sm:text-xl font-bold text-green-900 mb-2">{name}</h3>
-  <p className="text-green-700 font-semibold mb-2 text-base sm:text-lg">{role}</p>
-    <p className="text-gray-700 mb-1">
-      <span className="font-semibold">Email:</span> <a href={`mailto:${email}`} className="text-green-700 underline">{email}</a>
-    </p>
-    <p className="text-gray-700">
-      <span className="font-semibold">Phone:</span> {phone}
-    </p>
-  </div>
-);
-
-export default TeamCard;
+  )
+}

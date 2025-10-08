@@ -1,21 +1,32 @@
-#root {
-  max-width: 100%;
-  margin: 0 auto;
+/* Make the app fill the entire viewport */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  background-color: var(--background); /* optional background */
+  color: var(--foreground); /* optional foreground */
+  overflow-x: hidden; /* prevent horizontal scrolling */
 }
 
+/* Logo styling */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Spin animation for logo */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -31,10 +42,13 @@
   }
 }
 
+/* Cards now flexible to full width */
 .card {
   padding: 2em;
+  max-width: 100%;
 }
 
+/* Documentation links */
 .read-the-docs {
   color: #888;
 }

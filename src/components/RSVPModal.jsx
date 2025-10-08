@@ -1,81 +1,85 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { getGuests, deleteGuest } from "@/backend/api/EventGuest";
-import AddGuestsModal from "@/components/AddGuestsModal";
+"use client"
+
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { getGuests, deleteGuest } from "../backend/api/EventGuest"
+import AddGuestsModal from "./AddGuestsModal"
+import { FiX, FiSearch, FiDownload, FiRefreshCw, FiUserPlus, FiEdit2, FiTrash2, FiBell, FiMail } from "react-icons/fi"
 
 export default function RSVPModal({ guests: initialGuests, onClose, eventId, onAddGuests }) {
-  const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("All");
-  const [exportType, setExportType] = useState("CSV");
-  const [guests, setGuests] = useState(initialGuests || []);
-  const [showAddGuestsModal, setShowAddGuestsModal] = useState(false);
-  const [editingGuest, setEditingGuest] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const navigate = useNavigate()
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterStatus, setFilterStatus] = useState("All")
+  const [exportType, setExportType] = useState("CSV")
+  const [guests, setGuests] = useState(initialGuests || [])
+  const [showAddGuestsModal, setShowAddGuestsModal] = useState(false)
+  const [editingGuest, setEditingGuest] = useState(null)
+  const [showEditModal, setShowEditModal] = useState(false)
 
   // Fetch guests function (reusable)
   const fetchGuests = async () => {
-    if (!eventId) return;
+    if (!eventId) return
     try {
-      const data = await getGuests(eventId);
-      setGuests(data);
+      const data = await getGuests(eventId)
+      setGuests(data)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   // Initial fetch
   useEffect(() => {
-    fetchGuests();
-  }, [eventId]);
+    fetchGuests()
+  }, [eventId])
 
   // Remove guest
   const handleRemoveGuest = async (guestId) => {
-    if (!eventId) return;
+    if (!eventId) return
+    if (!confirm("Are you sure you want to remove this guest?")) return
     try {
-      await deleteGuest(eventId, guestId);
-      fetchGuests();
+      await deleteGuest(eventId, guestId)
+      fetchGuests()
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   // Remind a guest
   const handleRemindGuest = async (guestId) => {
     try {
       const res = await fetch(
         `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}/guest/${guestId}/remind`,
-        { method: "POST" }
-      );
-      if (!res.ok) throw new Error("Failed to send reminder");
-      alert("Reminder sent!");
+        { method: "POST" },
+      )
+      if (!res.ok) throw new Error("Failed to send reminder")
+      alert("Reminder sent!")
     } catch (err) {
-      console.error(err);
-      alert("Failed to send reminder. Please try again.");
+      console.error(err)
+      alert("Failed to send reminder. Please try again.")
     }
-  };
+  }
 
   // Re-invite a guest
   const handleReinviteGuest = async (guestId) => {
     try {
       const res = await fetch(
         `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}/guest/${guestId}/reinvite`,
-        { method: "POST" }
-      );
-      if (!res.ok) throw new Error("Failed to re-invite guest");
-      fetchGuests();
-      alert("Guest re-invited!");
+        { method: "POST" },
+      )
+      if (!res.ok) throw new Error("Failed to re-invite guest")
+      fetchGuests()
+      alert("Guest re-invited!")
     } catch (err) {
-      console.error(err);
-      alert("Failed to re-invite guest. Please try again.");
+      console.error(err)
+      alert("Failed to re-invite guest. Please try again.")
     }
-  };
+  }
 
   // Edit guest
   const handleEditGuest = (guest) => {
-    setEditingGuest(guest);
-    setShowEditModal(true);
-  };
+    setEditingGuest(guest)
+    setShowEditModal(true)
+  }
 
   const handleUpdateGuest = async (updatedGuest) => {
     try {
@@ -85,30 +89,28 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedGuest),
-        }
-      );
-      if (!res.ok) throw new Error("Failed to update guest");
+        },
+      )
+      if (!res.ok) throw new Error("Failed to update guest")
 
-      const updated = await res.json();
-      setGuests((prev) =>
-        prev.map((g) => (g._id === updated.guest._id ? updated.guest : g))
-      );
-      setShowEditModal(false);
+      const updated = await res.json()
+      setGuests((prev) => prev.map((g) => (g._id === updated.guest._id ? updated.guest : g)))
+      setShowEditModal(false)
     } catch (err) {
-      console.error("Error updating guest:", err);
-      alert("Failed to update guest. Please try again.");
+      console.error("Error updating guest:", err)
+      alert("Failed to update guest. Please try again.")
     }
-  };
+  }
 
   // Filtering
   const filteredGuests = guests.filter((guest) => {
-    const matchesStatus = filterStatus === "All" || guest.rsvpStatus === filterStatus;
+    const matchesStatus = filterStatus === "All" || guest.rsvpStatus === filterStatus
     const matchesSearch =
       guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       guest.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      guest.phone.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+      guest.phone.toLowerCase().includes(searchTerm.toLowerCase())
+    return matchesStatus && matchesSearch
+  })
 
   // Export
   const handleExport = () => {
@@ -116,196 +118,211 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
       const csvRows = [
         ["Name", "Email", "Mobile Number", "Status"],
         ...filteredGuests.map((g) => [g.name, g.email, g.phone, g.rsvpStatus]),
-      ];
+      ]
       const csvContent = csvRows
-        .map((row) =>
-          row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")
-        )
-        .join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "guests.csv";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+        .map((row) => row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(","))
+        .join("\n")
+      const blob = new Blob([csvContent], { type: "text/csv" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "guests.csv"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
     } else {
-      const jsonContent = JSON.stringify(filteredGuests, null, 2);
-      const blob = new Blob([jsonContent], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "guests.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      const jsonContent = JSON.stringify(filteredGuests, null, 2)
+      const blob = new Blob([jsonContent], { type: "application/json" })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "guests.json"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
     }
-  };
+  }
+
+  const acceptedCount = guests.filter((g) => g.rsvpStatus === "Accepted").length
+  const acceptanceRate = guests.length > 0 ? (acceptedCount / guests.length) * 100 : 0
 
   return (
     <>
-      <section className="bg-white rounded-lg shadow-lg p-4 sm:p-12 max-w-7xl w-full relative max-h-screen overflow-y-auto">
-        <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-          onClick={onClose}
-        >
-          &times;
-        </button>
-
-        <h3 className="text-xl font-bold mb-4 text-green-900">Guest List</h3>
-
-        {/* Search + Filters + Buttons */}
-        <section className="flex flex-col md:flex-row gap-2 mb-4">
-          <input
-            type="text"
-            placeholder="Search by Name, Email, or Mobile..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-700 w-full md:w-1/2"
-          />
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-700 w-full md:w-1/4"
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+        <section className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-7xl w-full relative max-h-[90vh] overflow-hidden flex flex-col">
+          <button
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded-full"
+            onClick={onClose}
           >
-            <option value="All">All Statuses</option>
-            <option value="Accepted">Accepted</option>
-            <option value="Pending">Pending</option>
-            <option value="Declined">Declined</option>
-          </select>
-          <section className="flex gap-2 items-center">
-            <select
-              value={exportType}
-              onChange={(e) => setExportType(e.target.value)}
-              className="px-2 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-700"
-            >
-              <option value="CSV">CSV</option>
-              <option value="JSON">JSON</option>
-            </select>
-            <button
-              className="bg-green-700 text-white px-3 py-2 rounded hover:bg-green-800 text-xs"
-              onClick={handleExport}
-              type="button"
-            >
-              Export
-            </button>
-            <button
-              className="bg-blue-700 text-white px-3 py-2 rounded hover:bg-blue-800 text-xs"
-              onClick={fetchGuests}
-              type="button"
-            >
-              Refresh
-            </button>
-            <button
-              className="bg-green-700 text-white px-3 py-2 rounded hover:bg-green-800 text-xs"
-              onClick={() => setShowAddGuestsModal(true)}
-              type="button"
-            >
-              Add Guests
-            </button>
-          </section>
-        </section>
+            <FiX className="w-6 h-6" />
+          </button>
 
-        {/* Guests Table */}
-        <section className="overflow-y-auto" style={{ maxHeight: "350px" }}>
-          <table className="w-full mb-4 border border-gray-200 rounded">
-            <thead>
-              <tr className="bg-green-50">
-                <th className="py-2 px-3 text-left text-xs font-semibold text-green-900 border border-gray-200">Name</th>
-                <th className="py-2 px-3 text-left text-xs font-semibold text-green-900 border border-gray-200">Email</th>
-                <th className="py-2 px-3 text-left text-xs font-semibold text-green-900 border border-gray-200">Mobile Number</th>
-                <th className="py-2 px-3 text-center text-xs font-semibold text-green-900 border border-gray-200">Status</th>
-                <th className="py-2 px-3 text-center text-xs font-semibold text-green-900 border border-gray-200">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredGuests.length === 0 ? (
+          <h3 className="text-2xl font-bold mb-6 text-gray-900 border-b border-gray-200 pb-4">Guest List Management</h3>
+
+          <section className="flex flex-col lg:flex-row gap-3 mb-6">
+            {/* Search Input */}
+            <div className="relative flex-1">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search by name, email, or phone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+              />
+            </div>
+
+            {/* Filter Dropdown */}
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all bg-white min-w-[160px]"
+            >
+              <option value="All">All Statuses</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Pending">Pending</option>
+              <option value="Declined">Declined</option>
+            </select>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              <select
+                value={exportType}
+                onChange={(e) => setExportType(e.target.value)}
+                className="px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+              >
+                <option value="CSV">CSV</option>
+                <option value="JSON">JSON</option>
+              </select>
+              <button
+                className="bg-teal-600 text-white px-4 py-2.5 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
+                onClick={handleExport}
+                type="button"
+              >
+                <FiDownload className="w-4 h-4" />
+                Export
+              </button>
+              <button
+                className="bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2 font-medium"
+                onClick={fetchGuests}
+                type="button"
+              >
+                <FiRefreshCw className="w-4 h-4" />
+              </button>
+              <button
+                className="bg-teal-600 text-white px-4 py-2.5 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
+                onClick={() => setShowAddGuestsModal(true)}
+                type="button"
+              >
+                <FiUserPlus className="w-4 h-4" />
+                Add Guests
+              </button>
+            </div>
+          </section>
+
+          <section className="flex-1 overflow-y-auto rounded-lg border border-gray-200">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-teal-50 to-cyan-50 sticky top-0">
                 <tr>
-                  <td colSpan={5} className="py-4 text-center text-gray-500">No guests found.</td>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Name</th>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Email</th>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Phone</th>
+                  <th className="py-3 px-4 text-center text-sm font-semibold text-gray-700">Status</th>
+                  <th className="py-3 px-4 text-center text-sm font-semibold text-gray-700">Actions</th>
                 </tr>
-              ) : (
-                filteredGuests.map((guest, idx) => (
-                  <tr key={idx} className="border-t border-gray-100">
-                    <td className="py-2 px-3 text-sm font-medium border border-gray-200">{guest.name}</td>
-                    <td className="py-2 px-3 text-sm border border-gray-200">{guest.email}</td>
-                    <td className="py-2 px-3 text-sm border border-gray-200">{guest.phone}</td>
-                    <td className="py-2 px-3 text-sm border border-gray-200 text-center">
-                      <span
-                        className={`px-2 py-1 rounded text-xs ${
-                          guest.rsvpStatus === "Accepted"
-                            ? "bg-green-200 text-green-900"
-                            : guest.rsvpStatus === "Pending"
-                            ? "bg-yellow-200 text-yellow-900"
-                            : "bg-red-200 text-red-900"
-                        }`}
-                      >
-                        {guest.rsvpStatus}
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 text-sm border border-gray-200 text-center">
-                      <div className="flex gap-2 justify-center items-center">
-                        <button
-                          className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs hover:bg-yellow-200"
-                          onClick={() => handleEditGuest(guest)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs hover:bg-red-200"
-                          onClick={() => handleRemoveGuest(guest._id)}
-                        >
-                          Remove
-                        </button>
-                        {guest.rsvpStatus === "Pending" && (
-                          <button
-                            className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs hover:bg-blue-200"
-                            onClick={() => handleRemindGuest(guest._id)}
-                          >
-                            Remind
-                          </button>
-                        )}
-                        {guest.rsvpStatus === "Declined" && (
-                          <button
-                            className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200"
-                            onClick={() => handleReinviteGuest(guest._id)}
-                          >
-                            Re-invite
-                          </button>
-                        )}
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-100">
+                {filteredGuests.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-12 text-center text-gray-500">
+                      <div className="flex flex-col items-center gap-2">
+                        <FiUserPlus className="w-12 h-12 text-gray-300" />
+                        <p className="font-medium">No guests found</p>
+                        <p className="text-sm">Try adjusting your search or filters</p>
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </section>
-
-        {/* Progress Bar */}
-        <section className="mb-2">
-          <h4 className="text-sm font-semibold mb-1">Invitation Progress</h4>
-          <section className="bg-gray-300 h-2 rounded">
-            <section
-              className="bg-green-900 h-2 rounded"
-              style={{
-                width: `${
-                  guests.length > 0
-                    ? (guests.filter((g) => g.rsvpStatus === "Accepted").length /
-                        guests.length) *
-                      100
-                    : 0
-                }%`,
-              }}
-            ></section>
+                ) : (
+                  filteredGuests.map((guest, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                      <td className="py-3 px-4 text-sm font-medium text-gray-900">{guest.name}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{guest.email}</td>
+                      <td className="py-3 px-4 text-sm text-gray-600">{guest.phone}</td>
+                      <td className="py-3 px-4 text-center">
+                        <span
+                          className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+                            guest.rsvpStatus === "Accepted"
+                              ? "bg-green-100 text-green-700"
+                              : guest.rsvpStatus === "Pending"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {guest.rsvpStatus}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex gap-2 justify-center items-center flex-wrap">
+                          <button
+                            className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors flex items-center gap-1"
+                            onClick={() => handleEditGuest(guest)}
+                          >
+                            <FiEdit2 className="w-3 h-3" />
+                            Edit
+                          </button>
+                          <button
+                            className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors flex items-center gap-1"
+                            onClick={() => handleRemoveGuest(guest._id)}
+                          >
+                            <FiTrash2 className="w-3 h-3" />
+                            Remove
+                          </button>
+                          {guest.rsvpStatus === "Pending" && (
+                            <button
+                              className="bg-purple-50 text-purple-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-purple-100 transition-colors flex items-center gap-1"
+                              onClick={() => handleRemindGuest(guest._id)}
+                            >
+                              <FiBell className="w-3 h-3" />
+                              Remind
+                            </button>
+                          )}
+                          {guest.rsvpStatus === "Declined" && (
+                            <button
+                              className="bg-gray-50 text-gray-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-100 transition-colors flex items-center gap-1"
+                              onClick={() => handleReinviteGuest(guest._id)}
+                            >
+                              <FiMail className="w-3 h-3" />
+                              Re-invite
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </section>
-          <p className="text-xs mt-1">
-            Accepted: {guests.filter((g) => g.rsvpStatus === "Accepted").length}/{guests.length}
-          </p>
+
+          <section className="mt-6 pt-6 border-t border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-semibold text-gray-700">RSVP Progress</h4>
+              <p className="text-sm text-gray-600">
+                <span className="font-semibold text-teal-600">{acceptedCount}</span> / {guests.length} accepted
+              </p>
+            </div>
+            <div className="bg-gray-200 h-3 rounded-full overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-teal-500 to-cyan-500 h-3 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${acceptanceRate}%` }}
+              ></div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">{acceptanceRate.toFixed(1)}% acceptance rate</p>
+          </section>
         </section>
-      </section>
+      </div>
 
       {/* AddGuestsModal */}
       {showAddGuestsModal && (
@@ -313,93 +330,100 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
           onClose={() => setShowAddGuestsModal(false)}
           eventId={eventId}
           onGuestsAdded={(newGuests) => {
-            setGuests([...guests, ...newGuests]);
-            if (onAddGuests) onAddGuests(newGuests);
+            setGuests([...guests, ...newGuests])
+            if (onAddGuests) onAddGuests(newGuests)
           }}
         />
       )}
 
       {/* EditGuestModal */}
       {showEditModal && editingGuest && (
-        <EditGuestModal
-          guest={editingGuest}
-          onClose={() => setShowEditModal(false)}
-          onSave={handleUpdateGuest}
-        />
+        <EditGuestModal guest={editingGuest} onClose={() => setShowEditModal(false)} onSave={handleUpdateGuest} />
       )}
     </>
-  );
+  )
 }
 
-// Edit Guest Modal Component
 function EditGuestModal({ guest, onClose, onSave }) {
-  const [form, setForm] = useState({ ...guest });
+  const [form, setForm] = useState({ ...guest })
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(form);
-  };
+    e.preventDefault()
+    onSave(form)
+  }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg w-96">
-        <h3 className="text-lg font-bold mb-4">Edit Guest</h3>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <input
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Name"
-            className="border px-2 py-1 rounded"
-            required
-          />
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Email"
-            className="border px-2 py-1 rounded"
-            required
-          />
-          <input
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            placeholder="Phone"
-            className="border px-2 py-1 rounded"
-          />
-          <select
-            name="rsvpStatus"
-            value={form.rsvpStatus}
-            onChange={handleChange}
-            className="border px-2 py-1 rounded"
-          >
-            <option value="Pending">Pending</option>
-            <option value="Accepted">Accepted</option>
-            <option value="Declined">Declined</option>
-          </select>
-          <div className="flex justify-end gap-2 mt-2">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-[60]">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
+        <h3 className="text-xl font-bold mb-6 text-gray-900">Edit Guest</h3>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Guest name"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="guest@example.com"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              placeholder="+1 (555) 000-0000"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">RSVP Status</label>
+            <select
+              name="rsvpStatus"
+              value={form.rsvpStatus}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all bg-white"
+            >
+              <option value="Pending">Pending</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Declined">Declined</option>
+            </select>
+          </div>
+          <div className="flex justify-end gap-3 mt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+              className="px-5 py-2.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-3 py-1 rounded bg-green-700 text-white hover:bg-green-800"
+              className="px-5 py-2.5 rounded-lg bg-teal-600 text-white hover:bg-teal-700 transition-colors font-medium shadow-sm"
             >
-              Save
+              Save Changes
             </button>
           </div>
         </form>
       </div>
     </div>
-  );
+  )
 }

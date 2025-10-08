@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import dayjs from "dayjs";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
-import { getAllEvents } from "@/backend/api/EventData";
+"use client"
+
+import React, { useState } from "react"
+import { useAuth0 } from "@auth0/auth0-react"
+import dayjs from "dayjs"
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi"
+import { getAllEvents } from "@/backend/api/EventData"
 
 const Calendar = ({ onDayClick }) => {
   const eventColors = React.useMemo(
@@ -22,73 +24,75 @@ const Calendar = ({ onDayClick }) => {
       Graduation: "bg-cyan-500",
       Other: "bg-gray-500",
     }),
-    []
-  );
+    [],
+  )
 
-  const getBgColor = React.useCallback(
-    (category) => eventColors[category] || eventColors["Other"],
-    [eventColors]
-  );
+  const getBgColor = React.useCallback((category) => eventColors[category] || eventColors["Other"], [eventColors])
 
-  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
   const monthsOfYear = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
-  ];
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ]
 
-  const currentDate = new Date();
-  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
-  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+  const currentDate = new Date()
+  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth())
+  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear())
 
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay()
 
   const prevMonth = () => {
-    setCurrentMonth((m) => (m === 0 ? 11 : m - 1));
-    setCurrentYear((y) => (currentMonth === 0 ? y - 1 : y));
-  };
+    setCurrentMonth((m) => (m === 0 ? 11 : m - 1))
+    setCurrentYear((y) => (currentMonth === 0 ? y - 1 : y))
+  }
 
   const nextMonth = () => {
-    setCurrentMonth((m) => (m === 11 ? 0 : m + 1));
-    setCurrentYear((y) => (currentMonth === 11 ? currentYear + 1 : y));
-  };
+    setCurrentMonth((m) => (m === 11 ? 0 : m + 1))
+    setCurrentYear((y) => (currentMonth === 11 ? currentYear + 1 : y))
+  }
 
-  const { user, isAuthenticated } = useAuth0();
-  const [events, setEvents] = useState([]);
+  const { user, isAuthenticated } = useAuth0()
+  const [events, setEvents] = useState([])
 
   React.useEffect(() => {
     if (isAuthenticated && user) {
       getAllEvents(user.sub)
         .then((data) => {
-          setEvents(
-            data.map((ev) => ({ ...ev, bgColor: getBgColor(ev.category) }))
-          );
+          setEvents(data.map((ev) => ({ ...ev, bgColor: getBgColor(ev.category) })))
         })
-        .catch((err) => console.error("Failed to fetch events:", err));
+        .catch((err) => console.error("Failed to fetch events:", err))
     }
-  }, [isAuthenticated, user, getBgColor]);
+  }, [isAuthenticated, user, getBgColor])
 
   return (
-    <section className="w-full h-full px-1 sm:px-4">
+    <section className="w-full h-full px-2 sm:px-4">
       {/* Month & Year Navigation */}
-      <section className="flex flex-col sm:flex-row items-center gap-2 my-6 sm:my-12">
-        <h2 className="text-xl sm:text-3xl font-bold pl-2 sm:pl-5 text-green-900">
-          {monthsOfYear[currentMonth]},
-        </h2>
-        <h2 className="text-xl sm:text-3xl font-bold text-green-900">
-          {currentYear}
+      <section className="flex flex-col sm:flex-row items-center gap-3 my-6 sm:my-8">
+        <h2 className="text-2xl sm:text-4xl font-bold text-teal-900 tracking-tight">
+          {monthsOfYear[currentMonth]}, {currentYear}
         </h2>
 
-        <section className="flex gap-2 sm:gap-4 ml-auto">
+        <section className="flex gap-3 ml-auto">
           <button
             onClick={prevMonth}
-            className="w-10 h-10 sm:w-14 sm:h-14 bg-gray-100 rounded-full flex justify-center items-center text-lg sm:text-2xl text-gray-800 hover:bg-gray-200"
+            className="w-11 h-11 sm:w-12 sm:h-12 bg-teal-50 rounded-xl flex justify-center items-center text-xl text-teal-700 hover:bg-teal-100 hover:shadow-md transition-all duration-200 border border-teal-100"
           >
             <HiChevronLeft />
           </button>
           <button
             onClick={nextMonth}
-            className="w-10 h-10 sm:w-14 sm:h-14 bg-gray-100 rounded-full flex justify-center items-center text-lg sm:text-2xl text-gray-800 hover:bg-gray-200"
+            className="w-11 h-11 sm:w-12 sm:h-12 bg-teal-50 rounded-xl flex justify-center items-center text-xl text-teal-700 hover:bg-teal-100 hover:shadow-md transition-all duration-200 border border-teal-100"
           >
             <HiChevronRight />
           </button>
@@ -96,11 +100,11 @@ const Calendar = ({ onDayClick }) => {
       </section>
 
       {/* Weekdays */}
-      <section className="grid grid-cols-7 my-4 sm:my-8">
+      <section className="grid grid-cols-7 my-4 sm:my-6 bg-teal-50 rounded-lg py-3">
         {daysOfWeek.map((day) => (
           <span
             key={day}
-            className="font-bold uppercase text-gray-800 tracking-wider flex justify-center items-center text-xs sm:text-base h-8 sm:h-10"
+            className="font-bold uppercase text-teal-800 tracking-wider flex justify-center items-center text-xs sm:text-sm"
           >
             {day}
           </span>
@@ -108,40 +112,39 @@ const Calendar = ({ onDayClick }) => {
       </section>
 
       {/* Days Grid */}
-      <section className="grid grid-cols-7 gap-1">
+      <section className="grid grid-cols-7 gap-2">
         {/* Empty slots for padding */}
         {[...Array(firstDayOfMonth).keys()].map((_, i) => (
           <span
             key={`empty-${i}`}
-            className="h-10 sm:h-12 flex justify-center items-center text-gray-800 text-xs sm:text-sm border border-gray-200 rounded"
+            className="h-12 sm:h-16 flex justify-center items-center text-gray-400 text-xs sm:text-sm bg-gray-50 rounded-lg"
           />
         ))}
         {/* Actual days */}
         {[...Array(daysInMonth).keys()].map((day) => {
-          const dateObj = new Date(currentYear, currentMonth, day + 1);
-          const dateStr = dayjs(dateObj).format("YYYY-MM-DD");
-          const eventsForDay = events.filter(
-            (ev) => dayjs(ev.date).format("YYYY-MM-DD") === dateStr
-          );
+          const dateObj = new Date(currentYear, currentMonth, day + 1)
+          const dateStr = dayjs(dateObj).format("YYYY-MM-DD")
+          const eventsForDay = events.filter((ev) => dayjs(ev.date).format("YYYY-MM-DD") === dateStr)
+          const isToday = dayjs(dateObj).isSame(dayjs(), "day")
+
           return (
             <span
               key={day + 1}
               onClick={() => onDayClick && onDayClick(dateObj)}
-              className="
-                h-10 sm:h-12 flex flex-col justify-center items-center
-                text-gray-800 text-xs sm:text-sm cursor-pointer
-                hover:bg-gray-100 rounded border border-gray-300 relative group
-              "
+              className={`
+                h-12 sm:h-16 flex flex-col justify-center items-center
+                text-gray-800 text-sm sm:text-base cursor-pointer font-medium
+                hover:bg-teal-50 hover:shadow-md rounded-lg border transition-all duration-200
+                ${isToday ? "bg-teal-100 border-teal-300 ring-2 ring-teal-200" : "bg-white border-gray-200"}
+                relative group
+              `}
             >
               <span>{day + 1}</span>
 
               {eventsForDay.length > 0 && (
-                <span className="flex gap-0.5 sm:gap-1 mt-1">
-                  {eventsForDay.map((ev, idx) => (
-                    <span
-                      key={idx}
-                      className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${ev.bgColor}`}
-                    ></span>
+                <span className="flex gap-1 mt-1">
+                  {eventsForDay.slice(0, 3).map((ev, idx) => (
+                    <span key={idx} className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${ev.bgColor} shadow-sm`}></span>
                   ))}
                 </span>
               )}
@@ -149,37 +152,35 @@ const Calendar = ({ onDayClick }) => {
               {eventsForDay.length > 0 && (
                 <section
                   className="
-                    absolute left-1/2 -translate-x-1/2 top-full mt-1 sm:mt-2
-                    z-10 bg-white border border-gray-300 rounded shadow-lg
-                    p-1 sm:p-2 min-w-[140px] sm:min-w-[180px]
-                    text-[10px] sm:text-xs text-gray-800
+                    absolute left-1/2 -translate-x-1/2 top-full mt-2
+                    z-10 bg-white border border-gray-200 rounded-xl shadow-2xl
+                    p-3 min-w-[160px] sm:min-w-[200px]
+                    text-xs sm:text-sm text-gray-800
                     opacity-0 group-hover:opacity-100
                     pointer-events-none group-hover:pointer-events-auto
                     transition-opacity duration-200
                   "
                 >
-                  <div className="font-bold mb-1">Events:</div>
-                  <ul>
+                  <div className="font-bold mb-2 text-teal-800">Events:</div>
+                  <ul className="space-y-1.5">
                     {eventsForDay.map((ev, idx) => (
-                      <li key={idx} className="mb-0.5 sm:mb-1">
-                        <span
-                          className={`inline-block w-2 h-2 rounded-full mr-1 sm:mr-2 align-middle ${ev.bgColor}`}
-                        ></span>
-                        <span className="font-semibold">{ev.title}</span>{" "}
-                        <span className="text-gray-500">
-                          ({ev.category || ev.type})
-                        </span>
+                      <li key={idx} className="flex items-center gap-2">
+                        <span className={`w-2.5 h-2.5 rounded-full ${ev.bgColor} flex-shrink-0`}></span>
+                        <div className="flex-1 min-w-0">
+                          <span className="font-semibold block truncate">{ev.title}</span>
+                          <span className="text-gray-500 text-xs">({ev.category || ev.type})</span>
+                        </div>
                       </li>
                     ))}
                   </ul>
                 </section>
               )}
             </span>
-          );
+          )
         })}
       </section>
     </section>
-  );
-};
+  )
+}
 
-export default Calendar;
+export default Calendar

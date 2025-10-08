@@ -1,74 +1,80 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import Navbar from "../components/Navbar";
-import { useAuth0 } from "@auth0/auth0-react";
+"use client"
 
-// Modals
-import RSVPModal from "../components/RSVPModal";
-import EditEventModal from "../components/EditEventModal";
-import VendorsModal from "../components/VendorsModal";
-import VenuesModal from "../components/VenuesModal";
-import AddVenuesModal from "../components/AddVenuesModal";
-import ScheduleModal from "../components/ScheduleModal";
-import AddScheduleModal from "../components/AddScheduleModal";
-import FloorPlanModal from "../components/FloorPlanModal";
-import DocumentsModal from "../components/DocumentsModal";
-import AddGuestsModal from "../components/AddGuestsModal";
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import dayjs from "dayjs"
+import Navbar from "@/components/Navbar"
+import { useAuth0 } from "@auth0/auth0-react"
+import { FiAlertCircle, FiRefreshCw, FiSend, FiEdit3, FiLoader } from "react-icons/fi"
 
 // Backend API
-import { getAllEvents, updateEvent } from "../backend/api/EventData";
-import { getVenues } from "../backend/api/EventVenue";
-import { getVendors, getEventVendorDetails } from "../backend/api/EventVendor";
-import { getGuests } from "../backend/api/EventGuest";
-import WeatherCard from "../components/WeatherCard";
-import { getDocuments } from "../backend/api/EventDocuments";
-import { get } from "mongoose";
+import { getAllEvents } from "@/backend/api/EventData"
+
+import RSVPModal from "@/components/RSVPModal";
+import EditEventModal from "@/components/EditEventModal";
+import VendorsModal from "@/components/VendorsModal";
+import VenuesModal from "@/components/VenuesModal";
+import AddVenuesModal from "@/components/AddVenuesModal";
+import ScheduleModal from "@/components/ScheduleModal";
+import AddScheduleModal from "@/components/AddScheduleModal";
+import FloorPlanModal from "@/components/FloorPlanModal";
+import DocumentsModal from "@/components/DocumentsModal";
+import WeatherCard from "@/components/WeatherCard";
+
+import { updateEvent } from "@/backend/api/EventData";
+import { getVenues } from "@/backend/api/EventVenue";
+import { getVendors, getEventVendorDetails } from "@/backend/api/EventVendor";
+import { getGuests } from "@/backend/api/EventGuest";
+import { getDocuments } from "@/backend/api/EventDocuments";
 
 export default function EventDetails() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth0();
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { user } = useAuth0()
 
+  const [loading, setLoading] = useState(true)
   // Event & related data
-  const [events, setEvents] = useState([]);
-  const [event, setEvent] = useState(null);
-  const [guests, setGuests] = useState([]);
-  const [vendors, setVendors] = useState([]);
-  const [venues, setVenues] = useState([]);
-  const [schedules, setSchedules] = useState([]);
-  const [documents, setDocuments] = useState([]);
+  const [events, setEvents] = useState([])
+  const [event, setEvent] = useState(null)
+  const [guests, setGuests] = useState([])
+  const [vendors, setVendors] = useState([])
+  const [venues, setVenues] = useState([])
+  const [schedules, setSchedules] = useState([])
+  const [documents, setDocuments] = useState([])
 
   // Tabs & modals
-  const [activeTab, setActiveTab] = useState("overview");
-  const [showEditEventModal, setShowEditEventModal] = useState(false);
-  const [showAddVenuesModal, setShowAddVenuesModal] = useState(false);
-  const [showAddScheduleModal, setShowAddScheduleModal] = useState(false);
-  const [showPastEventModal, setShowPastEventModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview")
+  const [showEditEventModal, setShowEditEventModal] = useState(false)
+  const [showAddVenuesModal, setShowAddVenuesModal] = useState(false)
+  const [showAddScheduleModal, setShowAddScheduleModal] = useState(false)
+  const [showPastEventModal, setShowPastEventModal] = useState(false)
 
   // Fetch events and select current
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const allEvents = await getAllEvents(user.sub);
-        setEvents(allEvents);
-        const ev = allEvents.find((e) => e._id === id);
+        setLoading(true)
+        const allEvents = await getAllEvents(user.sub)
+        setEvents(allEvents)
+        const ev = allEvents.find((e) => e._id === id)
         if (ev) {
-          setEvent(ev);
+          setEvent(ev)
           if (dayjs(ev.date).isBefore(dayjs(), "day")) {
-            setShowPastEventModal(true);
+            setShowPastEventModal(true)
           }
         }
       } catch (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error fetching events:", err)
+      } finally {
+        setLoading(false)
       }
-    };
-    fetchEvents();
-  }, [id]);
+    }
+    fetchEvents()
+  }, [id, user.sub])
 
   // Fetch event-related data
   useEffect(() => {
-    if (!event?._id) return;
+    if (!event?._id) return
 
     const fetchData = async () => {
       try {
@@ -80,47 +86,45 @@ export default function EventDetails() {
         ]);
         setGuests(guestData);
         setVendors(vendorData);
-        setSchedules([]); // placeholder until backend ready
         setDocuments(documentData);
         setVenues(venueData);
+        setSchedules([]) // placeholder until backend ready
       } catch (err) {
-        console.error("Error fetching event data:", err);
+        console.error("Error fetching event data:", err)
       }
-    };
+    }
 
-    fetchData();
-  }, [event?._id]);
+    fetchData()
+  }, [event?._id, user.sub])
 
   const handleEditEventSave = (updated) => {
-    setEvent((prev) => ({ ...prev, ...updated }));
-    setShowPastEventModal(false);
-  };
+    setEvent((prev) => ({ ...prev, ...updated }))
+    setShowPastEventModal(false)
+  }
 
   const handleSendInvites = (eventId) => {
-    const link = `${window.location.origin}/invite/${eventId}`;
+    const link = `${window.location.origin}/invite/${eventId}`
     const shareData = {
       title: event.title,
       text: `You're invited to ${event.title} on ${dayjs(event.date).format(
-        "DD MMM YYYY, HH:mm"
+        "DD MMM YYYY, HH:mm",
       )} at ${event.location}.\n\nConfirm attendance here:\n${link}`,
       url: link,
-    };
-    if (navigator.share) {
-      navigator
-        .share(shareData)
-        .catch((err) => console.error("Share failed:", err));
-    } else {
-      navigator.clipboard.writeText(link);
-      alert("Link copied to clipboard!");
     }
-  };
+    if (navigator.share) {
+      navigator.share(shareData).catch((err) => console.error("Share failed:", err))
+    } else {
+      navigator.clipboard.writeText(link)
+      alert("Link copied to clipboard!")
+    }
+  }
 
   const refreshData = async () => {
-    if (!event?._id) return;
+    if (!event?._id) return
     try {
       const [guestData, vendorData, documentData, venueData] = await Promise.all([
         getGuests(event._id),
-        getVendors(event._id),
+        getEventVendorDetails(event._id),
         getDocuments(user.sub, event._id),
         getVenues(event._id)
       ]);
@@ -128,89 +132,122 @@ export default function EventDetails() {
       setVendors(vendorData);
       setDocuments(documentData);
       setVenues(venueData);
-      setSchedules([]); // placeholder until backend ready
+      setSchedules([]) // placeholder until backend ready
     } catch (err) {
-      console.error("Error refreshing event data:", err);
+      console.error("Error refreshing event data:", err)
     }
-  };
+  }
 
   const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    refreshData(); // fetch latest data for modal
-  };
+    setActiveTab(tab)
+    refreshData()
+  }
 
+  const handleClosePastEvent = async () => {
+    try {
+      const updated = await updateEvent(event._id, { status: "Completed" });
+      setEvent(updated);
+      setShowPastEventModal(false)
+    } catch (err) {
+      console.error("Failed to complete event:", err)
+    }
+  }
 
+  const handleReopenEvent = async () => {
+    try {
+      const updated = await updateEvent(event._id, { status: "Planning" });
+      setEvent(updated);
+      setShowPastEventModal(false)
+      setShowEditEventModal(true)
+    } catch (err) {
+      console.error("Failed to reopen event:", err)
+    }
+  }
 
-  const tabColors = {
-    overview: "text-green-700",
-    rsvp: "text-green-700",
-    vendors: "text-blue-700",
-    venues: "text-red-700",
-    schedule: "text-yellow-700",
-    floor: "text-pink-700",
-    documents: "text-purple-700",
-  };
+  if (loading) {
+    return (
+      <section className="min-h-screen flex flex-col bg-gradient-to-br from-cyan-50 via-teal-50 to-teal-100">
+        <Navbar />
+        <section className="flex-1 flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiLoader className="w-8 h-8 text-teal-600 animate-spin" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Loading Event...</h2>
+            <p className="text-gray-600">Please wait while we fetch the event details.</p>
+          </div>
+        </section>
+      </section>
+    )
+  }
 
   if (!event) {
     return (
-      <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 to-green-900">
+      <section className="min-h-screen flex flex-col bg-gradient-to-br from-cyan-50 via-teal-50 to-teal-100">
         <Navbar />
-        <section className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow mt-8 text-center">
-          <h2 className="text-2xl font-bold text-red-700 mb-2">
-            Event Not Found
-          </h2>
-          <button
-            className="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-700"
-            onClick={() => navigate("/events")}
-          >
-            Back to Events
-          </button>
+        <section className="flex-1 flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiAlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Event Not Found</h2>
+            <p className="text-gray-600 mb-6">The event you're looking for doesn't exist or has been removed.</p>
+            <button
+              className="bg-teal-600 text-white px-6 py-3 rounded-xl hover:bg-teal-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
+              onClick={() => navigate("/events")}
+            >
+              Back to Events
+            </button>
+          </div>
         </section>
       </section>
-    );
+    )
   }
 
+  const daysToGo = dayjs(event.date).diff(dayjs(), "day")
+  const acceptedGuests = guests.filter((g) => g.rsvpStatus === "Accepted").length
+  const declinedGuests = guests.filter((g) => g.rsvpStatus === "Declined").length
+  const pendingGuests = guests.filter((g) => g.rsvpStatus === "Pending").length
+  const guestCount = guests.length
+
+  const totalVendorCost = vendors.reduce((sum, v) => {
+    const cost = v.eventVendor?.vendorCost ?? 0
+    return sum + (typeof cost === "string" ? Number.parseFloat(cost) : cost)
+  }, 0)
+
+  const totalVenueCost = venues.reduce((sum, v) => {
+    const cost = v.venueCost ?? 0
+    return sum + (typeof cost === "string" ? Number.parseFloat(cost) : cost)
+  }, 0)
+
+  const totalUsed = totalVendorCost + totalVenueCost
+  const remaining = event.budget - totalUsed
+
   return (
-    <section className="min-h-screen bg-gradient-to-b from-sky-100 to-green-900 pb-8">
+    <section className="min-h-screen bg-gradient-to-br from-cyan-50 via-teal-50 to-teal-100 pb-12">
       <Navbar />
 
       {/* Past Event Confirmation Modal */}
       {showPastEventModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h3 className="text-lg font-bold text-green-900 mb-4">
-              Past Event Detected
-            </h3>
-            <p className="text-gray-700 mb-6">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all">
+            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiAlertCircle className="w-8 h-8 text-amber-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">Past Event Detected</h3>
+            <p className="text-gray-600 mb-8 text-center leading-relaxed">
               This event has already passed. Do you want to confirm it as closed, or re-open it with a new date?
             </p>
-            <div className="flex justify-end gap-3">
+            <div className="flex gap-3">
               <button
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-                onClick={async () => {
-                  try {
-                    const updated = await updateEvent(event._id, { status: "Completed" });
-                    setEvent(updated);
-                    setShowPastEventModal(false);
-                  } catch (err) {
-                    console.error("Failed to complete event:", err);
-                  }
-                }}
+                className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-200 transition-all duration-200 font-semibold"
+                onClick={handleClosePastEvent}
               >
                 Confirm Closing
               </button>
               <button
-                className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
-                onClick={async () => {
-                  try {
-                    const updated = await updateEvent(event._id, { status: "Planning" });
-                    setEvent(updated);
-                    setShowPastEventModal(false);
-                    setShowEditEventModal(true);
-                  } catch (err) {
-                    console.error("Failed to complete event:", err);
-                  }
-                }}
+                className="flex-1 bg-teal-600 text-white px-6 py-3 rounded-xl hover:bg-teal-700 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl"
+                onClick={handleReopenEvent}
               >
                 Re-open / Postpone
               </button>
@@ -220,228 +257,218 @@ export default function EventDetails() {
       )}
 
       {/* Event Header */}
-      <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
-        <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
-          <section className="flex flex-wrap items-center gap-2">
-            <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-              {event.category}
-            </span>
-            <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
-              {event.status}
-            </span>
-            <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">
-              {dayjs(event.date).diff(dayjs(), "day")} days to go
-            </span>
-          </section>
-          <section className="flex gap-2">
-            <button
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 text-sm font-semibold shadow flex items-center gap-2"
-              type="button"
-              onClick={refreshData}
-            >
-              Refresh
-            </button>
-            <button
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm font-semibold shadow flex items-center gap-2"
-              type="button"
-              onClick={() => handleSendInvites(event._id)}
-            >
-              Send Invite
-            </button>
-            <button
-              className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 text-sm font-semibold shadow flex items-center gap-2"
-              type="button"
-              onClick={() => setShowEditEventModal(true)}
-            >
-              Edit Event
-            </button>
-          </section>
-        </section>
-        {showEditEventModal && (
-          <EditEventModal
-            event={event}
-            onClose={() => setShowEditEventModal(false)}
-            onSave={handleEditEventSave}
-          />
-        )}
-        <h2 className="text-3xl font-bold text-green-900 mb-2">
-          {event.title}
-        </h2>
-        <section className="flex flex-wrap items-center gap-4 text-sm text-gray-700 mb-3">
-          <p>{dayjs(event.date).format("DD MMM YYYY")}</p>
-          <p>
-            {event.startTime} - {event.endTime}
-          </p>
-          <p>{event.location}</p>
-        </section>
-        <p className="text-gray-600 mb-6">{event.description}</p>
-
-        {/* Overview Cards */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
-          <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
-            <h4 className="font-semibold">Total Guests</h4>
-            <p className="text-2xl font-bold">{event.rsvpTotal}</p>
-            <p className="text-sm text-gray-500">
-              Accepted: {guests.filter((g) => g.rsvpStatus === "Accepted").length} | Declined:{" "}
-              {guests.filter((g) => g.rsvpStatus === "Declined").length} | Pending:{" "}
-              {guests.filter((g) => g.rsvpStatus === "Pending").length}
-            </p>
+      <section className="max-w-7xl mx-auto px-6 mt-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          {/* Badges and Actions */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-md">
+                {event.category}
+              </span>
+              <span className="bg-teal-100 text-teal-800 text-sm font-semibold px-4 py-2 rounded-full">
+                {event.status}
+              </span>
+              <span className="bg-amber-100 text-amber-800 text-sm font-semibold px-4 py-2 rounded-full">
+                {daysToGo} days to go
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <button
+                className="bg-gray-100 text-gray-700 px-5 py-2.5 rounded-xl hover:bg-gray-200 transition-all duration-200 font-semibold shadow-md hover:shadow-lg flex items-center gap-2"
+                type="button"
+                onClick={refreshData}
+              >
+                <FiRefreshCw className="w-4 h-4" />
+                Refresh
+              </button>
+              <button
+                className="bg-rose-500 text-white px-5 py-2.5 rounded-xl hover:bg-rose-600 transition-all duration-200 font-semibold shadow-md hover:shadow-lg flex items-center gap-2"
+                type="button"
+                onClick={() => handleSendInvites(event._id)}
+              >
+                <FiSend className="w-4 h-4" />
+                Send Invite
+              </button>
+              <button
+                className="bg-teal-600 text-white px-5 py-2.5 rounded-xl hover:bg-teal-700 transition-all duration-200 font-semibold shadow-md hover:shadow-lg flex items-center gap-2"
+                type="button"
+                onClick={() => setShowEditEventModal(true)}
+              >
+                <FiEdit3 className="w-4 h-4" />
+                Edit Event
+              </button>
+            </div>
           </div>
-          <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
-            <h4 className="font-semibold">Vendors</h4>
-            <p className="text-2xl font-bold">{vendors.length}</p>
-            <p className="text-sm text-gray-500">All categories</p>
-          </div>
-          <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
-            <h4 className="font-semibold">Documents</h4>
-            <p className="text-2xl font-bold">{documents.length}</p>
-            <p className="text-sm text-gray-500">Uploaded</p>
-          </div>
-          <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
-            <h4 className="font-semibold">Budget</h4>
-            <p className="text-2xl font-bold">R{event.budget}</p>
-            <p className="text-sm text-gray-500">Total allocated</p>
-          </div>
-          <div className="bg-gray-50 rounded-lg shadow p-4 hover:bg-gray-100 cursor-pointer">
-            <h4 className="font-semibold">Budget Usage</h4>
-            {event.budget ? (
-              (() => {
-                const totalVendorCost = vendors.reduce((sum, v) => {
-                const cost = v.eventVendor?.vendorCost ?? 0;
-                return sum + (typeof cost === "string" ? parseFloat(cost) : cost);
-              }, 0);
 
-              const totalVenueCost = venues.reduce((sum, v) => {
-                const cost = v.venueCost ?? 0;
-                return sum + (typeof cost === "string" ? parseFloat(cost) : cost);
-              }, 0);
-
-              const totalUsed = totalVendorCost + totalVenueCost;
-              const remaining = event.budget - totalUsed;
-                return (
-                  <>
-                    <p className="text-2xl font-bold">R{totalUsed}</p>
-                    <p className="text-sm text-gray-500">Remaining: R{remaining.toFixed(2)}</p>
-                  </>
-                );
-              })()
-            ) : (
-              <p className="text-sm text-gray-500">No budget set</p>
-            )}
-          </div>
-        </section>
-      </section>
-
-      {/* Tabs Navigation */}
-      <section className="p-6 w-10/12 mx-auto bg-white rounded-lg shadow mt-8">
-        <section className="flex justify-between mb-6 bg-gray-100 rounded-lg">
-          {[
-            "overview",
-            "rsvp",
-            "vendors",
-            "venues",
-            "schedule",
-            "floor",
-            "documents",
-          ].map((tab) => (
-            <button
-              key={tab}
-              className={`px-4 py-2 ${
-                activeTab === tab
-                  ? `${tabColors[tab]} font-bold`
-                  : "text-gray-500"
-              }`}
-              onClick={() => handleTabChange(tab)}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1).replace(/([A-Z])/g, " $1")}
-            </button>
-          ))}
-        </section>
-
-        {/* Tab Content */}
-        <section className="display">
-          {activeTab === "overview" && (
-            <section className="grid grid-cols-2 gap-6 mb-8">
-              {/* RSVP Card */}
-              <section
-                className="bg-green-100 rounded-lg shadow p-6 cursor-pointer hover:bg-green-200 transition"
-                onClick={() => setActiveTab("rsvp")}
-              >
-                <h3 className="text-lg font-semibold mb-2">RSVP Progress</h3>
-                <p className="text-xs mb-2">
-                  Progress: {guests.filter((g) => g.rsvpStatus === "Accepted").length}/{guests.length}
-                </p>
-                <section className="bg-gray-300 h-2 rounded mb-2">
-                  <section
-                    className="bg-green-900 h-2 rounded"
-                    style={{
-                      width: `${
-                        guests.length > 0
-                          ? (guests.filter((g) => g.rsvpStatus === "Accepted").length / guests.length) *
-                            100
-                          : 0
-                      }%`,
-                    }}
-                  ></section>
-                </section>
-                <p className="text-xs text-green-900">
-                  Click to view guest list
-                </p>
-              </section>
-              <WeatherCard eventDate={event.date} location={event.location} />
-
-              {/* Vendors Card */}
-              <section
-                className="bg-blue-100 rounded-lg shadow p-6 cursor-pointer hover:bg-blue-200 transition"
-                onClick={() => setActiveTab("vendors")}
-              >
-                <h3 className="text-lg font-semibold mb-2">Vendors</h3>
-                <p className="text-xs mb-2">Total Vendors: {vendors.length}</p>
-                <p className="text-xs text-blue-900 mt-2">Click to view vendor details</p>
-              </section>
-
-              {/* Venues Card */}
-              <section
-                className="bg-red-100 rounded-lg shadow p-6 cursor-pointer hover:bg-red-200 transition"
-                onClick={() => setActiveTab("venues")}
-              >
-                <h3 className="text-lg font-semibold mb-2">Venues</h3>
-                <p className="text-xs mb-2">Manage venue options</p>
-                <p className="text-xs text-red-900">Click to view venues</p>
-              </section>
-
-              {/* Schedule Card */}
-              <section
-                className="bg-yellow-100 rounded-lg shadow p-6 cursor-pointer hover:bg-yellow-200 transition"
-                onClick={() => setActiveTab("schedule")}
-              >
-                <h3 className="text-lg font-semibold mb-2">Schedule</h3>
-                <p className="text-xs text-yellow-900">Click to view schedule</p>
-              </section>
-
-              {/* Floor Plan Card */}
-              <section
-                className="bg-pink-100 rounded-lg shadow p-6 cursor-pointer hover:bg-pink-200 transition"
-                onClick={() => setActiveTab("floor")}
-              >
-                <h3 className="text-lg font-semibold mb-2">Floor Plan</h3>
-                <p className="text-xs mb-2">Venue layout and seating arrangement</p>
-                <p className="text-xs text-pink-900">Click to view</p>
-              </section>
-
-              {/* Documents Card */}
-              <section
-                className="bg-purple-100 rounded-lg shadow p-6 cursor-pointer hover:bg-purple-200 transition"
-                onClick={() => setActiveTab("documents")}
-              >
-                <h3 className="text-lg font-semibold mb-2">Documents</h3>
-                <p className="text-xs mb-2">View event documents</p>
-                <p className="text-xs text-purple-900">Click to view</p>
-              </section>
-            </section>
+          {showEditEventModal && (
+            <EditEventModal
+              event={event}
+              onClose={() => setShowEditEventModal(false)}
+              onSave={handleEditEventSave}
+            />
           )}
 
-          {/* Tab Modals */}
+          {/* Event Title and Details */}
+          <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">{event.title}</h2>
+          <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-4">
+            <p className="font-medium">{dayjs(event.date).format("DD MMM YYYY")}</p>
+            <p className="font-medium">
+              {event.startTime} - {event.endTime}
+            </p>
+            <p className="font-medium">{event.location}</p>
+          </div>
+          <p className="text-gray-700 leading-relaxed mb-8">{event.description}</p>
+
+          {/* Overview Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-teal-200">
+              <h4 className="font-semibold text-gray-700 mb-2">Total Guests</h4>
+              <p className="text-3xl font-bold text-teal-700 mb-2">{guestCount || 0}</p>
+              <p className="text-sm text-gray-600">
+                Accepted: {acceptedGuests} | Declined: {declinedGuests} | Pending: {pendingGuests}
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-blue-200">
+              <h4 className="font-semibold text-gray-700 mb-2">Vendors</h4>
+              <p className="text-3xl font-bold text-blue-700 mb-2">{vendors.length}</p>
+              <p className="text-sm text-gray-600">All categories</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-purple-200">
+              <h4 className="font-semibold text-gray-700 mb-2">Documents</h4>
+              <p className="text-3xl font-bold text-purple-700 mb-2">{documents.length}</p>
+              <p className="text-sm text-gray-600">Uploaded</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-emerald-200">
+              <h4 className="font-semibold text-gray-700 mb-2">Budget</h4>
+              <p className="text-3xl font-bold text-emerald-700 mb-2">R{event.budget || 0}</p>
+              <p className="text-sm text-gray-600">Total allocated</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-200 cursor-pointer border border-amber-200">
+              <h4 className="font-semibold text-gray-700 mb-2">Budget Usage</h4>
+              {event.budget ? (
+                <>
+                  <p className="text-3xl font-bold text-amber-700 mb-2">R{totalUsed.toFixed(2)}</p>
+                  <p className="text-sm text-gray-600">Remaining: R{remaining.toFixed(2)}</p>
+                </>
+              ) : (
+                <p className="text-sm text-gray-600">No budget set</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Tabs Section */}
+      <section className="max-w-7xl mx-auto px-6 mt-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          {/* Tabs Navigation */}
+          <div className="flex flex-wrap gap-2 mb-8 bg-gray-50 p-2 rounded-xl">
+            {[
+              { key: "overview", label: "Overview", color: "teal" },
+              { key: "rsvp", label: "RSVP", color: "teal" },
+              { key: "vendors", label: "Vendors", color: "blue" },
+              { key: "venues", label: "Venues", color: "rose" },
+              { key: "schedule", label: "Schedule", color: "amber" },
+              { key: "floor", label: "Floor Plan", color: "pink" },
+              { key: "documents", label: "Documents", color: "purple" },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+                  activeTab === tab.key ? `bg-${tab.color}-600 text-white shadow-md` : "text-gray-600 hover:bg-gray-100"
+                }`}
+                onClick={() => handleTabChange(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "overview" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* RSVP Card */}
+              <div
+                className="bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-200 border border-teal-200"
+                onClick={() => setActiveTab("rsvp")}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">RSVP Progress</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Progress: {acceptedGuests}/{guests.length || 0}
+                </p>
+                <div className="bg-gray-200 h-3 rounded-full mb-3 overflow-hidden">
+                  <div
+                    className="bg-teal-600 h-3 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${guests.length > 0 ? (acceptedGuests / guests.length) * 100 : 0}%`,
+                    }}
+                  ></div>
+                </div>
+                <p className="text-sm text-teal-700 font-medium">Click to view guest list</p>
+              </div>
+
+              {/* Weather Card Placeholder */}
+              <div className="bg-gradient-to-br from-sky-50 to-sky-100 rounded-xl shadow-md p-6 border border-sky-200">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Event Day Forecast</h3>
+                <p className="text-sm text-gray-600">Weather forecast will appear here</p>
+                  <WeatherCard eventDate={event.date} location={event.location} />
+              </div>
+
+              {/* Vendors Card */}
+              <div
+                className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-200 border border-blue-200"
+                onClick={() => setActiveTab("vendors")}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Vendors</h3>
+                <p className="text-sm text-gray-600 mb-3">Total Vendors: {vendors.length}</p>
+                <p className="text-sm text-blue-700 font-medium">Click to view vendor details</p>
+              </div>
+
+              {/* Venues Card */}
+              <div
+                className="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-200 border border-rose-200"
+                onClick={() => setActiveTab("venues")}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Venues</h3>
+                <p className="text-sm text-gray-600 mb-3">Manage venue options</p>
+                <p className="text-sm text-rose-700 font-medium">Click to view venues</p>
+              </div>
+
+              {/* Schedule Card */}
+              <div
+                className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-200 border border-amber-200"
+                onClick={() => setActiveTab("schedule")}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Schedule</h3>
+                <p className="text-sm text-amber-700 font-medium">Click to view schedule</p>
+              </div>
+
+              {/* Floor Plan Card */}
+              <div
+                className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-200 border border-pink-200"
+                onClick={() => setActiveTab("floor")}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Floor Plan</h3>
+                <p className="text-sm text-gray-600 mb-3">Venue layout and seating arrangement</p>
+                <p className="text-sm text-pink-700 font-medium">Click to view</p>
+              </div>
+
+              {/* Documents Card */}
+              <div
+                className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-200 border border-purple-200"
+                onClick={() => setActiveTab("documents")}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Documents</h3>
+                <p className="text-sm text-gray-600 mb-3">View event documents</p>
+                <p className="text-sm text-purple-700 font-medium">Click to view</p>
+              </div>
+            </div>
+          )}
+
           {activeTab === "rsvp" && (
             <RSVPModal eventId={event._id} guests={guests} onClose={() => setActiveTab("overview")} />
           )}
@@ -475,8 +502,8 @@ export default function EventDetails() {
           {activeTab === "documents" && (
             <DocumentsModal eventId={event._id} documents={documents} onClose={() => setActiveTab("overview")} />
           )}
-        </section>
+        </div>
       </section>
     </section>
-  );
+  )
 }

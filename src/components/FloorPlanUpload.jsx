@@ -1,68 +1,65 @@
-import React, { useState } from "react";
+"use client"
+
+import { useState } from "react"
+import { FiUpload, FiX, FiFile, FiAlertCircle } from "react-icons/fi"
+import { AiOutlineLoading } from "react-icons/ai"
 
 export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("");
-  const [error, setError] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [file, setFile] = useState(null)
+  const [fileName, setFileName] = useState("")
+  const [error, setError] = useState("")
+  const [uploading, setUploading] = useState(false)
 
-  const docType = "FloorPlan"; // fixed type
+  const docType = "FloorPlan"
 
-  // Handle file selection
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (!selectedFile) return;
+    const selectedFile = e.target.files[0]
+    if (!selectedFile) return
 
-    setFile(selectedFile);
-    setFileName(selectedFile.name.replace(/\.[^/.]+$/, "")); // remove extension
-    setError("");
-  };
+    setFile(selectedFile)
+    setFileName(selectedFile.name.replace(/\.[^/.]+$/, ""))
+    setError("")
+  }
 
-  // Remove file
   const handleRemoveFile = () => {
-    setFile(null);
-    setFileName("");
-    setError("");
-  };
+    setFile(null)
+    setFileName("")
+    setError("")
+  }
 
-  // Validate filename
   const validateFileName = (name) => {
-    if (!name.trim()) return "File name cannot be empty.";
-    if (/[<>:"/\\|?*]/.test(name)) return "File name contains invalid characters.";
-    return "";
-  };
+    if (!name.trim()) return "File name cannot be empty."
+    if (/[<>:"/\\|?*]/.test(name)) return "File name contains invalid characters."
+    return ""
+  }
 
-  // Handle upload
   const handleUpload = async () => {
     if (!file || !userId || !eventId) {
-      setError("Missing required information.");
-      return;
+      setError("Missing required information.")
+      return
     }
 
-    const validationError = validateFileName(fileName);
+    const validationError = validateFileName(fileName)
     if (validationError) {
-      setError(validationError);
-      return;
+      setError(validationError)
+      return
     }
 
-    setUploading(true);
-    setError("");
+    setUploading(true)
+    setError("")
 
-    const extension = file.name.includes(".")
-      ? file.name.substring(file.name.lastIndexOf("."))
-      : "";
+    const extension = file.name.includes(".") ? file.name.substring(file.name.lastIndexOf(".")) : ""
 
-    // Rename file if user changed filename
     const uploadFile =
       fileName.trim() && fileName.trim() !== file.name.replace(extension, "")
         ? new File([file], `${fileName.trim()}${extension}`, { type: file.type })
-        : file;
+        : file
 
-    const formData = new FormData();
-    formData.append("file", uploadFile);
-    formData.append("userId", userId);
-    formData.append("eventId", eventId);
-    formData.append("docType", docType);
+    const formData = new FormData()
+    formData.append("file", uploadFile)
+    formData.append("userId", userId)
+    formData.append("eventId", eventId)
+    formData.append("docType", docType)
 
     try {
       const res = await fetch(
@@ -70,77 +67,103 @@ export default function FloorPlanUpload({ userId, eventId, onUploadSuccess }) {
         {
           method: "POST",
           body: formData,
-        }
-      );
+        },
+      )
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) throw new Error("Upload failed")
 
-      alert("Upload successful!");
-
-      // Reset inputs
-      handleRemoveFile();
-
-      // Refresh floor plans in modal
-      if (onUploadSuccess) onUploadSuccess();
+      handleRemoveFile()
+      if (onUploadSuccess) onUploadSuccess()
     } catch (err) {
-      console.error("Upload error:", err);
-      setError("Failed to upload file. Please try again.");
+      console.error("Upload error:", err)
+      setError("Failed to upload file. Please try again.")
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-  };
+  }
 
   return (
-    <div className="p-4 border rounded-lg bg-gray-50">
-      <h4 className="text-lg font-semibold mb-2">Upload Floor Plan</h4>
+    <div className="p-6 border-2 border-dashed border-teal-200 rounded-xl bg-gradient-to-br from-teal-50 to-cyan-50 hover:border-teal-300 transition-all duration-300">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-2 bg-teal-100 rounded-lg">
+          <FiUpload className="w-5 h-5 text-teal-600" />
+        </div>
+        <h4 className="text-lg font-semibold text-gray-800">Upload Floor Plan</h4>
+      </div>
 
       {/* File input */}
-      <label className="block mb-2 font-medium text-sm">
-        Choose File
+      <label className="block mb-4">
+        <span className="block text-sm font-medium text-gray-700 mb-2">Choose File</span>
         <input
           type="file"
           onChange={handleFileChange}
-          className="block w-full mt-1"
+          className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 file:cursor-pointer cursor-pointer transition-all duration-200"
         />
       </label>
 
-      {/* Optional file name override */}
+      {/* File preview and name override */}
       {file && (
-        <div className="mb-2">
-          <label className="block font-medium text-sm">
-            File Name (optional)
+        <div className="mb-4 p-4 bg-white rounded-lg border border-teal-100 shadow-sm">
+          <div className="flex items-start gap-3 mb-3">
+            <FiFile className="w-5 h-5 text-teal-600 mt-1 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-800">{file.name}</p>
+              <p className="text-xs text-gray-500 mt-1">{(file.size / 1024).toFixed(2)} KB</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleRemoveFile}
+              className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors duration-200"
+            >
+              <FiX className="w-5 h-5" />
+            </button>
+          </div>
+
+          <label className="block">
+            <span className="block text-sm font-medium text-gray-700 mb-2">File Name (optional)</span>
             <input
               type="text"
               value={fileName}
               onChange={(e) => setFileName(e.target.value)}
-              className="block w-full border rounded p-2 mt-1"
+              placeholder="Enter custom file name"
+              className="block w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
             />
           </label>
-
-          {/* Remove file button */}
-          <button
-            type="button"
-            onClick={handleRemoveFile}
-            className="mt-2 px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-          >
-            Remove File
-          </button>
         </div>
       )}
 
       {/* Error message */}
-      {error && <p className="text-red-600 text-sm mb-2">{error}</p>}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+          <FiAlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
 
       {/* Upload button */}
       <button
         onClick={handleUpload}
         disabled={!file || uploading}
-        className={`px-4 py-2 rounded-lg text-white ${
-          uploading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
+        className={`w-full px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300 flex items-center justify-center gap-2 ${
+          uploading
+            ? "bg-gray-400 cursor-not-allowed"
+            : !file
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         }`}
       >
-        {uploading ? "Uploading..." : "Upload"}
+        {uploading ? (
+          <>
+            <AiOutlineLoading className="w-5 h-5 animate-spin" />
+            Uploading...
+          </>
+        ) : (
+          <>
+            <FiUpload className="w-5 h-5" />
+            Upload Floor Plan
+          </>
+        )}
       </button>
     </div>
-  );
+  )
 }
