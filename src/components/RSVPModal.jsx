@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { getGuests, deleteGuest } from "../backend/api/EventGuest"
-import AddGuestsModal from "./AddGuestsModal"
+import AddGuestsModal from "@/components/AddGuestsModal"
+import EditGuestModal from "@/components/EditGuestModal"
 import { FiX, FiSearch, FiDownload, FiRefreshCw, FiUserPlus, FiEdit2, FiTrash2, FiBell, FiMail } from "react-icons/fi"
 
 export default function RSVPModal({ guests: initialGuests, onClose, eventId, onAddGuests }) {
@@ -151,19 +152,21 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
   return (
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-        <section className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-7xl w-full relative max-h-[90vh] overflow-hidden flex flex-col">
+        <section className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 max-w-7xl w-full relative max-h-[90vh] overflow-hidden flex flex-col">
           <button
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded-full"
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded-full z-10"
             onClick={onClose}
           >
             <FiX className="w-6 h-6" />
           </button>
 
-          <h3 className="text-2xl font-bold mb-6 text-gray-900 border-b border-gray-200 pb-4">Guest List Management</h3>
+          <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 border-b border-gray-200 pb-3 sm:pb-4 pr-12">
+            Guest List Management
+          </h3>
 
-          <section className="flex flex-col lg:flex-row gap-3 mb-6">
+          <section className="flex flex-col gap-3 mb-4 sm:mb-6">
             {/* Search Input */}
-            <div className="relative flex-1">
+            <div className="relative w-full">
               <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
@@ -174,142 +177,164 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
               />
             </div>
 
-            {/* Filter Dropdown */}
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all bg-white min-w-[160px]"
-            >
-              <option value="All">All Statuses</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Pending">Pending</option>
-              <option value="Declined">Declined</option>
-            </select>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2">
+            {/* Filter and Actions Row */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+              {/* Filter Dropdown */}
               <select
-                value={exportType}
-                onChange={(e) => setExportType(e.target.value)}
-                className="px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all bg-white"
               >
-                <option value="CSV">CSV</option>
-                <option value="JSON">JSON</option>
+                <option value="All">All Statuses</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Pending">Pending</option>
+                <option value="Declined">Declined</option>
               </select>
-              <button
-                className="bg-teal-600 text-white px-4 py-2.5 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
-                onClick={handleExport}
-                type="button"
-              >
-                <FiDownload className="w-4 h-4" />
-                Export
-              </button>
-              <button
-                className="bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2 font-medium"
-                onClick={fetchGuests}
-                type="button"
-              >
-                <FiRefreshCw className="w-4 h-4" />
-              </button>
-              <button
-                className="bg-teal-600 text-white px-4 py-2.5 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 font-medium shadow-sm"
-                onClick={() => setShowAddGuestsModal(true)}
-                type="button"
-              >
-                <FiUserPlus className="w-4 h-4" />
-                Add Guests
-              </button>
+
+              {/* Action Buttons - Stack on mobile, row on larger screens */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:ml-auto">
+                {/* Export Row */}
+                <div className="flex gap-2">
+                  <select
+                    value={exportType}
+                    onChange={(e) => setExportType(e.target.value)}
+                    className="flex-1 sm:flex-none px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 bg-white text-sm"
+                  >
+                    <option value="CSV">CSV</option>
+                    <option value="JSON">JSON</option>
+                  </select>
+                  <button
+                    className="flex-1 sm:flex-none bg-teal-600 text-white px-4 py-2.5 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center gap-2 font-medium shadow-sm text-sm"
+                    onClick={handleExport}
+                    type="button"
+                  >
+                    <FiDownload className="w-4 h-4" />
+                    <span>Export</span>
+                  </button>
+                </div>
+
+                {/* Refresh and Add Buttons Row */}
+                <div className="flex gap-2">
+                  <button
+                    className="flex-none bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 font-medium text-sm"
+                    onClick={fetchGuests}
+                    type="button"
+                    title="Refresh"
+                  >
+                    <FiRefreshCw className="w-4 h-4" />
+                    <span className="sm:hidden">Refresh</span>
+                  </button>
+                  <button
+                    className="flex-1 sm:flex-none bg-teal-600 text-white px-4 py-2.5 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center gap-2 font-medium shadow-sm text-sm whitespace-nowrap"
+                    onClick={() => setShowAddGuestsModal(true)}
+                    type="button"
+                  >
+                    <FiUserPlus className="w-4 h-4" />
+                    <span>Add Guests</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </section>
 
-          <section className="flex-1 overflow-y-auto rounded-lg border border-gray-200">
-            <table className="w-full">
-              <thead className="bg-gradient-to-r from-teal-50 to-cyan-50 sticky top-0">
-                <tr>
-                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Name</th>
-                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Email</th>
-                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Phone</th>
-                  <th className="py-3 px-4 text-center text-sm font-semibold text-gray-700">Status</th>
-                  <th className="py-3 px-4 text-center text-sm font-semibold text-gray-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
-                {filteredGuests.length === 0 ? (
+          <section className="flex-1 overflow-auto rounded-lg border border-gray-200">
+            <div className="min-w-[640px]">
+              <table className="w-full">
+                <thead className="bg-gradient-to-r from-teal-50 to-cyan-50 sticky top-0">
                   <tr>
-                    <td colSpan={5} className="py-12 text-center text-gray-500">
-                      <div className="flex flex-col items-center gap-2">
-                        <FiUserPlus className="w-12 h-12 text-gray-300" />
-                        <p className="font-medium">No guests found</p>
-                        <p className="text-sm">Try adjusting your search or filters</p>
-                      </div>
-                    </td>
+                    <th className="py-3 px-3 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Name</th>
+                    <th className="py-3 px-3 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">
+                      Email
+                    </th>
+                    <th className="py-3 px-3 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">
+                      Phone
+                    </th>
+                    <th className="py-3 px-3 sm:px-4 text-center text-xs sm:text-sm font-semibold text-gray-700">
+                      Status
+                    </th>
+                    <th className="py-3 px-3 sm:px-4 text-center text-xs sm:text-sm font-semibold text-gray-700 min-w-[200px]">
+                      Actions
+                    </th>
                   </tr>
-                ) : (
-                  filteredGuests.map((guest, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                      <td className="py-3 px-4 text-sm font-medium text-gray-900">{guest.name}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{guest.email}</td>
-                      <td className="py-3 px-4 text-sm text-gray-600">{guest.phone}</td>
-                      <td className="py-3 px-4 text-center">
-                        <span
-                          className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
-                            guest.rsvpStatus === "Accepted"
-                              ? "bg-green-100 text-green-700"
-                              : guest.rsvpStatus === "Pending"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {guest.rsvpStatus}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex gap-2 justify-center items-center flex-wrap">
-                          <button
-                            className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors flex items-center gap-1"
-                            onClick={() => handleEditGuest(guest)}
-                          >
-                            <FiEdit2 className="w-3 h-3" />
-                            Edit
-                          </button>
-                          <button
-                            className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors flex items-center gap-1"
-                            onClick={() => handleRemoveGuest(guest._id)}
-                          >
-                            <FiTrash2 className="w-3 h-3" />
-                            Remove
-                          </button>
-                          {guest.rsvpStatus === "Pending" && (
-                            <button
-                              className="bg-purple-50 text-purple-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-purple-100 transition-colors flex items-center gap-1"
-                              onClick={() => handleRemindGuest(guest._id)}
-                            >
-                              <FiBell className="w-3 h-3" />
-                              Remind
-                            </button>
-                          )}
-                          {guest.rsvpStatus === "Declined" && (
-                            <button
-                              className="bg-gray-50 text-gray-600 px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-100 transition-colors flex items-center gap-1"
-                              onClick={() => handleReinviteGuest(guest._id)}
-                            >
-                              <FiMail className="w-3 h-3" />
-                              Re-invite
-                            </button>
-                          )}
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-100">
+                  {filteredGuests.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="py-12 text-center text-gray-500">
+                        <div className="flex flex-col items-center gap-2">
+                          <FiUserPlus className="w-12 h-12 text-gray-300" />
+                          <p className="font-medium">No guests found</p>
+                          <p className="text-sm">Try adjusting your search or filters</p>
                         </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    filteredGuests.map((guest, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                        <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-900">{guest.name}</td>
+                        <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-gray-600">{guest.email}</td>
+                        <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-gray-600">{guest.phone}</td>
+                        <td className="py-3 px-3 sm:px-4 text-center">
+                          <span
+                            className={`inline-flex px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${
+                              guest.rsvpStatus === "Accepted"
+                                ? "bg-green-100 text-green-700"
+                                : guest.rsvpStatus === "Pending"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {guest.rsvpStatus}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 sm:px-4">
+                          <div className="flex gap-1.5 justify-center items-center flex-wrap">
+                            <button
+                              className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-blue-100 transition-colors flex items-center gap-1 whitespace-nowrap"
+                              onClick={() => handleEditGuest(guest)}
+                            >
+                              <FiEdit2 className="w-3 h-3" />
+                              <span className="hidden sm:inline">Edit</span>
+                            </button>
+                            <button
+                              className="bg-red-50 text-red-600 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-red-100 transition-colors flex items-center gap-1 whitespace-nowrap"
+                              onClick={() => handleRemoveGuest(guest._id)}
+                            >
+                              <FiTrash2 className="w-3 h-3" />
+                              <span className="hidden sm:inline">Remove</span>
+                            </button>
+                            {guest.rsvpStatus === "Pending" && (
+                              <button
+                                className="bg-purple-50 text-purple-600 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-purple-100 transition-colors flex items-center gap-1 whitespace-nowrap"
+                                onClick={() => handleRemindGuest(guest._id)}
+                              >
+                                <FiBell className="w-3 h-3" />
+                                <span className="hidden sm:inline">Remind</span>
+                              </button>
+                            )}
+                            {guest.rsvpStatus === "Declined" && (
+                              <button
+                                className="bg-gray-50 text-gray-600 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-100 transition-colors flex items-center gap-1 whitespace-nowrap"
+                                onClick={() => handleReinviteGuest(guest._id)}
+                              >
+                                <FiMail className="w-3 h-3" />
+                                <span className="hidden sm:inline">Re-invite</span>
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </section>
 
-          <section className="mt-6 pt-6 border-t border-gray-200">
+          <section className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-semibold text-gray-700">RSVP Progress</h4>
-              <p className="text-sm text-gray-600">
+              <h4 className="text-xs sm:text-sm font-semibold text-gray-700">RSVP Progress</h4>
+              <p className="text-xs sm:text-sm text-gray-600">
                 <span className="font-semibold text-teal-600">{acceptedCount}</span> / {guests.length} accepted
               </p>
             </div>
@@ -341,89 +366,5 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
         <EditGuestModal guest={editingGuest} onClose={() => setShowEditModal(false)} onSave={handleUpdateGuest} />
       )}
     </>
-  )
-}
-
-function EditGuestModal({ guest, onClose, onSave }) {
-  const [form, setForm] = useState({ ...guest })
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    onSave(form)
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-[60]">
-      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h3 className="text-xl font-bold mb-6 text-gray-900">Edit Guest</h3>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Guest name"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="guest@example.com"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="+1 (555) 000-0000"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">RSVP Status</label>
-            <select
-              name="rsvpStatus"
-              value={form.rsvpStatus}
-              onChange={handleChange}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all bg-white"
-            >
-              <option value="Pending">Pending</option>
-              <option value="Accepted">Accepted</option>
-              <option value="Declined">Declined</option>
-            </select>
-          </div>
-          <div className="flex justify-end gap-3 mt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-5 py-2.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors font-medium"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2.5 rounded-lg bg-teal-600 text-white hover:bg-teal-700 transition-colors font-medium shadow-sm"
-            >
-              Save Changes
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
   )
 }
