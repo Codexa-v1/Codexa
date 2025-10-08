@@ -28,7 +28,7 @@ export function addGuest(eventId, guest) {
 }
 
 export function updateGuest(eventId, guestId, guest) {
-    return fetch(`${url}/event/${eventId}/guest/${guestId}`, {
+    return fetch(`${url}/api/guests/event/${eventId}/guest/${guestId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(guest),
@@ -41,16 +41,18 @@ export function updateGuest(eventId, guestId, guest) {
         });
 }
 
-export function deleteGuest(eventId, guestId) {
-    return fetch(`${url}/event/${eventId}/guest/${guestId}`, {
+export async function deleteGuest(eventId, guestId) {
+    const response = await fetch(`${url}/api/guests/event/${eventId}/guest/${guestId}`, {
         method: 'DELETE',
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete guest');
-            }
-            return { success: true };
-        });
+    });
+
+    if (!response.ok) {
+        const text = await response.text(); // optional: see error from backend
+        throw new Error(`Failed to delete guest: ${text}`);
+    }
+
+    return { success: true };
 }
+
 
 export default { getGuests, addGuest, updateGuest, deleteGuest };
