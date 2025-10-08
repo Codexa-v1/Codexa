@@ -109,7 +109,8 @@ const Navbar = () => {
             <button
               className="w-full text-left px-4 py-3 hover:bg-teal-50 text-gray-700 transition-colors duration-150 font-medium"
               onClick={() => {
-                /* TODO: navigate to settings */
+                navigate("/settings")
+                setDropdownOpen(false)
               }}
             >
               Settings

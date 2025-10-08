@@ -30,9 +30,8 @@ export const Header = () => {
               <>
                 {/* Sign In */}
                 <Button
-                  variant="ghost"
                   size="sm"
-                  className="hidden sm:inline-flex"
+                  className="sm:inline-flex"
                   onClick={() =>
                     loginWithRedirect({ authorizationParams: { redirectUri: window.location.origin } })
                   }

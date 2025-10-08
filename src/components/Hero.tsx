@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, FileText, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const Hero = () => {
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
+
+   const handleClick = async () => {
+    if (isAuthenticated) {
+      navigate("/home");
+    } else {
+      await loginWithRedirect();
+    }
+  };
+
   return (
     <section className="gradient-hero min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Decorative Elements */}
@@ -31,31 +43,15 @@ export const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link to="/dashboard">
-              <Button variant="hero" size="lg">
-                Get Started Free
-              </Button>
-            </Link>
-            <Button variant="outline" size="lg">
-              Watch Demo
+            <Button
+              variant="hero"
+              size="lg"
+              onClick={handleClick}
+            >
+              Get Started Free
             </Button>
           </div>
-
-          {/* Stats */}
-          <div className="flex gap-8 pt-8 border-t border-border/50">
-            <div>
-              <div className="text-3xl font-bold text-primary">10K+</div>
-              <div className="text-sm text-muted-foreground">Events Planned</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary">98%</div>
-              <div className="text-sm text-muted-foreground">Satisfaction</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-primary">24/7</div>
-              <div className="text-sm text-muted-foreground">Support</div>
-            </div>
-          </div>
+          
         </div>
 
         {/* Right Content - Feature Preview */}

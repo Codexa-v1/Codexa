@@ -15,6 +15,7 @@ import "./App.css";
 import "./index.css";
 import RSVPPage from "./pages/RSVPPage";
 import InvitePage from "./pages/InvitePage";
+import SettingsPage from "./pages/SettingsPage";
 
 function PrivateRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -33,6 +34,15 @@ function App() {
           element={
             <PrivateRoute>
               <Home />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <PrivateRoute>
+              <SettingsPage />
             </PrivateRoute>
           }
         />
