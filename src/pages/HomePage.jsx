@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar"
 import Calendar from "@/components/CalendarBox"
 import EventPopup from "@/components/EventPopup"
 import EventCard from "@/components/EventCard"
+import AIEventGeneratorModal from "@/components/AIEventGeneratorModal"
 import { useEffect, useState } from "react"
 import { getAllEvents, deleteEvent } from "@/backend/api/EventData"
 import dayjs from "dayjs"
@@ -15,6 +16,7 @@ import { FiCalendar, FiClock, FiCheckCircle, FiTrendingUp } from "react-icons/fi
 const HomePage = () => {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false)
   const { user, isAuthenticated } = useAuth0()
   const [events, setEvents] = useState([])
   const [confirmDeleteId, setConfirmDeleteId] = useState(null)
@@ -31,6 +33,14 @@ const HomePage = () => {
   const handleDayClick = (date) => {
     setSelectedDate(date)
     setIsModalOpen(true)
+  }
+
+  const handleEventCreated = () => {
+    if (isAuthenticated && user) {
+      getAllEvents(user.sub)
+        .then((data) => setEvents(data))
+        .catch((err) => console.error("Failed to fetch events:", err))
+    }
   }
 
   const upcomingEvents = events.filter(
@@ -62,13 +72,21 @@ const HomePage = () => {
           <h2 className="text-3xl lg:text-5xl font-bold text-teal-900 tracking-tight">
             Welcome back, <span className="text-teal-700">{user?.name}</span>!
           </h2>
-          <button
-            className="bg-teal-700 text-white px-6 py-3 flex items-center gap-2.5 rounded-xl hover:bg-teal-800 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold text-base"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <FaCalendarPlus className="text-lg" />
-            Add New Event
-          </button>
+          <div className="flex gap-3 flex-wrap">
+            <button
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 flex items-center gap-2.5 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold text-base"
+              onClick={() => setIsAIModalOpen(true)}
+            >
+              AI Generate Event
+            </button>
+            <button
+              className="bg-teal-700 text-white px-6 py-3 flex items-center gap-2.5 rounded-xl hover:bg-teal-800 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold text-base"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <FaCalendarPlus className="text-lg" />
+              Add New Event
+            </button>
+          </div>
         </section>
 
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
@@ -132,6 +150,11 @@ const HomePage = () => {
               <EventPopup onClose={() => setIsModalOpen(false)} selectedDate={selectedDate} />
             </section>
           </>
+        )}
+
+        {/* AI Event Generator Modal */}
+        {isAIModalOpen && (
+          <AIEventGeneratorModal onClose={() => setIsAIModalOpen(false)} onEventCreated={handleEventCreated} />
         )}
 
         <section className="flex gap-6 flex-col lg:flex-row">
