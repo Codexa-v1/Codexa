@@ -35,7 +35,7 @@ export default function DocumentUpload({ userId, eventId, onUploadSuccess }) {
       formData.append("docType", docType)
 
       const res = await fetch(
-        "https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/azure/upload-user-document",
+        "https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/azure/upload",
         {
           method: "POST",
           body: formData,
