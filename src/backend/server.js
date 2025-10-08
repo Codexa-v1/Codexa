@@ -1,6 +1,4 @@
-
-import dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import connectDB from './mongodb.js';
@@ -11,9 +9,14 @@ import vendorRouter from './routes/EventVendor.js';
 import venueRouter from './routes/EventVenue.js';
 import scheduleRouter from './routes/EventSchedule.js';
 import azureRouter from './routes/AzureRoutes.js';
+import userRouter from './routes/Users.js';
+
+import { handleAuthError } from "./middleware/auth.js";
+import { a } from 'framer-motion/client';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
 
 // ✅ Allow both localhost (dev) and Azure Static Web Apps (prod)
 app.use(cors({
@@ -43,6 +46,9 @@ app.use('/api/vendors', vendorRouter);
 app.use('/api/venues', venueRouter);
 app.use('/api/schedules', scheduleRouter);
 app.use('/api/azure', azureRouter);
+app.use('/api/users', userRouter);
+
+app.use(handleAuthError);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(port, () => {
