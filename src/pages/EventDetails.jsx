@@ -269,7 +269,13 @@ export default function EventDetails() {
                 {event.status}
               </span>
               <span className="bg-amber-100 text-amber-800 text-sm font-semibold px-4 py-2 rounded-full">
-                {daysToGo} days to go
+                {daysToGo === 0
+                  ? "Tomorrow"
+                  : daysToGo === 1
+                  ? "1 day left"
+                  : daysToGo < 0
+                  ? "Closed"
+                  : `${daysToGo} days to go`}
               </span>
             </div>
             <div className="flex flex-wrap gap-3">

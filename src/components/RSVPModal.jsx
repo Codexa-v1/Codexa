@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { getGuests, deleteGuest } from "../backend/api/EventGuest"
-import AddGuestsModal from "@/components/AddGuestsModal"
-import EditGuestModal from "@/components/EditGuestModal"
+import AddGuestsModal from "./AddGuestsModal"
+import EditGuestModal from "./EditGuestModal"
 import { FiX, FiSearch, FiDownload, FiRefreshCw, FiUserPlus, FiEdit2, FiTrash2, FiBell, FiMail } from "react-icons/fi"
+import { AiOutlineLoading } from "react-icons/ai"
 
 export default function RSVPModal({ guests: initialGuests, onClose, eventId, onAddGuests }) {
   const navigate = useNavigate()
@@ -16,24 +17,26 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
   const [showAddGuestsModal, setShowAddGuestsModal] = useState(false)
   const [editingGuest, setEditingGuest] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [selectedGuests, setSelectedGuests] = useState(new Set())
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isRemindingAll, setIsRemindingAll] = useState(false)
+  const [isReinvitingAll, setIsReinvitingAll] = useState(false)
 
-  // Fetch guests function (reusable)
   const fetchGuests = async () => {
     if (!eventId) return
     try {
       const data = await getGuests(eventId)
       setGuests(data)
+      setSelectedGuests(new Set())
     } catch (error) {
       console.error(error)
     }
   }
 
-  // Initial fetch
   useEffect(() => {
     fetchGuests()
   }, [eventId])
 
-  // Remove guest
   const handleRemoveGuest = async (guestId) => {
     if (!eventId) return
     if (!confirm("Are you sure you want to remove this guest?")) return
@@ -45,7 +48,50 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     }
   }
 
-  // Remind a guest
+  const handleBulkDelete = async () => {
+    if (selectedGuests.size === 0) return
+    if (!confirm(`Are you sure you want to remove ${selectedGuests.size} guest(s)?`)) return
+
+    setIsDeleting(true)
+    try {
+      await Promise.all(Array.from(selectedGuests).map((guestId) => deleteGuest(eventId, guestId)))
+      await fetchGuests()
+      alert(`Successfully removed ${selectedGuests.size} guest(s)`)
+    } catch (error) {
+      console.error(error)
+      alert("Failed to remove some guests. Please try again.")
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const toggleGuestSelection = (guestId) => {
+    const newSelection = new Set(selectedGuests)
+    if (newSelection.has(guestId)) {
+      newSelection.delete(guestId)
+    } else {
+      newSelection.add(guestId)
+    }
+    setSelectedGuests(newSelection)
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedGuests.size === filteredGuests.length) {
+      setSelectedGuests(new Set())
+    } else {
+      setSelectedGuests(new Set(filteredGuests.map((g) => g._id)))
+    }
+  }
+
+  const filteredGuests = guests.filter((guest) => {
+    const matchesStatus = filterStatus === "All" || guest.rsvpStatus === filterStatus
+    const matchesSearch =
+      guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      guest.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      guest.phone.toLowerCase().includes(searchTerm.toLowerCase())
+    return matchesStatus && matchesSearch
+  })
+
   const handleRemindGuest = async (guestId) => {
     try {
       const res = await fetch(
@@ -60,7 +106,6 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     }
   }
 
-  // Re-invite a guest
   const handleReinviteGuest = async (guestId) => {
     try {
       const res = await fetch(
@@ -76,7 +121,6 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     }
   }
 
-  // Edit guest
   const handleEditGuest = (guest) => {
     setEditingGuest(guest)
     setShowEditModal(true)
@@ -103,17 +147,6 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     }
   }
 
-  // Filtering
-  const filteredGuests = guests.filter((guest) => {
-    const matchesStatus = filterStatus === "All" || guest.rsvpStatus === filterStatus
-    const matchesSearch =
-      guest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      guest.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      guest.phone.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchesStatus && matchesSearch
-  })
-
-  // Export
   const handleExport = () => {
     if (exportType === "CSV") {
       const csvRows = [
@@ -146,8 +179,93 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
     }
   }
 
+  const handleRemindAll = async () => {
+    const pendingGuests = guests.filter((g) => g.rsvpStatus === "Pending")
+    if (pendingGuests.length === 0) {
+      alert("No pending guests to remind.")
+      return
+    }
+
+    if (!confirm(`Send reminders to ${pendingGuests.length} pending guest(s)?`)) return
+
+    setIsRemindingAll(true)
+    let successCount = 0
+    let failCount = 0
+
+    try {
+      for (const guest of pendingGuests) {
+        try {
+          const res = await fetch(
+            `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}/guest/${guest._id}/remind`,
+            { method: "POST" },
+          )
+          if (res.ok) {
+            successCount++
+          } else {
+            failCount++
+          }
+        } catch (err) {
+          console.error(`Failed to remind guest ${guest._id}:`, err)
+          failCount++
+        }
+      }
+
+      if (successCount > 0) {
+        alert(`Successfully sent ${successCount} reminder(s)${failCount > 0 ? `. ${failCount} failed.` : "!"}`)
+      } else {
+        alert("Failed to send reminders. Please try again.")
+      }
+    } finally {
+      setIsRemindingAll(false)
+    }
+  }
+
+  const handleReinviteAll = async () => {
+    const declinedGuests = guests.filter((g) => g.rsvpStatus === "Declined")
+    if (declinedGuests.length === 0) {
+      alert("No declined guests to re-invite.")
+      return
+    }
+
+    if (!confirm(`Re-invite ${declinedGuests.length} declined guest(s)?`)) return
+
+    setIsReinvitingAll(true)
+    let successCount = 0
+    let failCount = 0
+
+    try {
+      for (const guest of declinedGuests) {
+        try {
+          const res = await fetch(
+            `https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/${eventId}/guest/${guest._id}/reinvite`,
+            { method: "POST" },
+          )
+          if (res.ok) {
+            successCount++
+          } else {
+            failCount++
+          }
+        } catch (err) {
+          console.error(`Failed to re-invite guest ${guest._id}:`, err)
+          failCount++
+        }
+      }
+
+      if (successCount > 0) {
+        alert(`Successfully re-invited ${successCount} guest(s)${failCount > 0 ? `. ${failCount} failed.` : "!"}`)
+        fetchGuests()
+      } else {
+        alert("Failed to re-invite guests. Please try again.")
+      }
+    } finally {
+      setIsReinvitingAll(false)
+    }
+  }
+
   const acceptedCount = guests.filter((g) => g.rsvpStatus === "Accepted").length
   const acceptanceRate = guests.length > 0 ? (acceptedCount / guests.length) * 100 : 0
+  const pendingCount = guests.filter((g) => g.rsvpStatus === "Pending").length
+  const declinedCount = guests.filter((g) => g.rsvpStatus === "Declined").length
 
   return (
     <>
@@ -235,6 +353,59 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                 </div>
               </div>
             </div>
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                onClick={handleRemindAll}
+                disabled={isRemindingAll || pendingCount === 0}
+                className="flex-1 bg-purple-600 text-white px-4 py-2.5 rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 font-medium shadow-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                type="button"
+              >
+                {isRemindingAll ? (
+                  <>
+                    <AiOutlineLoading className="w-4 h-4 animate-spin" />
+                    <span>Sending Reminders...</span>
+                  </>
+                ) : (
+                  <>
+                    <FiBell className="w-4 h-4" />
+                    <span>Remind All Pending ({pendingCount})</span>
+                  </>
+                )}
+              </button>
+              <button
+                onClick={handleReinviteAll}
+                disabled={isReinvitingAll || declinedCount === 0}
+                className="flex-1 bg-gray-600 text-white px-4 py-2.5 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 font-medium shadow-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                type="button"
+              >
+                {isReinvitingAll ? (
+                  <>
+                    <AiOutlineLoading className="w-4 h-4 animate-spin" />
+                    <span>Re-inviting...</span>
+                  </>
+                ) : (
+                  <>
+                    <FiMail className="w-4 h-4" />
+                    <span>Re-invite All Declined ({declinedCount})</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {selectedGuests.size > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-center justify-between">
+                <p className="text-sm font-medium text-red-900">{selectedGuests.size} guest(s) selected</p>
+                <button
+                  onClick={handleBulkDelete}
+                  disabled={isDeleting}
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <FiTrash2 className="w-4 h-4" />
+                  {isDeleting ? "Removing..." : "Remove Selected"}
+                </button>
+              </div>
+            )}
           </section>
 
           <section className="flex-1 overflow-auto rounded-lg border border-gray-200">
@@ -242,6 +413,14 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
               <table className="w-full">
                 <thead className="bg-gradient-to-r from-teal-50 to-cyan-50 sticky top-0">
                   <tr>
+                    <th className="py-3 px-3 sm:px-4 text-center w-12">
+                      <input
+                        type="checkbox"
+                        checked={filteredGuests.length > 0 && selectedGuests.size === filteredGuests.length}
+                        onChange={toggleSelectAll}
+                        className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                      />
+                    </th>
                     <th className="py-3 px-3 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">Name</th>
                     <th className="py-3 px-3 sm:px-4 text-left text-xs sm:text-sm font-semibold text-gray-700">
                       Email
@@ -260,7 +439,7 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                 <tbody className="bg-white divide-y divide-gray-100">
                   {filteredGuests.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-gray-500">
+                      <td colSpan={6} className="py-12 text-center text-gray-500">
                         <div className="flex flex-col items-center gap-2">
                           <FiUserPlus className="w-12 h-12 text-gray-300" />
                           <p className="font-medium">No guests found</p>
@@ -271,6 +450,14 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
                   ) : (
                     filteredGuests.map((guest, idx) => (
                       <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                        <td className="py-3 px-3 sm:px-4 text-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedGuests.has(guest._id)}
+                            onChange={() => toggleGuestSelection(guest._id)}
+                            className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                          />
+                        </td>
                         <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-900">{guest.name}</td>
                         <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-gray-600">{guest.email}</td>
                         <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-gray-600">{guest.phone}</td>
@@ -354,9 +541,9 @@ export default function RSVPModal({ guests: initialGuests, onClose, eventId, onA
         <AddGuestsModal
           onClose={() => setShowAddGuestsModal(false)}
           eventId={eventId}
-          onGuestsAdded={(newGuests) => {
-            setGuests([...guests, ...newGuests])
-            if (onAddGuests) onAddGuests(newGuests)
+          onGuestsUpdated={() => {
+            fetchGuests()
+            if (onAddGuests) onAddGuests()
           }}
         />
       )}

@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import { addGuest, getGuests } from "../backend/api/EventGuest"
+import { useState, useEffect, useRef } from "react"
+import { addGuest } from "../backend/api/EventGuest"
 import { AiOutlineLoading, AiOutlineClose, AiOutlineUserAdd, AiOutlineUpload, AiOutlineDownload } from "react-icons/ai"
+import { FiTrash2 } from "react-icons/fi"
 
 export default function AddGuestsModal({ onClose, onGuestsUpdated, eventId }) {
   const [form, setForm] = useState({
@@ -15,6 +16,17 @@ export default function AddGuestsModal({ onClose, onGuestsUpdated, eventId }) {
   const [guests, setGuests] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [showReassurance, setShowReassurance] = useState(false)
+  const [selectedIndices, setSelectedIndices] = useState(new Set())
+  const reassuranceTimerRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (reassuranceTimerRef.current) {
+        clearTimeout(reassuranceTimerRef.current)
+      }
+    }
+  }, [])
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -74,6 +86,48 @@ export default function AddGuestsModal({ onClose, onGuestsUpdated, eventId }) {
     reader.readAsText(file)
   }
 
+  function toggleGuestSelection(index) {
+    setSelectedIndices((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(index)) {
+        newSet.delete(index)
+      } else {
+        newSet.add(index)
+      }
+      return newSet
+    })
+  }
+
+  function toggleSelectAll() {
+    if (selectedIndices.size === guests.length) {
+      setSelectedIndices(new Set())
+    } else {
+      setSelectedIndices(new Set(guests.map((_, i) => i)))
+    }
+  }
+
+  function handleRemoveGuest(index) {
+    setGuests((prev) => prev.filter((_, i) => i !== index))
+    setSelectedIndices((prev) => {
+      const newSet = new Set(prev)
+      newSet.delete(index)
+      const adjustedSet = new Set()
+      newSet.forEach((i) => {
+        if (i > index) adjustedSet.add(i - 1)
+        else if (i < index) adjustedSet.add(i)
+      })
+      return adjustedSet
+    })
+  }
+
+  function handleRemoveSelected() {
+    if (selectedIndices.size === 0) return
+
+    const indicesToRemove = Array.from(selectedIndices).sort((a, b) => b - a)
+    setGuests((prev) => prev.filter((_, i) => !selectedIndices.has(i)))
+    setSelectedIndices(new Set())
+  }
+
   async function handleSaveAll() {
     if (guests.length === 0) return
 
@@ -85,6 +139,11 @@ export default function AddGuestsModal({ onClose, onGuestsUpdated, eventId }) {
 
     setLoading(true)
     setError(null)
+    setShowReassurance(false)
+
+    reassuranceTimerRef.current = setTimeout(() => {
+      setShowReassurance(true)
+    }, 5000)
 
     try {
       const savedGuests = []
@@ -93,17 +152,20 @@ export default function AddGuestsModal({ onClose, onGuestsUpdated, eventId }) {
         savedGuests.push(saved)
       }
 
-      const updatedGuests = await getGuests(eventId)
-
-      if (onGuestsUpdated) onGuestsUpdated(updatedGuests)
+      if (onGuestsUpdated) {
+        onGuestsUpdated()
+      }
       setGuests([])
-      window.location.reload()
       onClose()
     } catch (err) {
       setError(err.message || "Failed to save guests.")
       console.error(err)
     } finally {
+      if (reassuranceTimerRef.current) {
+        clearTimeout(reassuranceTimerRef.current)
+      }
       setLoading(false)
+      setShowReassurance(false)
     }
   }
 
@@ -126,11 +188,18 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
         <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm z-50">
           <AiOutlineLoading className="w-12 h-12 text-teal-500 animate-spin" />
           <span className="mt-4 text-white text-lg font-semibold">Saving guests...</span>
+          {showReassurance && (
+            <div className="mt-6 px-6 py-4 bg-teal-500/20 backdrop-blur-md border border-teal-400/30 rounded-xl max-w-md text-center animate-fade-in">
+              <p className="text-white text-sm font-medium">
+                Still working... Adding {guests.length} {guests.length === 1 ? "guest" : "guests"}.
+              </p>
+              <p className="text-teal-200 text-xs mt-1">This may take a moment. Please don't close this window.</p>
+            </div>
+          )}
         </div>
       )}
 
       <section className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-4xl w-full relative max-h-[90vh] overflow-y-auto">
-        {/* Close button */}
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors p-2 hover:bg-gray-100 rounded-full"
           onClick={onClose}
@@ -139,7 +208,6 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
           <AiOutlineClose className="w-6 h-6" />
         </button>
 
-        {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <div className="p-3 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl">
             <AiOutlineUserAdd className="w-6 h-6 text-white" />
@@ -151,7 +219,6 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">{error}</div>
         )}
 
-        {/* Manual Guest Form */}
         <form onSubmit={handleAddGuest} className="space-y-4 mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -231,7 +298,6 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
           </button>
         </form>
 
-        {/* CSV Upload Section */}
         <div className="border-t border-gray-200 pt-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
             <AiOutlineUpload className="w-5 h-5 text-teal-600" />
@@ -263,7 +329,21 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
           </div>
         </div>
 
-        {/* Guest Preview Table */}
+        {guests.length > 0 && selectedIndices.size > 0 && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center justify-between">
+            <span className="text-red-700 font-medium">
+              {selectedIndices.size} {selectedIndices.size === 1 ? "guest" : "guests"} selected
+            </span>
+            <button
+              onClick={handleRemoveSelected}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 text-sm font-medium"
+            >
+              <FiTrash2 className="w-4 h-4" />
+              Remove Selected
+            </button>
+          </div>
+        )}
+
         {guests.length > 0 && (
           <div className="border-t border-gray-200 pt-6">
             <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -276,16 +356,33 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
+                    <th className="px-4 py-3 text-left">
+                      <input
+                        type="checkbox"
+                        checked={guests.length > 0 && selectedIndices.size === guests.length}
+                        onChange={toggleSelectAll}
+                        className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                      />
+                    </th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700">Name</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700">Email</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700">Phone</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700">RSVP</th>
                     <th className="px-4 py-3 text-left font-semibold text-gray-700">Dietary</th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {guests.map((g, i) => (
                     <tr key={i} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedIndices.has(i)}
+                          onChange={() => toggleGuestSelection(i)}
+                          className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+                        />
+                      </td>
                       <td className="px-4 py-3 font-medium text-gray-900">{g.name}</td>
                       <td className="px-4 py-3 text-gray-600">{g.email}</td>
                       <td className="px-4 py-3 text-gray-600">{g.phone || "-"}</td>
@@ -303,6 +400,15 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
                         </span>
                       </td>
                       <td className="px-4 py-3 text-gray-600">{g.dietaryPreferences || "-"}</td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => handleRemoveGuest(i)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Remove guest"
+                        >
+                          <FiTrash2 className="w-4 h-4" />
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -311,7 +417,6 @@ Bob,0987654321,bob@email.com,Declined,Gluten-free`
           </div>
         )}
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
           <button
             type="button"
