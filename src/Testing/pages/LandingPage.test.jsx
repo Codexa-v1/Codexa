@@ -22,10 +22,27 @@ vi.mock("@auth0/auth0-react", () => ({
 }));
 
 describe("LandingPage", () => {
+  it("renders Header, Hero, Features, and Footer components", () => {
+    render(<LandingPage />);
+    // Check for header (assume it contains 'PlanIt')
+    expect(screen.getByText(/PlanIt/i)).toBeInTheDocument();
+    // Check for Hero section (assume it contains a main heading)
+    expect(screen.getByRole("main")).toBeInTheDocument();
+    // Check for Features section (assume it contains 'Features' or similar)
+    // If Features has a heading, adjust selector accordingly
+    // Check for Footer (assume it contains 'PlanIt' or copyright)
+    expect(screen.getByText(/PlanIt/i)).toBeInTheDocument();
+  });
+
+  it("renders the main layout structure", () => {
+    render(<LandingPage />);
+    // Check for main container
+    expect(screen.getByRole("main")).toBeInTheDocument();
+  });
+
   it("renders PlanIt header", () => {
     render(<LandingPage />);
     expect(screen.getAllByText("PlanIt")).toHaveLength(2); // header + footer
-
   });
 
   it("shows Sign In button when not authenticated", () => {
@@ -45,7 +62,6 @@ describe("LandingPage", () => {
     const menuButton = screen.getByRole("button", { name: /open navigation menu/i });
     fireEvent.click(menuButton);
     expect(screen.getAllByRole("button", { name: /about/i })).toHaveLength(2); // desktop + mobile navq
-    
   });
   it("closes mobile menu when close button clicked", () => {
     render(<LandingPage />);

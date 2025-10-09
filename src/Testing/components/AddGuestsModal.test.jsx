@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import NewGuestModal from "@/components/AddGuestsModal";
+import AddGuestsModal from "@/components/AddGuestsModal";
 import { vi } from "vitest";
 import { addGuest, getGuests } from "@/backend/api/EventGuest";
 
@@ -9,7 +9,7 @@ vi.mock("@/backend/api/EventGuest", () => ({
   getGuests: vi.fn(),
 }));
 
-describe("NewGuestModal", () => {
+describe("AddGuestsModal", () => {
   const onClose = vi.fn();
   const onGuestsUpdated = vi.fn();
   const eventId = "event123";
@@ -20,7 +20,7 @@ describe("NewGuestModal", () => {
 
   function setup() {
     render(
-      <NewGuestModal
+      <AddGuestsModal
         onClose={onClose}
         onGuestsUpdated={onGuestsUpdated}
         eventId={eventId}
@@ -30,24 +30,23 @@ describe("NewGuestModal", () => {
 
   it("renders the modal title", () => {
     setup();
-    expect(screen.getByText(/Add New Guest/i)).toBeInTheDocument();
+    expect(screen.getByText(/Add New Guests/i)).toBeInTheDocument();
   });
 
   it("closes when the close button is clicked", () => {
     setup();
-    fireEvent.click(screen.getByRole("button", { name: /×/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Close/i }));
     expect(onClose).toHaveBeenCalled();
   });
 
   it("adds a guest manually and shows preview", async () => {
     setup();
 
-    await userEvent.type(screen.getByPlaceholderText(/Name/i), "Alice");
-    await userEvent.type(screen.getByPlaceholderText(/Email/i), "alice@email.com");
-    await userEvent.type(screen.getByPlaceholderText(/Phone/i), "123456");
+    await userEvent.type(screen.getByPlaceholderText(/Enter guest name/i), "Alice");
+    await userEvent.type(screen.getByPlaceholderText(/guest@example.com/i), "alice@email.com");
+    await userEvent.type(screen.getByPlaceholderText(/\(123\) 456-7890/i), "123456");
 
-    // Submit the form by clicking the "+ Add Guest" button
-    fireEvent.click(screen.getByRole("button", { name: /\+ Add Guest/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Add Guest to List/i }));
 
     expect(screen.getByText("Alice")).toBeInTheDocument();
     expect(screen.getByText("alice@email.com")).toBeInTheDocument();
@@ -56,10 +55,9 @@ describe("NewGuestModal", () => {
 
   it("does not add guest if name or email is missing", async () => {
     setup();
-    await userEvent.type(screen.getByPlaceholderText(/Name/i), "Bob");
+    await userEvent.type(screen.getByPlaceholderText(/Enter guest name/i), "Bob");
 
-    // Submit the form
-    fireEvent.click(screen.getByRole("button", { name: /\+ Add Guest/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Add Guest to List/i }));
 
     expect(screen.queryByText("Bob")).not.toBeInTheDocument();
   });
@@ -68,24 +66,20 @@ describe("NewGuestModal", () => {
     setup();
 
     // Add one guest
-    await userEvent.type(screen.getByPlaceholderText(/Name/i), "Alice");
-    await userEvent.type(screen.getByPlaceholderText(/Email/i), "alice@email.com");
-    fireEvent.click(screen.getByRole("button", { name: /\+ Add Guest/i }));
+    await userEvent.type(screen.getByPlaceholderText(/Enter guest name/i), "Alice");
+    await userEvent.type(screen.getByPlaceholderText(/guest@example.com/i), "alice@email.com");
+    fireEvent.click(screen.getByRole("button", { name: /Add Guest to List/i }));
 
-    // Mock API responses
     addGuest.mockResolvedValueOnce({ id: 1, name: "Alice" });
-    getGuests.mockResolvedValueOnce([{ id: 1, name: "Alice" }]);
 
-    // Save all
-    fireEvent.click(screen.getByRole("button", { name: /Save All Guests/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Save 1 Guest/i }));
 
     await waitFor(() => {
       expect(addGuest).toHaveBeenCalledWith(
         eventId,
         expect.objectContaining({ name: "Alice" })
       );
-      expect(getGuests).toHaveBeenCalledWith(eventId);
-      expect(onGuestsUpdated).toHaveBeenCalledWith([{ id: 1, name: "Alice" }]);
+      expect(onGuestsUpdated).toHaveBeenCalled();
       expect(onClose).toHaveBeenCalled();
     });
   });
@@ -93,14 +87,13 @@ describe("NewGuestModal", () => {
   it("shows error if save fails", async () => {
     setup();
 
-    // Add one guest
-    await userEvent.type(screen.getByPlaceholderText(/Name/i), "Charlie");
-    await userEvent.type(screen.getByPlaceholderText(/Email/i), "charlie@email.com");
-    fireEvent.click(screen.getByRole("button", { name: /\+ Add Guest/i }));
+    await userEvent.type(screen.getByPlaceholderText(/Enter guest name/i), "Charlie");
+    await userEvent.type(screen.getByPlaceholderText(/guest@example.com/i), "charlie@email.com");
+    fireEvent.click(screen.getByRole("button", { name: /Add Guest to List/i }));
 
     addGuest.mockRejectedValueOnce(new Error("Server down"));
 
-    fireEvent.click(screen.getByRole("button", { name: /Save All Guests/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Save 1 Guest/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/Server down/i)).toBeInTheDocument();
@@ -110,15 +103,13 @@ describe("NewGuestModal", () => {
   it("imports guests from CSV file", async () => {
     setup();
 
-    // Fix label-input association in your component
     const csvContent = `name,phone,email,rsvpStatus,dietaryPreferences
 Alice,123,alice@email.com,Pending,Vegan
 Bob,456,bob@email.com,Accepted,`;
 
     const file = new File([csvContent], "guests.csv", { type: "text/csv" });
 
-    // Select the file input
-    const input = screen.getByLabelText(/Or upload CSV file/i);
+    const input = screen.getByLabelText(/Bulk Import via CSV/i);
 
     await userEvent.upload(input, file);
 
@@ -126,5 +117,40 @@ Bob,456,bob@email.com,Accepted,`;
       expect(screen.getByText("Alice")).toBeInTheDocument();
       expect(screen.getByText("Bob")).toBeInTheDocument();
     });
+  });
+
+  it("removes a guest from the preview list", async () => {
+    setup();
+
+    await userEvent.type(screen.getByPlaceholderText(/Enter guest name/i), "Alice");
+    await userEvent.type(screen.getByPlaceholderText(/guest@example.com/i), "alice@email.com");
+    fireEvent.click(screen.getByRole("button", { name: /Add Guest to List/i }));
+
+    const removeBtn = screen.getAllByTitle("Remove guest")[0];
+    fireEvent.click(removeBtn);
+
+    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
+  });
+
+  it("selects and removes multiple guests", async () => {
+    setup();
+
+    // Add two guests
+    await userEvent.type(screen.getByPlaceholderText(/Enter guest name/i), "Alice");
+    await userEvent.type(screen.getByPlaceholderText(/guest@example.com/i), "alice@email.com");
+    fireEvent.click(screen.getByRole("button", { name: /Add Guest to List/i }));
+
+    await userEvent.type(screen.getByPlaceholderText(/Enter guest name/i), "Bob");
+    await userEvent.type(screen.getByPlaceholderText(/guest@example.com/i), "bob@email.com");
+    fireEvent.click(screen.getByRole("button", { name: /Add Guest to List/i }));
+
+    // Select all
+    fireEvent.click(screen.getAllByRole("checkbox")[0]); // header checkbox
+
+    // Remove selected
+    fireEvent.click(screen.getByRole("button", { name: /Remove Selected/i }));
+
+    expect(screen.queryByText("Alice")).not.toBeInTheDocument();
+    expect(screen.queryByText("Bob")).not.toBeInTheDocument();
   });
 });

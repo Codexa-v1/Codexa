@@ -12,33 +12,29 @@ vi.mock("@auth0/auth0-react", () => ({
 vi.mock("../pages/LandingPage", () => ({
   default: () => <div data-testid="landing-page">Landing Page</div>,
 }));
-
 vi.mock("../pages/HomePage", () => ({
   default: () => <div data-testid="home-page">Home Page</div>,
 }));
-
 vi.mock("../pages/ErrorPage", () => ({
   default: () => <div data-testid="error-page">Error Page</div>,
 }));
-
 vi.mock("../pages/AboutPage", () => ({
   default: () => <div data-testid="about-page">About Page</div>,
 }));
-
 vi.mock("../pages/EventsPage", () => ({
   default: () => <div data-testid="events-page">Events Page</div>,
 }));
-
 vi.mock("../pages/EventDetails", () => ({
   default: () => <div data-testid="event-details-page">Event Details Page</div>,
 }));
-
 vi.mock("../pages/RSVPPage", () => ({
   default: () => <div data-testid="rsvp-page">RSVP Page</div>,
 }));
-
 vi.mock("../pages/InvitePage", () => ({
   default: () => <div data-testid="invite-page">Invite Page</div>,
+}));
+vi.mock("../pages/SettingsPage", () => ({
+  default: () => <div data-testid="settings-page">Settings Page</div>,
 }));
 
 // Mock react-router-dom to use MemoryRouter instead of BrowserRouter
@@ -48,7 +44,6 @@ vi.mock("react-router-dom", async () => {
     ...actual,
     BrowserRouter: ({ children }) => {
       const { MemoryRouter } = actual;
-      // Get the initial route from window.location or default to "/"
       const initialRoute = window.__TEST_INITIAL_ROUTE__ || "/";
       return <MemoryRouter initialEntries={[initialRoute]}>{children}</MemoryRouter>;
     },
@@ -128,6 +123,12 @@ describe("App Component", () => {
       render(<App />);
       expect(screen.getByTestId("event-details-page")).toBeInTheDocument();
     });
+
+    it("should render Settings page when authenticated", () => {
+      window.__TEST_INITIAL_ROUTE__ = "/settings";
+      render(<App />);
+      expect(screen.getByTestId("settings-page")).toBeInTheDocument();
+    });
   });
 
   describe("Protected Routes - Unauthenticated User", () => {
@@ -141,7 +142,6 @@ describe("App Component", () => {
     it("should redirect to /error when accessing /home unauthenticated", async () => {
       window.__TEST_INITIAL_ROUTE__ = "/home";
       render(<App />);
-      
       await waitFor(() => {
         expect(screen.getByTestId("error-page")).toBeInTheDocument();
       });
@@ -150,7 +150,6 @@ describe("App Component", () => {
     it("should redirect to /error when accessing /events unauthenticated", async () => {
       window.__TEST_INITIAL_ROUTE__ = "/events";
       render(<App />);
-      
       await waitFor(() => {
         expect(screen.getByTestId("error-page")).toBeInTheDocument();
       });
@@ -159,7 +158,14 @@ describe("App Component", () => {
     it("should redirect to /error when accessing /events/:id unauthenticated", async () => {
       window.__TEST_INITIAL_ROUTE__ = "/events/123";
       render(<App />);
-      
+      await waitFor(() => {
+        expect(screen.getByTestId("error-page")).toBeInTheDocument();
+      });
+    });
+
+    it("should redirect to /error when accessing /settings unauthenticated", async () => {
+      window.__TEST_INITIAL_ROUTE__ = "/settings";
+      render(<App />);
       await waitFor(() => {
         expect(screen.getByTestId("error-page")).toBeInTheDocument();
       });
@@ -175,8 +181,6 @@ describe("App Component", () => {
 
       window.__TEST_INITIAL_ROUTE__ = "/home";
       render(<App />);
-      
-      // Should not render any page component
       expect(screen.queryByTestId("home-page")).not.toBeInTheDocument();
       expect(screen.queryByTestId("error-page")).not.toBeInTheDocument();
     });
@@ -189,50 +193,9 @@ describe("App Component", () => {
 
       window.__TEST_INITIAL_ROUTE__ = "/home";
       render(<App />);
-      
       await waitFor(() => {
         expect(screen.getByTestId("home-page")).toBeInTheDocument();
       });
-    });
-  });
-
-  describe("PrivateRoute Component", () => {
-    it("should render children when authenticated and not loading", () => {
-      mockUseAuth0.mockReturnValue({
-        isAuthenticated: true,
-        isLoading: false,
-      });
-
-      window.__TEST_INITIAL_ROUTE__ = "/home";
-      render(<App />);
-      expect(screen.getByTestId("home-page")).toBeInTheDocument();
-    });
-
-    it("should redirect when not authenticated and not loading", async () => {
-      mockUseAuth0.mockReturnValue({
-        isAuthenticated: false,
-        isLoading: false,
-      });
-
-      window.__TEST_INITIAL_ROUTE__ = "/home";
-      render(<App />);
-      
-      await waitFor(() => {
-        expect(screen.getByTestId("error-page")).toBeInTheDocument();
-      });
-    });
-
-    it("should return null when loading", () => {
-      mockUseAuth0.mockReturnValue({
-        isAuthenticated: false,
-        isLoading: true,
-      });
-
-      window.__TEST_INITIAL_ROUTE__ = "/home";
-      render(<App />);
-      
-      expect(screen.queryByTestId("home-page")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("error-page")).not.toBeInTheDocument();
     });
   });
 
@@ -288,8 +251,6 @@ describe("App Component", () => {
 
       window.__TEST_INITIAL_ROUTE__ = "/home";
       render(<App />);
-      
-      // Should treat undefined as falsy and redirect
       await waitFor(() => {
         expect(screen.getByTestId("error-page")).toBeInTheDocument();
       });
@@ -303,8 +264,6 @@ describe("App Component", () => {
 
       window.__TEST_INITIAL_ROUTE__ = "/home";
       render(<App />);
-      
-      // Should treat null as falsy and redirect
       await waitFor(() => {
         expect(screen.getByTestId("error-page")).toBeInTheDocument();
       });
@@ -329,16 +288,14 @@ describe("App Component", () => {
         isLoading: false,
       });
 
-      const protectedRoutes = ["/home", "/events", "/events/123"];
+      const protectedRoutes = ["/home", "/events", "/events/123", "/settings"];
 
       for (const route of protectedRoutes) {
         window.__TEST_INITIAL_ROUTE__ = route;
         const { unmount } = render(<App />);
-        
         await waitFor(() => {
           expect(screen.getByTestId("error-page")).toBeInTheDocument();
         });
-        
         unmount();
       }
     });
@@ -353,6 +310,7 @@ describe("App Component", () => {
         { route: "/home", testId: "home-page" },
         { route: "/events", testId: "events-page" },
         { route: "/events/123", testId: "event-details-page" },
+        { route: "/settings", testId: "settings-page" },
       ];
 
       tests.forEach(({ route, testId }) => {
