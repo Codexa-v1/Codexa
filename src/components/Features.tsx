@@ -77,11 +77,11 @@ export const Features = () => {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="gradient-card p-6 border border-border/50 hover:shadow-lg transition-smooth hover:-translate-y-1 animate-fade-in-up cursor-pointer group"
+              className="gradient-card p-6 border border-border/50 hover:shadow-md transition-smooth hover:-translate-y-0.3 animate-fade-in-up group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="space-y-4">
-                <div className={`w-14 h-14 rounded-xl bg-${feature.color}/10 flex items-center justify-center group-hover:scale-110 transition-smooth`}>
+                <div className={`w-14 h-14 rounded-xl bg-${feature.color}/10 flex items-center justify-center group-hover:scale-105 transition-smooth`}>
                   <feature.icon className={`w-7 h-7 text-${feature.color}`} />
                 </div>
                 

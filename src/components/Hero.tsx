@@ -58,7 +58,7 @@ export const Hero = () => {
         <div className="relative animate-fade-in" style={{ animationDelay: "0.2s" }}>
           <div className="gradient-card rounded-2xl shadow-lg p-8 border border-border/50">
             <div className="space-y-6">
-              <div className="flex items-center gap-4 p-4 bg-accent rounded-lg hover:shadow-md transition-smooth cursor-pointer">
+              <div className="flex items-center gap-4 p-4 bg-accent rounded-lg hover:shadow-md transition-smooth">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-primary" />
                 </div>
@@ -68,7 +68,7 @@ export const Hero = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 bg-accent rounded-lg hover:shadow-md transition-smooth cursor-pointer">
+              <div className="flex items-center gap-4 p-4 bg-accent rounded-lg hover:shadow-md transition-smooth">
                 <div className="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center">
                   <Users className="w-6 h-6 text-secondary" />
                 </div>
@@ -78,7 +78,7 @@ export const Hero = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 p-4 bg-accent rounded-lg hover:shadow-md transition-smooth cursor-pointer">
+              <div className="flex items-center gap-4 p-4 bg-accent rounded-lg hover:shadow-md transition-smooth">
                 <div className="w-12 h-12 rounded-lg bg-primary-light/10 flex items-center justify-center">
                   <FileText className="w-6 h-6 text-primary-light" />
                 </div>
