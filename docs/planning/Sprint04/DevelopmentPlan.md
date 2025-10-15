@@ -1,14 +1,15 @@
-# PlanIt Event Planner: Sprint 3 Development Plan 
+# PlanIt Event Planner: Sprint 4 Development Plan 
+
 
 ## 1. 🎯 Sprint Goal
-Deliver a **feature-complete, stable, and tested event planning web application** by:  
-- Implementing guest and vendor management enhancements (VIP guests, vendor validation, budget tracking).  
-- Expanding and documenting automated testing to achieve ≥80% coverage.  
-- Making APIs externally available and reliable.  
-- Improving app performance with auto-reload and faster refresh.  
-- Conducting stakeholder reviews and incorporating feedback.  
-- Providing clear, updated documentation (features, APIs, DB schema, testing).  
-- Demonstrating adherence to Agile Scrum through standups, retros, and backlog tracking.  
+Deliver a **feature-complete, stable, well-documented, and deployed** event-planner application that meets all requirements, production-ready database and API, fully functional web app (responsive & accessible), comprehensive documentation, thorough testing, and clear evidence of Agile process and stakeholder interaction.
+
+- **Deployed Web App** (publicly accessible URL; production-ready).  
+- **Deployed API** (externally available and documented).  
+- **Database** deployed with sample/production data and schema documentation.   
+- **Automated Test Evidence**: Unit, integration, and E2E test suites with coverage reports (target **≥80%**).  
+- **Bug Tracker Evidence**: Active GitHub Issues / Trello with recent items, fixes, and linked PRs.  
+- **Reports**: Submit Group report and individual report.ing adherence to Agile Scrum through standups, retros, and backlog tracking.  
 
 ---
 
@@ -103,13 +104,7 @@ Deliver a **feature-complete, stable, and tested event planning web application*
 ## 3. ⌛ Sprint Timeline
 - Below are snapshots of our Trello board as we progress through the entire sprint. The trello board can be accessed via this [Link](https://trello.com/invite/b/688926a06672f847b26eadd8/ATTI44809ab9733ae3526b4a7133a7e97f41E5E6470D/codexa)
 
-- Our trello board as pf 09 September
-![Alt text](../../assets/meetings/Sprint03/09Sept.png)
-
-- Our trello board as pf 11 September
-![Alt text](../../assets/meetings/Sprint03/11_Sept.png)
-
-- Our trello board as pf 23 September
-![Alt text](../../assets/meetings/Sprint03/23Sept.png)
+- Our trello board as pf 07 October 2025
+![Alt text](../../assets/meetings/Sprint04/16_Oct.png)
 
 ---

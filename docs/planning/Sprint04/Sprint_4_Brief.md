@@ -1,7 +1,7 @@
 # PlanIt Event Planner: Sprint 4 (Final Submission) Brief
 
 ## 1. 🥅 Sprint Goal
-Deliver a **feature-complete, stable, well-documented, and deployed** event-planner product that meets all requirements, production-ready database and API, fully functional web app (responsive & accessible), comprehensive documentation, thorough testing, and clear evidence of Agile process and stakeholder interaction.
+Deliver a **feature-complete, stable, well-documented, and deployed** event-planner application that meets all requirements, production-ready database and API, fully functional web app (responsive & accessible), comprehensive documentation, thorough testing, and clear evidence of Agile process and stakeholder interaction.
 
 ---
 
