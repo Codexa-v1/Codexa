@@ -97,7 +97,7 @@ export default function MemoriesModal({ eventId, onClose }) {
       await fetchMemories(); // 🔁 ensures PDF immediately updates
     } catch (err) {
       console.error(err);
-      setError("Failed to upload PDF");
+      setError("Failed to upload PDF (only one PDF can be uploaded per event");
     } finally {
       setUploading(false);
     }
@@ -170,104 +170,95 @@ export default function MemoriesModal({ eventId, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 relative flex flex-col">
-        {/* Close */}
+      <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col relative">
+        
+        {/* Close button */}
         <button
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10"
           onClick={onClose}
         >
           <FiX className="w-6 h-6" />
         </button>
 
-        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          <FiImage className="text-lime-500 w-6 h-6" /> Memories
-        </h2>
+        {/* Top section: Uploads + status */}
+        <div className="px-6 pt-6 pb-4 space-y-4">
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <FiImage className="text-lime-500 w-6 h-6" /> Memories
+          </h2>
 
-        {/* Status messages */}
-        {error && (
-          <div className="bg-red-100 text-red-700 p-2 rounded mb-4">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="bg-green-100 text-green-700 p-2 rounded mb-4">
-            {success}
-          </div>
-        )}
+          {/* Status messages */}
+          {error && <div className="bg-red-100 text-red-700 p-2 rounded">{error}</div>}
+          {success && <div className="bg-green-100 text-green-700 p-2 rounded">{success}</div>}
 
-        {/* Upload Inputs */}
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Upload Picture</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleUploadPictures}
-            disabled={uploading}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Upload PDF</label>
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleUploadPDF}
-            disabled={uploading}
-          />
-        </div>
-
-        {/* Pictures */}
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2">Pictures</h3>
-          {loading ? (
-            <p>Loading...</p>
-          ) : pictures.length ? (
-            <div className="grid grid-cols-2 gap-2">
-              {pictures.map((url, i) => (
-                <img
-                  key={i}
-                  src={url}
-                  alt={`Event Picture ${i + 1}`}
-                  className="w-full h-40 object-cover rounded-lg border"
-                />
-              ))}
+          {/* Upload Inputs */}
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block font-semibold mb-1">Upload Picture</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleUploadPictures}
+                disabled={uploading}
+              />
             </div>
-          ) : (
-            <p className="text-gray-500 italic">No pictures uploaded yet.</p>
-          )}
-          <div className="flex gap-2 mt-2">
-            <button
-              onClick={handleDeletePictures}
-              className="px-3 py-1 bg-red-500 text-white rounded flex items-center gap-1 disabled:opacity-50"
-              disabled={uploading || !pictures.length}
-            >
-              {uploading ? (
-                <FiLoader className="animate-spin" />
-              ) : (
-                <>
-                  <FiTrash2 /> Delete
-                </>
-              )}
-            </button>
+
+            <div>
+              <label className="block font-semibold mb-1">Upload PDF</label>
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handleUploadPDF}
+                disabled={uploading}
+              />
+            </div>
           </div>
         </div>
 
-        {/* PDF Section */}
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2">PDF Document</h3>
-          {loading ? (
-            <p>Loading...</p>
-          ) : pdf ? (
+        {/* Scrollable pictures */}
+        <div className="flex-1 overflow-y-auto px-6 pb-6">
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">Pictures</h3>
+            {loading ? (
+              <p>Loading...</p>
+            ) : pictures.length ? (
+              <div className="grid grid-cols-2 gap-2">
+                {pictures.map((url, i) => (
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`Event Picture ${i + 1}`}
+                    className="w-full h-40 object-cover rounded-lg border"
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">No pictures uploaded yet.</p>
+            )}
+
+            {/* Delete button */}
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={handleDeletePictures}
+                className="px-3 py-1 bg-red-500 text-white rounded flex items-center gap-1 disabled:opacity-50"
+                disabled={uploading || !pictures.length}
+              >
+                {uploading ? <FiLoader className="animate-spin" /> : <><FiTrash2 /> Delete</>}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Fixed bottom section: PDF + Share */}
+        <div className="p-6 border-t bg-white flex flex-col gap-4">
+          {/* PDF Section */}
+          {pdf ? (
             <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
               <div className="flex items-center gap-2">
                 <FiFileText className="text-blue-500 w-5 h-5" />
-                <span className="truncate max-w-[200px] font-medium">
-                  Event Memories PDF
-                </span>
+                <span className="truncate max-w-[200px] font-medium">Event Memories PDF</span>
               </div>
 
               <div className="flex gap-2">
-                {/* Single, reliable download button */}
                 <button
                   onClick={handleDownloadPDF}
                   className="px-3 py-1 bg-green-500 text-white rounded flex items-center gap-1"
@@ -281,38 +272,25 @@ export default function MemoriesModal({ eventId, onClose }) {
                   className="px-3 py-1 bg-red-500 text-white rounded flex items-center gap-1 disabled:opacity-50"
                   disabled={uploading}
                 >
-                  {uploading ? (
-                    <FiLoader className="animate-spin" />
-                  ) : (
-                    <>
-                      <FiTrash2 /> Delete
-                    </>
-                  )}
+                  {uploading ? <FiLoader className="animate-spin" /> : <><FiTrash2 /> Delete</>}
                 </button>
               </div>
             </div>
           ) : (
             <p className="text-gray-500 italic">No PDF uploaded yet.</p>
           )}
-        </div>
 
-        {/* Share link */}
-        <div className="mt-4">
+          {/* Share link */}
           <button
             onClick={handleGenerateShareLink}
             disabled={uploading}
             className="px-4 py-2 bg-blue-500 text-white rounded flex items-center gap-2 disabled:opacity-50"
           >
-            {uploading ? (
-              <FiLoader className="animate-spin" />
-            ) : (
-              <>
-                <FiShare2 /> Generate Share Link
-              </>
-            )}
+            {uploading ? <FiLoader className="animate-spin" /> : <><FiShare2 /> Generate Share Link</>}
           </button>
         </div>
       </div>
     </div>
+
   );
 }
