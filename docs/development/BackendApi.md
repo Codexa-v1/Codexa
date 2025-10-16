@@ -5,10 +5,6 @@
 https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net
 ```
 
-## Authentication
-- Most endpoints do **not** require authentication by default.
-- If your deployment enforces authentication, provide a valid token in the `Authorization` header.
-
 ## Common Headers
 ```http
 Content-Type: application/json
