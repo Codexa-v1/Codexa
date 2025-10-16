@@ -195,10 +195,3 @@ Content-Type: application/json
 ```sh
 curl -X GET https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/events/1234567890abcdef12345678
 ```
-
----
-
-## Notes
-- Replace all `:id`, `:eventId`, `:guestId`, etc. with actual IDs from your database.
-- All requests and responses use JSON format.
-- For more details, see your backend source code or contact the API maintainer.
