@@ -1,4 +1,3 @@
-// src/pages/DownloadMemories.jsx
 import React, { useEffect, useState } from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -15,25 +14,44 @@ export default function DownloadMemories() {
       return;
     }
 
+    const getFileNameFromUrl = (url) => {
+      const parts = url.split("/");
+      return parts[parts.length - 1].split("?")[0]; // remove query params
+    };
+
     async function fetchAndDownload() {
       try {
-        const data = await getPublicResource(eventId);
+        setStatus("Fetching files...");
+
+        const res = await getPublicResource(eventId);
+        const data = res.data?.data || res.data || {};
+        const records = Array.isArray(data) ? data : [data];
+
         const zip = new JSZip();
 
         // Add pictures
-        for (const pic of data.pictures || []) {
-          const res = await fetch(pic.url);
-          const blob = await res.blob();
-          zip.file(`pictures/${pic.url.split("/").pop()}`, blob);
+        const pictureRecords = records.filter(r => r.picture_url);
+        for (const r of pictureRecords) {
+          const url = r.picture_url;
+          const resp = await fetch(url);
+          const blob = await resp.blob();
+          zip.file(`pictures/${getFileNameFromUrl(url)}`, blob);
         }
 
-        // Add PDF if exists
-        if (data.pdf) {
-          const res = await fetch(data.pdf.url);
-          const blob = await res.blob();
-          zip.file(`pdf/${data.pdf.url.split("/").pop()}`, blob);
+        // Add PDF (force correct MIME type using Blob)
+        const pdfRecord = records.find(r => r.file_url);
+        if (pdfRecord) {
+          const url = pdfRecord.file_url;
+          const resp = await fetch(url);
+          const blob = await resp.blob();
+
+          // Force MIME type PDF
+          const pdfBlob = new Blob([blob], { type: "application/pdf" });
+
+          zip.file(`pdf/${getFileNameFromUrl(url)}`, pdfBlob);
         }
 
+        setStatus("Generating ZIP...");
         const zipBlob = await zip.generateAsync({ type: "blob" });
         saveAs(zipBlob, `Event_${eventId}_Memories.zip`);
         setStatus("Download should begin shortly!");

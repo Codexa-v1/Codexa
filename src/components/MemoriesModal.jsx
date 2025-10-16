@@ -67,7 +67,6 @@ export default function MemoriesModal({ eventId, onClose }) {
     }
   };
 
-
   const handleUploadPictures = async (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
@@ -133,6 +132,35 @@ export default function MemoriesModal({ eventId, onClose }) {
       setUploading(false);
     }
   };
+
+  const handleDownloadPDF = async () => {
+    if (!pdf) return;
+    try {
+      setUploading(true);
+      const res = await fetch(pdf);
+      const blob = await res.blob();
+
+      // Ensure MIME type is PDF
+      const pdfBlob = new Blob([blob], { type: "application/pdf" });
+
+      const url = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "EventMemories.pdf"; // proper filename
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      setSuccess("PDF downloaded!");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to download PDF.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+
 
   const handleGenerateShareLink = () => {
     const shareUrl = `${window.location.origin}/download?eventId=${eventId}`;
@@ -239,21 +267,15 @@ export default function MemoriesModal({ eventId, onClose }) {
               </div>
 
               <div className="flex gap-2">
-                <a
-                  href={pdf}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1 bg-blue-500 text-white rounded flex items-center gap-1"
-                >
-                  <FiFileText /> View
-                </a>
-                <a
-                  href={pdf}
-                  download
+                {/* Single, reliable download button */}
+                <button
+                  onClick={handleDownloadPDF}
                   className="px-3 py-1 bg-green-500 text-white rounded flex items-center gap-1"
+                  disabled={uploading}
                 >
                   <FiDownload /> Download
-                </a>
+                </button>
+
                 <button
                   onClick={handleDeletePDF}
                   className="px-3 py-1 bg-red-500 text-white rounded flex items-center gap-1 disabled:opacity-50"
