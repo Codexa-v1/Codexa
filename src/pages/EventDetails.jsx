@@ -20,6 +20,7 @@ import AddScheduleModal from "@/components/AddScheduleModal";
 import FloorPlanModal from "@/components/FloorPlanModal";
 import DocumentsModal from "@/components/DocumentsModal";
 import WeatherCard from "@/components/WeatherCard";
+import MemoriesModal from "@/components/MemoriesModal"; // <-- Add this import
 
 import { updateEvent } from "@/backend/api/EventData";
 import { getVenues } from "@/backend/api/EventVenue";
@@ -41,6 +42,7 @@ export default function EventDetails() {
   const [venues, setVenues] = useState([])
   const [schedules, setSchedules] = useState([])
   const [documents, setDocuments] = useState([])
+  const [memories, setMemories] = useState([]); // <-- Add memories state
 
   // Tabs & modals
   const [activeTab, setActiveTab] = useState("overview")
@@ -96,6 +98,12 @@ export default function EventDetails() {
 
     fetchData()
   }, [event?._id, user.sub])
+
+  // Example: fetch memories when event changes (optional, if you have a backend)
+  // useEffect(() => {
+  //   if (!event?._id) return;
+  //   getMemories(event._id).then(setMemories).catch(console.error);
+  // }, [event?._id]);
 
   const handleEditEventSave = (updated) => {
     setEvent((prev) => ({ ...prev, ...updated }))
@@ -381,6 +389,7 @@ export default function EventDetails() {
               { key: "schedule", label: "Schedule", color: "amber" },
               { key: "floor", label: "Floor Plan", color: "pink" },
               { key: "documents", label: "Documents", color: "purple" },
+              { key: "memories", label: "Memories", color: "lime" }, // <-- Change to lime
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -472,6 +481,20 @@ export default function EventDetails() {
                 <p className="text-sm text-gray-600 mb-3">View event documents</p>
                 <p className="text-sm text-purple-700 font-medium">Click to view</p>
               </div>
+
+              {/* Memories Card */}
+              <div
+                className="bg-gradient-to-br from-lime-50 to-lime-100 rounded-xl shadow-md p-6 cursor-pointer hover:shadow-xl transition-all duration-200 border border-lime-200"
+                onClick={() => setActiveTab("memories")}
+              >
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Memories</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  {memories.length > 0
+                    ? `Total Memories: ${memories.length}`
+                    : "No memories uploaded yet"}
+                </p>
+                <p className="text-sm text-lime-700 font-medium">Click to view and add photos and files from your event</p>
+              </div>
             </div>
           )}
 
@@ -507,6 +530,9 @@ export default function EventDetails() {
           )}
           {activeTab === "documents" && (
             <DocumentsModal eventId={event._id} documents={documents} onClose={() => setActiveTab("overview")} />
+          )}
+          {activeTab === "memories" && (
+            <MemoriesModal eventId={event._id} memories={memories} onClose={() => setActiveTab("overview")} />
           )}
         </div>
       </section>
