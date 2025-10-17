@@ -113,14 +113,13 @@
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -130,9 +129,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -142,9 +142,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -165,57 +163,56 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { eventColors } from "@/utils/eventColors";
-import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
-import React from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use client"
 &nbsp;
+import { eventColors } from "@/utils/eventColors"
+import dayjs from "dayjs"
+import { useNavigate } from "react-router-dom"
 &nbsp;
 const EventCard = ({ event, setConfirmDeleteId }) =&gt; {
-  const { bgColor, labelColor } = eventColors[event.category] || eventColors.Other;
-  const navigate = useNavigate();
+  const { bgColor, labelColor } = eventColors[event.category] || eventColors.Other
+  const navigate = useNavigate()
 &nbsp;
   return (
     &lt;section
-      className={`${bgColor} p-2 sm:p-4 rounded-lg shadow mb-4 hover:-translate-y-2 transition-transform duration-300`}
+      className={`${bgColor} p-5 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100`}
     &gt;
-      &lt;span
-        className={`${labelColor} text-white px-3 py-1 rounded-full text-xs`}
-      &gt;
+      &lt;span className={`${labelColor} text-white px-3 py-1.5 rounded-full text-xs font-semibold inline-block`}&gt;
         {event.category}
       &lt;/span&gt;
-  &lt;h4 className="text-base sm:text-lg font-bold mt-2"&gt;{event.title}&lt;/h4&gt;
-      &lt;p className="text-sm"&gt;
-        {event.date
-          ? typeof event.date === "string"
-            ? dayjs(event.date).format("DD MMM YYYY"<span class="branch-0 cbranch-no" title="branch not covered" >)</span>
-<span class="cstat-no" title="statement not covered" >            : dayjs(event.date).format("DD MMM YYYY")</span>
-          : ""}
-      &lt;/p&gt;
-      &lt;p className="text-sm"&gt;{event.location}&lt;/p&gt;
 &nbsp;
-  {/* RSVP Progress removed as requested */}
+      &lt;h4 className="text-lg sm:text-xl font-bold mt-3 mb-2 text-gray-900"&gt;{event.title}&lt;/h4&gt;
 &nbsp;
-      {/* View and Cancel buttons */}
-      &lt;section className="flex justify-between mt-3"&gt;
+      &lt;div className="space-y-1 mb-4"&gt;
+        &lt;p className="text-sm text-gray-600 font-medium"&gt;
+          {event.date
+            ? typeof event.date === "string"
+              ? dayjs(event.date).format("DD MMM YYYY"<span class="branch-0 cbranch-no" title="branch not covered" >)</span>
+<span class="cstat-no" title="statement not covered" >              : dayjs(event.date).format("DD MMM YYYY")</span>
+            : ""}
+        &lt;/p&gt;
+        &lt;p className="text-sm text-gray-600"&gt;{event.location}&lt;/p&gt;
+      &lt;/div&gt;
+&nbsp;
+      &lt;section className="flex gap-3 mt-4"&gt;
         &lt;button
-          className="bg-green-800 text-white px-6 py-1 rounded hover:opacity-90"
+          className="flex-1 bg-teal-700 hover:bg-teal-800 text-white px-4 py-2.5 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
           onClick={() =&gt; navigate(`/events/${event._id}`)}
         &gt;
           View Event
         &lt;/button&gt;
         &lt;button
-          className="bg-red-600 text-white px-6 py-1 rounded hover:opacity-90"
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
           onClick={() =&gt; setConfirmDeleteId(event._id)}
         &gt;
           Cancel
         &lt;/button&gt;
       &lt;/section&gt;
     &lt;/section&gt;
-  );
-};
+  )
+}
 &nbsp;
-export default EventCard;
+export default EventCard
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -223,7 +220,7 @@ export default EventCard;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-30T14:28:24.225Z
+                at 2025-10-09T14:05:32.260Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

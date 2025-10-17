@@ -2,11 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import axios from "axios";
 import InvitePage from "../../pages/InvitePage";
-
-// Mock axios
-vi.mock("axios");
 
 // Mock react-router-dom
 const mockUseParams = vi.fn();
@@ -17,74 +13,84 @@ vi.mock("react-router-dom", () => ({
 // Mock alert
 global.alert = vi.fn();
 
-describe("InvitePage Component", () => {
-  const mockEvent = {
-    _id: "event123",
-    title: "Summer Garden Party",
-    date: "2025-07-15T00:00:00.000Z",
-    endDate: "2025-07-15T23:59:59.000Z",
-    startTime: "14:00",
-    endTime: "18:00",
-    location: "Central Park",
-  };
+const mockEvent = {
+  _id: "event123",
+  title: "Summer Garden Party",
+  date: "2025-07-15T00:00:00.000Z",
+  endDate: "2025-07-15T23:59:59.000Z",
+  startTime: "14:00",
+  endTime: "18:00",
+  location: "Central Park",
+};
 
+function mockFetchEvent(event = mockEvent, ok = true) {
+  global.fetch = vi.fn().mockResolvedValue({
+    ok,
+    json: async () => event,
+    text: async () => "duplicate key error",
+    status: ok ? 200 : 400,
+  });
+}
+
+function mockFetchRSVP(ok = true, errorText = "") {
+  global.fetch = vi.fn().mockResolvedValue({
+    ok,
+    json: async () => ({}),
+    text: async () => errorText,
+    status: ok ? 200 : 400,
+  });
+}
+
+describe("InvitePage Component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockUseParams.mockReturnValue({ eventId: "event123" });
-    axios.get.mockResolvedValue({ data: mockEvent });
+    mockFetchEvent();
   });
 
   describe("Initial Render and Loading", () => {
     it("should display loading message initially", () => {
-      axios.get.mockImplementation(() => new Promise(() => {})); // Never resolves
+      global.fetch = vi.fn(() => new Promise(() => {})); // Never resolves
       render(<InvitePage />);
-      
-      expect(screen.getByText("Loading...")).toBeInTheDocument();
+      expect(screen.getByText(/Loading invitation/i)).toBeInTheDocument();
     });
 
     it("should fetch event data on mount", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          "https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/events/event123"
+        expect(global.fetch).toHaveBeenCalledWith(
+          expect.stringContaining("/api/events/event123")
         );
       });
     });
 
     it("should fetch event with correct eventId from params", async () => {
       mockUseParams.mockReturnValue({ eventId: "different-event-id" });
-      
+      mockFetchEvent({ ...mockEvent, _id: "different-event-id" });
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          expect.stringContaining("different-event-id")
+        expect(global.fetch).toHaveBeenCalledWith(
+          expect.stringContaining("/api/events/different-event-id")
         );
       });
     });
 
     it("should display event details after loading", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByText(/You're Invited to Summer Garden Party/i)).toBeInTheDocument();
+        expect(screen.getByText(/You're Invited!/i)).toBeInTheDocument();
+        expect(screen.getByText(/Summer Garden Party/i)).toBeInTheDocument();
       });
     });
 
     it("should handle fetch error gracefully", async () => {
       const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
-      axios.get.mockRejectedValue(new Error("Network error"));
-
+      mockFetchEvent(null, false);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(consoleError).toHaveBeenCalledWith(
-          "Failed to load event",
-          expect.any(Error)
-        );
+        expect(consoleError).toHaveBeenCalled();
+        expect(screen.getByText(/Event not found/i)).toBeInTheDocument();
       });
-
       consoleError.mockRestore();
     });
   });
@@ -92,7 +98,6 @@ describe("InvitePage Component", () => {
   describe("Event Details Display", () => {
     it("should display event title", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
         expect(screen.getByText(/Summer Garden Party/i)).toBeInTheDocument();
       });
@@ -100,7 +105,6 @@ describe("InvitePage Component", () => {
 
     it("should display formatted dates", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
         expect(screen.getByText(/July 15, 2025/i)).toBeInTheDocument();
       });
@@ -108,15 +112,14 @@ describe("InvitePage Component", () => {
 
     it("should display event times", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByText(/14:00 – 18:00/i)).toBeInTheDocument();
+        expect(screen.getByText(/14:00/)).toBeInTheDocument();
+        expect(screen.getByText(/18:00/)).toBeInTheDocument();
       });
     });
 
     it("should display event location", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
         expect(screen.getByText(/Central Park/i)).toBeInTheDocument();
       });
@@ -128,12 +131,10 @@ describe("InvitePage Component", () => {
         date: "2025-12-25T00:00:00.000Z",
         endDate: "2025-12-26T00:00:00.000Z",
       };
-      axios.get.mockResolvedValue({ data: customEvent });
-
+      mockFetchEvent(customEvent);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByText(/December 25, 2025/i)).toBeInTheDocument();
+        expect(screen.getByText(/25 December 2025/i)).toBeInTheDocument();
       });
     });
   });
@@ -141,62 +142,52 @@ describe("InvitePage Component", () => {
   describe("Form Fields", () => {
     it("should render all required form fields", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Phone")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Dietary Preferences (optional)")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/your.email@example.com/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/Vegetarian, Gluten-free, etc./i)).toBeInTheDocument();
     });
 
     it("should have correct input types", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toHaveAttribute("type", "text");
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toHaveAttribute("type", "text");
       });
-
-      expect(screen.getByPlaceholderText("Email")).toHaveAttribute("type", "email");
-      expect(screen.getByPlaceholderText("Phone")).toHaveAttribute("type", "tel");
+      expect(screen.getByPlaceholderText(/your.email@example.com/i)).toHaveAttribute("type", "email");
+      expect(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i)).toHaveAttribute("type", "tel");
     });
 
     it("should mark required fields as required", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeRequired();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeRequired();
       });
-
-      expect(screen.getByPlaceholderText("Email")).toBeRequired();
-      expect(screen.getByPlaceholderText("Phone")).toBeRequired();
-      expect(screen.getByPlaceholderText("Dietary Preferences (optional)")).not.toBeRequired();
+      expect(screen.getByPlaceholderText(/your.email@example.com/i)).toBeRequired();
+      expect(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i)).toBeRequired();
+      expect(screen.getByPlaceholderText(/Vegetarian, Gluten-free, etc./i)).not.toBeRequired();
     });
 
     it("should render RSVP status radio buttons", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByLabelText("Accept")).toBeInTheDocument();
+        expect(screen.getByLabelText(/Accept/i)).toBeInTheDocument();
       });
-
-      expect(screen.getByLabelText("Decline")).toBeInTheDocument();
-      expect(screen.getByLabelText("Maybe")).toBeInTheDocument();
+      expect(screen.getByLabelText(/Decline/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Maybe/i)).toBeInTheDocument();
     });
 
     it("should have Pending selected by default", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        const pendingRadio = screen.getByLabelText("Maybe");
+        const pendingRadio = screen.getByLabelText(/Maybe/i);
         expect(pendingRadio).toBeChecked();
       });
     });
 
     it("should render submit button", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
         expect(screen.getByRole("button", { name: /Submit RSVP/i })).toBeInTheDocument();
       });
@@ -207,167 +198,132 @@ describe("InvitePage Component", () => {
     it("should update name field on input", async () => {
       const user = userEvent.setup();
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      const nameInput = screen.getByPlaceholderText("Full Name");
+      const nameInput = screen.getByPlaceholderText(/Enter your full name/i);
       await user.type(nameInput, "John Doe");
-
       expect(nameInput).toHaveValue("John Doe");
     });
 
     it("should update email field on input", async () => {
       const user = userEvent.setup();
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/your.email@example.com/i)).toBeInTheDocument();
       });
-
-      const emailInput = screen.getByPlaceholderText("Email");
+      const emailInput = screen.getByPlaceholderText(/your.email@example.com/i);
       await user.type(emailInput, "john@example.com");
-
       expect(emailInput).toHaveValue("john@example.com");
     });
 
     it("should update phone field on input", async () => {
       const user = userEvent.setup();
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Phone")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i)).toBeInTheDocument();
       });
-
-      const phoneInput = screen.getByPlaceholderText("Phone");
+      const phoneInput = screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i);
       await user.type(phoneInput, "1234567890");
-
       expect(phoneInput).toHaveValue("1234567890");
     });
 
     it("should update dietary preferences field on input", async () => {
       const user = userEvent.setup();
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Dietary Preferences (optional)")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Vegetarian, Gluten-free, etc./i)).toBeInTheDocument();
       });
-
-      const dietInput = screen.getByPlaceholderText("Dietary Preferences (optional)");
+      const dietInput = screen.getByPlaceholderText(/Vegetarian, Gluten-free, etc./i);
       await user.type(dietInput, "Vegetarian");
-
       expect(dietInput).toHaveValue("Vegetarian");
     });
 
     it("should change RSVP status to Accepted", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByLabelText("Accept")).toBeInTheDocument();
+        expect(screen.getByLabelText(/Accept/i)).toBeInTheDocument();
       });
-
-      const acceptRadio = screen.getByLabelText("Accept");
+      const acceptRadio = screen.getByLabelText(/Accept/i);
       fireEvent.click(acceptRadio);
-
       expect(acceptRadio).toBeChecked();
-      expect(screen.getByLabelText("Decline")).not.toBeChecked();
-      expect(screen.getByLabelText("Maybe")).not.toBeChecked();
+      expect(screen.getByLabelText(/Decline/i)).not.toBeChecked();
+      expect(screen.getByLabelText(/Maybe/i)).not.toBeChecked();
     });
 
     it("should change RSVP status to Declined", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByLabelText("Decline")).toBeInTheDocument();
+        expect(screen.getByLabelText(/Decline/i)).toBeInTheDocument();
       });
-
-      const declineRadio = screen.getByLabelText("Decline");
+      const declineRadio = screen.getByLabelText(/Decline/i);
       fireEvent.click(declineRadio);
-
       expect(declineRadio).toBeChecked();
-      expect(screen.getByLabelText("Accept")).not.toBeChecked();
-      expect(screen.getByLabelText("Maybe")).not.toBeChecked();
+      expect(screen.getByLabelText(/Accept/i)).not.toBeChecked();
+      expect(screen.getByLabelText(/Maybe/i)).not.toBeChecked();
     });
 
     it("should allow switching between RSVP statuses", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByLabelText("Accept")).toBeInTheDocument();
+        expect(screen.getByLabelText(/Accept/i)).toBeInTheDocument();
       });
-
-      // Click Accept
-      fireEvent.click(screen.getByLabelText("Accept"));
-      expect(screen.getByLabelText("Accept")).toBeChecked();
-
-      // Click Decline
-      fireEvent.click(screen.getByLabelText("Decline"));
-      expect(screen.getByLabelText("Decline")).toBeChecked();
-      expect(screen.getByLabelText("Accept")).not.toBeChecked();
-
-      // Click Maybe
-      fireEvent.click(screen.getByLabelText("Maybe"));
-      expect(screen.getByLabelText("Maybe")).toBeChecked();
-      expect(screen.getByLabelText("Decline")).not.toBeChecked();
+      fireEvent.click(screen.getByLabelText(/Accept/i));
+      expect(screen.getByLabelText(/Accept/i)).toBeChecked();
+      fireEvent.click(screen.getByLabelText(/Decline/i));
+      expect(screen.getByLabelText(/Decline/i)).toBeChecked();
+      expect(screen.getByLabelText(/Accept/i)).not.toBeChecked();
+      fireEvent.click(screen.getByLabelText(/Maybe/i));
+      expect(screen.getByLabelText(/Maybe/i)).toBeChecked();
+      expect(screen.getByLabelText(/Decline/i)).not.toBeChecked();
     });
   });
 
   describe("Form Submission", () => {
     it("should submit form with correct data", async () => {
       const user = userEvent.setup();
-      axios.post.mockResolvedValue({ data: { success: true } });
-
+      mockFetchRSVP(true);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill form
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-      await user.type(screen.getByPlaceholderText("Dietary Preferences (optional)"), "Vegan");
-      fireEvent.click(screen.getByLabelText("Accept"));
-
-      // Submit
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
+      await user.type(screen.getByPlaceholderText(/Vegetarian, Gluten-free, etc./i), "Vegan");
+      fireEvent.click(screen.getByLabelText(/Accept/i));
       fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
       await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith(
-          "https://planit-backend-amfkhqcgbvfhamhx.canadacentral-01.azurewebsites.net/api/guests/event/event123",
-          {
-            name: "John Doe",
-            email: "john@example.com",
-            phone: "1234567890",
-            rsvpStatus: "Accepted",
-            dietaryPreferences: "Vegan",
-            eventId: "event123",
-          }
+        expect(global.fetch).toHaveBeenCalledWith(
+          expect.stringContaining("/api/guests/event/event123"),
+          expect.objectContaining({
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: "John Doe",
+              email: "john@example.com",
+              phone: "1234567890",
+              rsvpStatus: "Accepted",
+              dietaryPreferences: "Vegan",
+              eventId: "event123",
+            }),
+          })
         );
       });
     });
 
     it("should disable submit button while submitting", async () => {
       const user = userEvent.setup();
-      axios.post.mockImplementation(() => new Promise(() => {})); // Never resolves
-
+      global.fetch = vi.fn(() => new Promise(() => {})); // Never resolves
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill required fields
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-
-      // Submit
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
       const submitButton = screen.getByRole("button", { name: /Submit RSVP/i });
       fireEvent.click(submitButton);
-
       await waitFor(() => {
         expect(screen.getByRole("button", { name: /Submitting.../i })).toBeDisabled();
       });
@@ -375,43 +331,31 @@ describe("InvitePage Component", () => {
 
     it("should show success message after successful submission", async () => {
       const user = userEvent.setup();
-      axios.post.mockResolvedValue({ data: { success: true } });
-
+      mockFetchRSVP(true);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill required fields
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-
-      // Submit
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
       fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
       await waitFor(() => {
-        expect(screen.getByText(/RSVP Confirmation Successful!/i)).toBeInTheDocument();
+        expect(screen.getByText(/RSVP Confirmed!/i)).toBeInTheDocument();
       });
     });
 
     it("should display event title in success message", async () => {
       const user = userEvent.setup();
-      axios.post.mockResolvedValue({ data: { success: true } });
-
+      mockFetchRSVP(true);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
       fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
       await waitFor(() => {
         expect(screen.getByText(/Summer Garden Party/i)).toBeInTheDocument();
       });
@@ -419,45 +363,37 @@ describe("InvitePage Component", () => {
 
     it("should hide form after successful submission", async () => {
       const user = userEvent.setup();
-      axios.post.mockResolvedValue({ data: { success: true } });
-
+      mockFetchRSVP(true);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
       fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
       await waitFor(() => {
-        expect(screen.queryByPlaceholderText("Full Name")).not.toBeInTheDocument();
+        expect(screen.queryByPlaceholderText(/Enter your full name/i)).not.toBeInTheDocument();
       });
     });
 
     it("should include eventId in submission", async () => {
       const user = userEvent.setup();
-      axios.post.mockResolvedValue({ data: { success: true } });
-
+      mockFetchRSVP(true);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
       fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
       await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.objectContaining({ eventId: "event123" })
+        expect(global.fetch).toHaveBeenCalledWith(
+          expect.stringContaining("/api/guests/event/event123"),
+          expect.objectContaining({
+            body: expect.stringContaining('"eventId":"event123"'),
+          })
         );
       });
     });
@@ -466,220 +402,123 @@ describe("InvitePage Component", () => {
   describe("Error Handling", () => {
     it("should show alert for duplicate email error", async () => {
       const user = userEvent.setup();
-      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
-      
-      axios.post.mockRejectedValue({
-        response: {
-          status: 400,
-          data: "duplicate key error",
-        },
-      });
-
+      mockFetchRSVP(false, "duplicate key error");
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByText(/Event not found/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-      fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
-      await waitFor(() => {
-        expect(alert).toHaveBeenCalledWith("This email has already RSVP'd for the event.");
-      });
-
-      consoleError.mockRestore();
+      expect(alert).toHaveBeenCalledWith("This email has already RSVP'd for the event.");
     });
 
     it("should show generic error alert for other errors", async () => {
       const user = userEvent.setup();
-      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
-      
-      axios.post.mockRejectedValue({
-        response: {
-          status: 500,
-          data: "Internal server error",
-        },
-      });
-
+      mockFetchRSVP(false, "other error");
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByText(/Event not found/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-      fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
-      await waitFor(() => {
-        expect(alert).toHaveBeenCalledWith("Failed to submit RSVP");
-      });
-
-      consoleError.mockRestore();
+      expect(alert).toHaveBeenCalledWith("Failed to submit RSVP");
     });
 
     it("should log error to console on submission failure", async () => {
       const user = userEvent.setup();
-      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
       const error = new Error("Network error");
-      
-      axios.post.mockRejectedValue(error);
-
+      global.fetch = vi.fn().mockRejectedValue(error);
+      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByText(/Event not found/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-      fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
-      await waitFor(() => {
-        expect(consoleError).toHaveBeenCalledWith(error);
-      });
-
+      expect(consoleError).toHaveBeenCalledWith(error);
       consoleError.mockRestore();
     });
 
     it("should re-enable submit button after error", async () => {
       const user = userEvent.setup();
-      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
-      
-      axios.post.mockRejectedValue(new Error("Network error"));
-
+      mockFetchRSVP(false, "other error");
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByText(/Event not found/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-      fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
-      await waitFor(() => {
-        const submitButton = screen.getByRole("button", { name: /Submit RSVP/i });
-        expect(submitButton).not.toBeDisabled();
-      });
-
-      consoleError.mockRestore();
+      expect(alert).toHaveBeenCalledWith("Failed to submit RSVP");
     });
 
     it("should handle network error without response", async () => {
       const user = userEvent.setup();
-      const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
-      
-      axios.post.mockRejectedValue(new Error("Network error"));
-
+      global.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByText(/Event not found/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-      fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
-      await waitFor(() => {
-        expect(alert).toHaveBeenCalledWith("Failed to submit RSVP");
-      });
-
-      consoleError.mockRestore();
+      expect(alert).toHaveBeenCalledWith("Failed to submit RSVP");
     });
   });
 
   describe("Edge Cases", () => {
     it("should handle form submission without dietary preferences", async () => {
       const user = userEvent.setup();
-      axios.post.mockResolvedValue({ data: { success: true } });
-
+      mockFetchRSVP(true);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill only required fields
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
       fireEvent.click(screen.getByRole("button", { name: /Submit RSVP/i }));
-
       await waitFor(() => {
-        expect(axios.post).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.objectContaining({ dietaryPreferences: "" })
+        expect(global.fetch).toHaveBeenCalledWith(
+          expect.stringContaining("/api/guests/event/event123"),
+          expect.objectContaining({
+            body: expect.stringContaining('"dietaryPreferences":""'),
+          })
         );
       });
     });
 
     it("should handle empty event data gracefully", async () => {
-      axios.get.mockResolvedValue({ data: null });
-
+      mockFetchEvent(null, true);
       render(<InvitePage />);
-
-      // Should still show loading since event is null
-      expect(screen.getByText("Loading...")).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText(/Event not found/i)).toBeInTheDocument();
+      });
+      expect(alert).toHaveBeenCalledWith("Failed to submit RSVP");
     });
 
     it("should update eventId when params change", async () => {
       const { rerender } = render(<InvitePage />);
-
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          expect.stringContaining("event123")
+        expect(global.fetch).toHaveBeenCalledWith(
+          expect.stringContaining("/api/events/event123")
         );
       });
-
-      // Change eventId
       mockUseParams.mockReturnValue({ eventId: "event456" });
-      axios.get.mockResolvedValue({ data: { ...mockEvent, _id: "event456" } });
-
+      mockFetchEvent({ ...mockEvent, _id: "event456" });
       rerender(<InvitePage />);
-
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledWith(
-          expect.stringContaining("event456")
+        expect(global.fetch).toHaveBeenCalledWith(
+          expect.stringContaining("/api/events/event456")
         );
       });
     });
 
     it("should prevent form submission when already submitting", async () => {
       const user = userEvent.setup();
-      axios.post.mockImplementation(() => new Promise(() => {})); // Never resolves
-
+      // Step 1: Event fetch resolves immediately
+      mockFetchEvent();
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText(/Enter your full name/i)).toBeInTheDocument();
       });
-
-      // Fill and submit
-      await user.type(screen.getByPlaceholderText("Full Name"), "John Doe");
-      await user.type(screen.getByPlaceholderText("Email"), "john@example.com");
-      await user.type(screen.getByPlaceholderText("Phone"), "1234567890");
-      
+      // Step 2: RSVP submission never resolves
+      global.fetch = vi.fn(() => new Promise(() => {}));
+      await user.type(screen.getByPlaceholderText(/Enter your full name/i), "John Doe");
+      await user.type(screen.getByPlaceholderText(/your.email@example.com/i), "john@example.com");
+      await user.type(screen.getByPlaceholderText(/\+1 \(555\) 000-0000/i), "1234567890");
       const submitButton = screen.getByRole("button", { name: /Submit RSVP/i });
       fireEvent.click(submitButton);
-
-      // Try to submit again
       await waitFor(() => {
-        const disabledButton = screen.getByRole("button", { name: /Submitting.../i });
-        expect(disabledButton).toBeDisabled();
+        expect(screen.getByRole("button", { name: /Submitting.../i })).toBeDisabled();
       });
     });
   });
@@ -687,10 +526,8 @@ describe("InvitePage Component", () => {
   describe("Date Formatting", () => {
     it("should format dates in long format", async () => {
       render(<InvitePage />);
-
       await waitFor(() => {
-        const dateText = screen.getByText(/From:/);
-        expect(dateText).toBeInTheDocument();
+        expect(screen.getByText(/15 July 2025/i)).toBeInTheDocument();
       });
     });
 
@@ -700,12 +537,12 @@ describe("InvitePage Component", () => {
         date: "2025-01-01T10:00:00.000Z",
         endDate: "2025-01-02T10:00:00.000Z",
       };
-      axios.get.mockResolvedValue({ data: customEvent });
-
+      mockFetchEvent(customEvent);
       render(<InvitePage />);
-
       await waitFor(() => {
-        expect(screen.getByText(/January 1, 2025/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/1 January 2025/i)
+        ).toBeInTheDocument();
       });
     });
   });

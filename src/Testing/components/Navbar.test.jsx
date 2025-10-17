@@ -1,18 +1,16 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { vi } from "vitest";
+import { vi, describe, it, beforeEach, expect } from "vitest";
 import Navbar from "@/components/Navbar";
 import { useAuth0 } from "@auth0/auth0-react";
 
 // Mock useAuth0
-vi.mock("@auth0/auth0-react", async () => {
-  return {
-    useAuth0: vi.fn(),
-  };
-});
+vi.mock("@auth0/auth0-react", () => ({
+  useAuth0: vi.fn(),
+}));
 
-// Mock useNavigate and useLocation from react-router-dom
+// Mock navigation and location
 const mockNavigate = vi.fn();
 let mockLocation = { pathname: "/" };
 
@@ -25,7 +23,6 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-// Helper to render Navbar with auth states
 const renderNavbar = ({ user, isAuthenticated = false, logout = vi.fn() }) => {
   useAuth0.mockReturnValue({ user, logout, isAuthenticated });
   return render(
@@ -41,9 +38,9 @@ describe("Navbar Component", () => {
     mockLocation = { pathname: "/" };
   });
 
-  it("renders the title and navigation links", () => {
+  it("renders title and desktop nav links", () => {
     renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
+      user: { name: "Tester", picture: "avatar.jpg" },
       isAuthenticated: true,
     });
 
@@ -52,129 +49,121 @@ describe("Navbar Component", () => {
     expect(screen.getByText("Events")).toBeInTheDocument();
   });
 
-  it("renders 'Guest' when user is not authenticated", () => {
+  it("renders 'Guest' when not authenticated", () => {
     renderNavbar({ user: null, isAuthenticated: false });
-
     expect(screen.getByText("Guest")).toBeInTheDocument();
   });
 
-  it("renders user name and picture when authenticated", () => {
+  it("renders user image and name when authenticated", () => {
     renderNavbar({
       user: { name: "John Doe", picture: "avatar.jpg" },
       isAuthenticated: true,
     });
-
-    expect(screen.getByText("John Doe")).toBeInTheDocument();
     const img = screen.getByRole("img");
     expect(img).toHaveAttribute("src", "avatar.jpg");
-    expect(img).toHaveAttribute("alt", "John Doe");
+    expect(screen.getByText("John Doe")).toBeInTheDocument();
   });
 
-  it("renders fallback icon and user name if no picture provided", () => {
+  it("renders fallback icon if user has no picture", () => {
     renderNavbar({
       user: { name: "NoPic User" },
       isAuthenticated: true,
     });
-
+    expect(screen.getByTestId("fallback-user-icon")).toBeInTheDocument();
     expect(screen.getByText("NoPic User")).toBeInTheDocument();
-    expect(screen.getByTestId("fallback-user-icon")).toBeInTheDocument(); // Make sure this test ID exists in your component
   });
 
-  it("navigates to '/' when clicking the title", async () => {
+  it("navigates home when clicking PlanIt title", async () => {
+    const user = userEvent.setup();
     renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
+      user: { name: "Tester", picture: "avatar.jpg" },
       isAuthenticated: true,
     });
 
-    await userEvent.click(screen.getByText("PlanIt"));
+    await user.click(screen.getByText("PlanIt"));
     expect(mockNavigate).toHaveBeenCalledWith("/");
   });
 
-  it("highlights active navigation link based on current pathname", () => {
+  it("applies active link style based on pathname", () => {
     mockLocation.pathname = "/events";
     renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
+      user: { name: "Tester", picture: "avatar.jpg" },
       isAuthenticated: true,
     });
 
-    const eventsLink = screen.getByText("Events");
-    expect(eventsLink).toHaveClass("bg-green-800 text-white");
-
-    const dashboardLink = screen.getByText("Dashboard");
-    expect(dashboardLink).toHaveClass("text-gray-700 hover:text-green-800");
+    const events = screen.getByText("Events");
+    expect(events).toHaveClass("bg-teal-700", "text-white");
+    expect(screen.getByText("Dashboard")).toHaveClass("text-gray-700");
   });
 
-  it("navigates to /home when clicking Dashboard and /events when clicking Events", async () => {
+  it("toggles dropdown when clicking profile area", async () => {
+    const user = userEvent.setup();
     renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
+      user: { name: "Test User", picture: "avatar.jpg" },
       isAuthenticated: true,
     });
 
-    await userEvent.click(screen.getByText("Dashboard"));
-    expect(mockNavigate).toHaveBeenCalledWith("/home");
+    const profile = screen.getByText("Test User");
 
-    await userEvent.click(screen.getByText("Events"));
-    expect(mockNavigate).toHaveBeenCalledWith("/events");
-  });
-
-  it("toggles dropdown on profile icon click", async () => {
-    renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
-      isAuthenticated: true,
-    });
-
-    const profileTrigger = screen.getByText("Test User");
     expect(screen.queryByText("Settings")).not.toBeInTheDocument();
+    await user.click(profile);
+    expect(screen.getByText("Settings")).toBeInTheDocument();
+    expect(screen.getByText("Sign Out")).toBeInTheDocument();
 
-    await userEvent.click(profileTrigger);
-    expect(screen.getByText("Settings")).toBeVisible();
-    expect(screen.getByText("Sign Out")).toBeVisible();
-
-    await userEvent.click(profileTrigger);
+    await user.click(profile);
     expect(screen.queryByText("Settings")).not.toBeInTheDocument();
   });
 
   it("closes dropdown when clicking outside", async () => {
+    const user = userEvent.setup();
     renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
+      user: { name: "Outside Click", picture: "pic.jpg" },
       isAuthenticated: true,
     });
 
-    const profileTrigger = screen.getByText("Test User");
-    await userEvent.click(profileTrigger);
-    expect(screen.getByText("Settings")).toBeVisible();
+    await user.click(screen.getByText("Outside Click"));
+    expect(screen.getByText("Settings")).toBeInTheDocument();
 
-    await userEvent.click(document.body);
+    fireEvent.mouseDown(document.body);
     expect(screen.queryByText("Settings")).not.toBeInTheDocument();
   });
 
-  it("calls logout on Sign Out button click", async () => {
+  it("calls logout when clicking Sign Out", async () => {
     const mockLogout = vi.fn();
+    const user = userEvent.setup();
+
     renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
+      user: { name: "Tester", picture: "pic.jpg" },
       isAuthenticated: true,
       logout: mockLogout,
     });
 
-    await userEvent.click(screen.getByText("Test User"));
-    await userEvent.click(screen.getByText("Sign Out"));
+    await user.click(screen.getByText("Tester"));
+    await user.click(screen.getByText("Sign Out"));
 
     expect(mockLogout).toHaveBeenCalledWith({ returnTo: window.location.origin });
   });
 
-  it("handles keyboard interaction for dropdown toggle", async () => {
+    it("toggles mobile nav menu", async () => {
+    const user = userEvent.setup();
     renderNavbar({
-      user: { name: "Test User", picture: "test-pic.jpg" },
+      user: { name: "Tester", picture: "pic.jpg" },
       isAuthenticated: true,
     });
 
-    const profileTrigger = screen.getByText("Test User");
+    const menuButton = screen.getByLabelText(/Open navigation menu/i);
 
-    profileTrigger.focus();
-    await userEvent.keyboard("{Enter}");
-    expect(screen.getByText("Settings")).toBeVisible();
+    // Open mobile nav
+    await user.click(menuButton);
+    const dashboards = screen.getAllByText("Dashboard");
+    // At least one of them (the mobile one) should be visible
+    expect(dashboards.some((el) => el.offsetParent !== null)).toBe(true);
 
-    await userEvent.keyboard("{Escape}");
-    expect(screen.queryByText("Settings")).not.toBeInTheDocument();
+    // Close mobile nav
+    await user.click(menuButton);
+    expect(
+      screen.getAllByText("Dashboard").every((el) => el.offsetParent === null)
+    ).toBe(true);
   });
+
 });

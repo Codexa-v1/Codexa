@@ -1,13 +1,16 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
 import "@testing-library/jest-dom";
 import About from "../../pages/AboutPage.jsx";
 
 // ---- mock child components ----
-vi.mock("../components/LandingNavbar", () => ({
-  default: () => <div data-testid="navbar">LandingNavbar</div>,
+vi.mock("../../components/Header", () => ({
+  Header: () => <div data-testid="header">Header</div>,
 }));
-vi.mock("../components/TeamCard", () => ({
+vi.mock("../../components/Footer", () => ({
+  Footer: () => <div data-testid="footer">Footer</div>,
+}));
+vi.mock("../../components/TeamCard", () => ({
   default: (props) => (
     <div data-testid="team-card">
       <p>{props.name}</p>
@@ -17,47 +20,39 @@ vi.mock("../components/TeamCard", () => ({
 }));
 
 describe("About Page", () => {
-  it("renders navbar and main heading", () => {
+  it("renders header and main heading", () => {
     render(<About />);
-    expect(screen.getByTestId("navbar")).toBeInTheDocument();
+    expect(screen.getByTestId("header")).toBeInTheDocument();
     expect(screen.getByText("About PlanIt")).toBeInTheDocument();
+  });
+
+  it("renders features grid", () => {
+    render(<About />);
+    // Check for some features
+    expect(screen.getByText("Vendor & Venue Management")).toBeInTheDocument();
+    expect(screen.getByText("Budget Management")).toBeInTheDocument();
+    expect(screen.getByText("Floor Plan Upload")).toBeInTheDocument();
   });
 
   it("renders team members correctly", () => {
     render(<About />);
     const cards = screen.getAllByTestId("team-card");
-    expect(cards.length).toBe(6); // matches your `team` array length
+    expect(cards.length).toBe(5); // matches your `team` array length
     expect(screen.getByText("Kutlwano")).toBeInTheDocument();
     expect(screen.getByText("Ntobeko")).toBeInTheDocument();
+    expect(screen.getByText("Given")).toBeInTheDocument();
   });
 
   it("renders contact section", () => {
     render(<About />);
-    expect(screen.getByText(/support@planit.com/i)).toBeInTheDocument();
+    expect(screen.getByText(/codexa3@gmail.com/i)).toBeInTheDocument();
     expect(
       screen.getByText(/We are committed to making your event planning/i)
     ).toBeInTheDocument();
   });
 
-  it("renders footer with quick links", () => {
+  it("renders footer", () => {
     render(<About />);
-    expect(screen.getByText("Quick Links")).toBeInTheDocument();
-    expect(screen.getByText("About")).toHaveAttribute("href", "/about");
-  });
-
-  it("navigates to features when Features button is clicked", () => {
-    delete window.location; // cleanup default
-    window.location = { href: "" };
-
-    render(<About />);
-    const featuresBtn = screen.getByRole("button", { name: "Features" });
-    fireEvent.click(featuresBtn);
-
-    expect(window.location.href).toBe("/#hero");
-  });
-
-  it("shows footer copyright", () => {
-    render(<About />);
-    expect(screen.getByText(/© 2025 PlanIt/i)).toBeInTheDocument();
+    expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
 });

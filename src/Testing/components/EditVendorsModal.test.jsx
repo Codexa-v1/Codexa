@@ -1,151 +1,194 @@
+// __tests__/EditVendorModal.test.jsx
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import EditVendorModal from "../../components/EditVendorModal";
-import { updateVendor, getVendors } from "@/backend/api/EventVendor";
+import { vi, describe, it, beforeEach, expect } from "vitest";
+import "@testing-library/jest-dom";
+import EditVendorModal from "@/components/EditVendorModal";
+import { updateVendor, getEventVendorDetails } from "@/backend/api/EventVendor";
+import { getVenues } from "@/backend/api/EventVenue";
 
-// Mock API
+// Mock APIs
 vi.mock("@/backend/api/EventVendor", () => ({
   updateVendor: vi.fn(),
-  getVendors: vi.fn(),
+  getEventVendorDetails: vi.fn(),
 }));
 
-const mockVendor = {
-  _id: "vendor123",
-  name: "Test Vendor",
-  vendorType: "Food",
-  contactPerson: "Alice",
-  phone: "123456789",
-  email: "vendor@example.com",
-  website: "https://test.com",
-  address: "123 Street",
-  rating: "4",
-  notes: "Good service",
-};
+vi.mock("@/backend/api/EventVenue", () => ({
+  getVenues: vi.fn(),
+}));
+
+// Mock alert since the component uses it
+window.alert = vi.fn();
 
 describe("EditVendorModal", () => {
-  const onClose = vi.fn();
-  const onVendorsUpdated = vi.fn();
+  const mockOnClose = vi.fn();
+  const mockOnSave = vi.fn();
+  const eventId = "event123";
+
+  const mockVendor = {
+    vendor: { _id: "vendor123" },
+    eventVendor: { vendorCost: 1000, notes: "Old notes" },
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
+    
   });
 
-  it("renders vendor data in inputs", () => {
+  it("renders initial vendor cost and notes", () => {
     render(
       <EditVendorModal
-        eventId="event1"
         vendor={mockVendor}
-        onClose={onClose}
-        onVendorsUpdated={onVendorsUpdated}
+        eventId={eventId}
+        eventBudget={5000}
+        onClose={mockOnClose}
+        onSave={mockOnSave}
       />
     );
 
-    expect(screen.getByDisplayValue("Test Vendor")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Food")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("Alice")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("1000")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Old notes")).toBeInTheDocument();
   });
 
-  it("updates form fields when typing", async () => {
+  it("updates form fields correctly", async () => {
+    const user = userEvent.setup();
     render(
       <EditVendorModal
-        eventId="event1"
         vendor={mockVendor}
-        onClose={onClose}
-        onVendorsUpdated={onVendorsUpdated}
+        eventId={eventId}
+        eventBudget={5000}
+        onClose={mockOnClose}
+        onSave={mockOnSave}
       />
     );
 
-    const nameInput = screen.getByDisplayValue("Test Vendor");
-    await userEvent.clear(nameInput);
-    await userEvent.type(nameInput, "Updated Vendor");
+    const costInput = screen.getByPlaceholderText("Enter cost (e.g., 1200.50)");
+    await user.clear(costInput);
+    await user.type(costInput, "2500.75");
 
-    expect(nameInput).toHaveValue("Updated Vendor");
+    const notesInput = screen.getByPlaceholderText("Add any additional notes...");
+    await user.clear(notesInput);
+    await user.type(notesInput, "Updated vendor note");
+
+    expect(costInput).toHaveValue("2500.75");
+    expect(notesInput).toHaveValue("Updated vendor note");
   });
 
-  it("submits form successfully", async () => {
-    updateVendor.mockResolvedValueOnce({});
-    getVendors.mockResolvedValueOnce([
-      { _id: "vendor123", name: "Updated Vendor" },
-    ]);
+  it("shows an alert if cost exceeds remaining budget", async () => {
+  const user = userEvent.setup();
+  getEventVendorDetails.mockResolvedValueOnce([]);
+  getVenues.mockResolvedValueOnce([]);
 
-    render(
-      <EditVendorModal
-        eventId="event1"
-        vendor={mockVendor}
-        onClose={onClose}
-        onVendorsUpdated={onVendorsUpdated}
-      />
-    );
-
-    const saveBtn = screen.getByRole("button", { name: /save vendor/i });
-    await userEvent.click(saveBtn);
-
-    await waitFor(() => {
-      expect(updateVendor).toHaveBeenCalledWith("event1", "vendor123", expect.any(Object));
-      expect(getVendors).toHaveBeenCalledWith("event1");
-      expect(onVendorsUpdated).toHaveBeenCalledWith(
-        expect.arrayContaining([{ _id: "vendor123", name: "Updated Vendor" }])
-      );
-      expect(onClose).toHaveBeenCalled();
-    });
-  });
-
-  it("shows error message when API fails", async () => {
-    updateVendor.mockRejectedValueOnce(new Error("Update failed"));
-
-    render(
-      <EditVendorModal
-        eventId="event1"
-        vendor={mockVendor}
-        onClose={onClose}
-        onVendorsUpdated={onVendorsUpdated}
-      />
-    );
-
-    const saveBtn = screen.getByRole("button", { name: /save vendor/i });
-    await userEvent.click(saveBtn);
-
-    expect(await screen.findByText("Update failed")).toBeInTheDocument();
-    expect(onClose).not.toHaveBeenCalled();
-  });
-
-  it("calls onClose when cancel is clicked", async () => {
-    render(
-      <EditVendorModal
-        eventId="event1"
-        vendor={mockVendor}
-        onClose={onClose}
-        onVendorsUpdated={onVendorsUpdated}
-      />
-    );
-
-    const cancelBtn = screen.getByRole("button", { name: /cancel/i });
-    await userEvent.click(cancelBtn);
-
-    expect(onClose).toHaveBeenCalled();
-  });
-  
-  it("initializes empty form fields when vendor props are missing", () => {
   render(
     <EditVendorModal
-      eventId="event1"
-      vendor={{}} // simulate no vendor data
-      onClose={onClose}
-      onVendorsUpdated={onVendorsUpdated}
+      vendor={mockVendor}
+      eventId={eventId}
+      eventBudget={500}
+      onClose={mockOnClose}
+      onSave={mockOnSave}
     />
   );
 
-  // All inputs should start empty
-  expect(screen.getByPlaceholderText("Name")).toHaveValue("");
-  expect(screen.getByPlaceholderText("Type")).toHaveValue("");
-  expect(screen.getByPlaceholderText("Contact Person")).toHaveValue("");
-  expect(screen.getByPlaceholderText("Phone")).toHaveValue("");
-  expect(screen.getByPlaceholderText("Email")).toHaveValue("");
-  expect(screen.getByPlaceholderText("Website")).toHaveValue("");
-  expect(screen.getByPlaceholderText("Address")).toHaveValue("");
-  expect(screen.getByPlaceholderText("Rating (1-5)")).toHaveValue(null);
-  expect(screen.getByPlaceholderText("Notes")).toHaveValue("");
+  // Wait for remaining budget to be displayed
+  await waitFor(() => {
+    expect(screen.getByText(/R500\.00/)).toBeInTheDocument();
+  });
+
+  const costInput = screen.getByPlaceholderText("Enter cost (e.g., 1200.50)");
+  await user.clear(costInput);
+  await user.type(costInput, "1000");
+
+  const saveButton = screen.getByRole("button", { name: /Save Changes/i });
+  await user.click(saveButton);
+
+  await waitFor(() => {
+    expect(window.alert).toHaveBeenCalledWith(
+      expect.stringContaining("Cost exceeds remaining budget")
+    );
+  });
+
+  expect(updateVendor).not.toHaveBeenCalled();
 });
 
+
+  it("calls updateVendor and triggers onSave and onClose on success", async () => {
+    const user = userEvent.setup();
+    updateVendor.mockResolvedValueOnce({});
+    getEventVendorDetails.mockResolvedValueOnce([]);
+    getVenues.mockResolvedValueOnce([]);
+
+    render(
+      <EditVendorModal
+        vendor={mockVendor}
+        eventId={eventId}
+        eventBudget={10000}
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />
+    );
+
+    const costInput = screen.getByPlaceholderText("Enter cost (e.g., 1200.50)");
+    await user.clear(costInput);
+    await user.type(costInput, "1200.50");
+
+    const notesInput = screen.getByPlaceholderText("Add any additional notes...");
+    await user.clear(notesInput);
+    await user.type(notesInput, "Updated note");
+
+    const saveButton = screen.getByRole("button", { name: /Save Changes/i });
+    await user.click(saveButton);
+
+    await waitFor(() => {
+      expect(updateVendor).toHaveBeenCalledWith(eventId, "vendor123", {
+        vendorCost: 1200.5,
+        notes: "Updated note",
+        contacted: true,
+      });
+      expect(mockOnSave).toHaveBeenCalled();
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+  });
+
+  it("shows alert if updateVendor throws error", async () => {
+    const user = userEvent.setup();
+    updateVendor.mockRejectedValueOnce(new Error("Update failed"));
+    getEventVendorDetails.mockResolvedValueOnce([]);
+    getVenues.mockResolvedValueOnce([]);
+
+    render(
+      <EditVendorModal
+        vendor={mockVendor}
+        eventId={eventId}
+        eventBudget={5000}
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />
+    );
+
+    const saveButton = screen.getByRole("button", { name: /Save Changes/i });
+    await user.click(saveButton);
+
+    await waitFor(() => {
+      expect(window.alert).toHaveBeenCalledWith("Failed to update vendor.");
+    });
+  });
+
+  it("calls onClose when Cancel is clicked", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <EditVendorModal
+        vendor={mockVendor}
+        eventId={eventId}
+        eventBudget={5000}
+        onClose={mockOnClose}
+        onSave={mockOnSave}
+      />
+    );
+
+    const cancelButton = screen.getByRole("button", { name: /Cancel/i });
+    await user.click(cancelButton);
+
+    expect(mockOnClose).toHaveBeenCalled();
+  });
 });

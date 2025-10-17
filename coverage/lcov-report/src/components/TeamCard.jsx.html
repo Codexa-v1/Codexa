@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -82,44 +82,53 @@
 <a name='L17'></a><a href='#L17'>17</a>
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { FiMail, FiPhone } from "react-icons/fi"
 &nbsp;
-const TeamCard = ({ name, role, email, phone }) =&gt; (
-  &lt;div className="bg-white border border-gray-200 rounded-xl shadow-lg p-4 sm:p-6 flex flex-col items-center text-center hover:shadow-2xl transition-shadow duration-200"&gt;
-    &lt;div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4"&gt;
-      &lt;span className="text-3xl font-bold text-green-800"&gt;{name.split(' ')[0][0]}&lt;/span&gt;
+export default function TeamCard({ name, role, email, phone }) {
+  const initials = name
+    .split(" ")
+    .map((n) =&gt; n[0])
+    .join("")
+    .toUpperCase()
+&nbsp;
+  return (
+    &lt;div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-teal-300 group hover:-translate-y-1"&gt;
+      &lt;div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center group-hover:from-teal-500 group-hover:to-teal-700 transition-all duration-300 shadow-md"&gt;
+        &lt;span className="text-3xl font-bold text-white"&gt;{initials}&lt;/span&gt;
+      &lt;/div&gt;
+&nbsp;
+      {/* Name and Role */}
+      &lt;h3 className="text-xl font-bold text-gray-900 text-center mb-1"&gt;{name}&lt;/h3&gt;
+      &lt;p className="text-teal-600 font-semibold text-center mb-4 text-lg"&gt;{role}&lt;/p&gt;
+&nbsp;
     &lt;/div&gt;
-  &lt;h3 className="text-lg sm:text-xl font-bold text-green-900 mb-2"&gt;{name}&lt;/h3&gt;
-  &lt;p className="text-green-700 font-semibold mb-2 text-base sm:text-lg"&gt;{role}&lt;/p&gt;
-    &lt;p className="text-gray-700 mb-1"&gt;
-      &lt;span className="font-semibold"&gt;Email:&lt;/span&gt; &lt;a href={`mailto:${email}`} className="text-green-700 underline"&gt;{email}&lt;/a&gt;
-    &lt;/p&gt;
-    &lt;p className="text-gray-700"&gt;
-      &lt;span className="font-semibold"&gt;Phone:&lt;/span&gt; {phone}
-    &lt;/p&gt;
-  &lt;/div&gt;
-);
-&nbsp;
-export default TeamCard;
+  )
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -127,7 +136,7 @@ export default TeamCard;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-30T14:28:24.225Z
+                at 2025-10-09T14:05:32.260Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
