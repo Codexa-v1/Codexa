@@ -79,6 +79,7 @@ Their API offered **storage functionality**, enabling the uploading and retrieva
 
 Although the API worked as intended, one limitation was identified, it only supported uploading **a single PDF per event**, restricting flexibility for multiple document storage.  
 Despite this, the API proved **stable** and was successfully **integrated into our production environment**.
+📖 Official Docs: [LSDFTH API documentation](https://sdp-project-zilb.onrender.com/public-resources/api-docs)
 
 ### 🚫 Collaboration with Bronze Fury
 The **Bronze Fury** group did not provide finalized API endpoints or adequate technical feedback within the required timeframe.  
