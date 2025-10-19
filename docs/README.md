@@ -1,10 +1,10 @@
-# Planit: Event Planner Project Documentation
+# 🎉 Planit: Event Planner Project Documentation 
 
-## Overview
+## 🧭 Overview  
 Planit is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning. Visit our Github [repository](https://github.com/Codexa-v1/Codexa.git) here!!. *PlanIt, Plan events that people remember because perfect events don't happen by accident!*.
 
-## Documentation Folder Structure
 
+## 🗂️ Documentation Folder Structure 
 The `docs` folder is organized as follows:
 - `development/`: Technical documentation, methodologies, backend structure, and mockups.
 - `meetings/`: Notes and summaries from project meetings and sprints.
@@ -13,7 +13,8 @@ The `docs` folder is organized as follows:
 
 This structure helps keep all project documentation organized and easy to navigate.
 
-## Project Goals
+
+## 🎯 Project Goals 
 - Enable event creation and planning
 - Guest invitations (manual, RSVP, CSV import) and track invitations
 - Adding Vendors to events and get recommendations based on event location
@@ -22,8 +23,8 @@ This structure helps keep all project documentation organized and easy to naviga
 - Responsive design for mobile and desktop
 - Easy-to-use dashboard for managing events
 
-## Tech Stack
 
+## 💻 Tech Stack
 [Tech Stack explained](./development/TechStack.md)
 - **Frontend:** React 19, Vite, Tailwind CSS
 - **[Backend](./development/Backend.md):** Node.js, Express.js, MongoDB
@@ -32,78 +33,65 @@ This structure helps keep all project documentation organized and easy to naviga
 - **Project Management:** Trello
 - **Documentation:** Markdown + GitHub Pages
 
-## Testing and Third Party Documentation
+## 🧪 Testing and Third-Party Documentation  
 - **[Sprint 2 Testing](./planning/Sprint02/Testing.md):** Frontend, Backend, Manual Testing, User testing
 - **[Sprint 3 Testing](./planning/Sprint03/Testing.md):** Expands Sprint 3 testing across frontend components, backend APIs, and Express routes.
 - **[Third Party code](./development/ThirdPartyCode.md):** Auth0, OpenWeather API, Inter-Group API Integration
 - **[Our Backend API Documentation](./development/BackendApi.md)**
 
 
-## Methodologies
-We follow the Agile Scrum methodology:
-- Standups: Tuesdays, Thursdays, Sundays
-- Sprint Retrospectives: After every sprint
-- Roles are rotated every sprint
-
-We follow the Github Flow methodology:
-- main (or master) branch always deployable
-- Create short-lived feature branches
-- Open a Pull Request when work is ready
-- Get peer review + approval
-- Merge to main
-- Deploy from main
-
-[Project methodologies explained](./development/Methodologies.md)
-
-## Communication Tools
-- WhatsApp
-- Discord
-- Trello Board (link)
-- GitHub Issues and Pull Requests
-- Microsoft teams
-
-[Team communication plan](./planning/Sprint01/Communication.md)
+## 🧱 Methodologies and Communication Tools 
+- **[Project methodology](./development/Methodologies.md):** Agile scrum, Github flow
+- **[Communication plan](./planning/Sprint01/Communication.md):** Whatsapp, Discord
+- **[Trello Board](https://trello.com/b/1v7ctfOX/codexa):** Team coordination, Planning
+- **[GitHub](https://github.com/Codexa-v1/Codexa.git):** Version control
 
 
-## Implementation 
-- Sprint one
+## 🕵️‍♂️ Audit Reports 
+- [Download www.aikido.dev Audit report](./assets/audit_reports/Tinycolor%20supply%20chain%20attack.pdf)
+- [Download socket.dev Audit report](./assets/audit_reports/Debug%20and%20Chalk%20supply%20chain%20attack.pdf)
+
+
+## 🚀 Implementation 
+- 🏁 Sprint One
     - [Sprint 1 brief](./planning/Sprint01/Sprint01Brief.md)
     - [Sprint 1 User Stories](./planning/Sprint01/UserStories.md)
     - [Team Roles](./planning/Sprint01/TeamRoles.md)
     - [Mockups](./development/Mockups.md)
-    - [Scrum 1 minute](./meetings/sprint01/2025-08-07-first-meeting.md)
-    - [Scrum 2 minute](./meetings/sprint01/Scrum.md)
-    - [Scrum 3 minute](./meetings/sprint01/Scrum02.md)
-    - [Scrum 4 minute](./meetings/sprint01/Scrum03.md)
-    - [Scrum 5 minute](./meetings/sprint01/Scrum04.md)
-- Sprint two
+    - [Scrum 1 minutes](./meetings/sprint01/2025-08-07-first-meeting.md)
+    - [Scrum 2 minutes](./meetings/sprint01/Scrum.md)
+    - [Scrum 3 minutes](./meetings/sprint01/Scrum02.md)
+    - [Scrum 4 minutes](./meetings/sprint01/Scrum03.md)
+    - [Scrum 5 minutes](./meetings/sprint01)
+- ⚡ Sprint Two  
     - [Sprint 2 brief](./planning/Sprint02/Sprint02Brief.md)
     - [Development Plan](./planning/Sprint02/DevelopmentPlan.md)
-    - [Scrum 1 minute](./meetings/sprint02/Scrum01.md)
-    - [Scrum 2 minute](./meetings/sprint02/Scrum02.md)
-    - [Scrum 3 minute](./meetings/sprint02/Scrum03.md)
-    - [Scrum 4 minute](./meetings/sprint02/Scrum04.md)
-    - [Scrum 5 minute](./meetings/sprint02/Scrum05.md)
-- Sprint three
+    - [Scrum 1 minutes](./meetings/sprint02/Scrum01.md)
+    - [Scrum 2 minutes](./meetings/sprint02/Scrum02.md)
+    - [Scrum 3 minutes](./meetings/sprint02/Scrum03.md)
+    - [Scrum 4 minutes](./meetings/sprint02/Scrum04.md)
+    - [Scrum 5 minutes](./meetings/sprint02/Scrum05.md)
+- 🔧 Sprint Three
     - [Sprint 3 brief](./planning/Sprint03/Sprint_3_Brief.md)
     - [Development Plan](./planning/Sprint03/DevelopmentPlan.md)
-    - [Scrum 1 minute](./meetings/sprint03/scrum01.md)
-    - [Scrum 2 minute](./meetings/sprint03/Scrum02.md)
-    - [Scrum 3 minute](./meetings/sprint03/Scrum03.md)
-    - [Scrum 4 minute](./meetings/sprint03/Scrum04.md)
-    - [Scrum 5 minute](./meetings/sprint03/Scrum05.md)
+    - [Scrum 1 minutes](./meetings/sprint03/scrum01.md)
+    - [Scrum 2 minutes](./meetings/sprint03/Scrum02.md)
+    - [Scrum 3 minutes](./meetings/sprint03/Scrum03.md)
+    - [Scrum 4 minutes](./meetings/sprint03/Scrum04.md)
+    - [Scrum 5 minutes](./meetings/sprint03/Scrum05.md)
     - [Scrum 6 minutes](./meetings/sprint03/Scrum06.md)
     - [Scrum 7 minutes](./meetings/sprint03/Scrum07.md)
     - [Scrum 8 minutes](./meetings/sprint03/Scrum08.md)
 
-- Sprint four
+- 🎯 Sprint Four
     - [Sprint 4 brief](./planning/Sprint04/Sprint_4_Brief.md)
     - [Development Plan](./planning/Sprint04/DevelopmentPlan.md)
-    - [Download www.aikido.dev Audit report](./assets/audit_reports/Tinycolor%20supply%20chain%20attack.pdf)
-    - [Download socket.dev Audit report](./assets/audit_reports/Debug%20and%20Chalk%20supply%20chain%20attack.pdf)
     - [Scrum 1 minutes](./meetings/sprint04/Scrum01.md)
     - [Scrum 2 minutes](./meetings/sprint04/Scrum02.md)
     - [Scrum 3 minutes](./meetings/sprint04/Scrum03.md)
     - [Scrum 4 minutes](./meetings/sprint04/Scrum04.md)
     
 ---
+
+🌟 **Planit** is continuously evolving and each sprint brings improvements to usability, testing, and performance.  
+Check out our live site and ongoing documentation for updates!  
