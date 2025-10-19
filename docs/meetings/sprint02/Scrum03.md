@@ -1,4 +1,4 @@
-# 📝 Codexa: Scrum 01 Meeting Minutes
+# 📝Scrum 01 Meeting Minutes
 
 **Date:** August 26, 2025  
 **Time:** 21:17 – 21:26  

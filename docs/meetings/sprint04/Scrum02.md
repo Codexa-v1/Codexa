@@ -1,4 +1,4 @@
-# 📋 Codexa: Scrum 02 Meeting Minutes
+# 📋Scrum 02 Meeting Minutes
 
 **Date:** October 09, 2025  
 **Time:** 20:37 – 20:57  

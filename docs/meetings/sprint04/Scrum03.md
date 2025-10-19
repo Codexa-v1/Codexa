@@ -1,4 +1,4 @@
-# 📋 Codexa: Scrum 03 Meeting Minutes
+# 📋Scrum 03 Meeting Minutes
 
 **Date:** October 14, 2025  
 **Time:** 20:40 – 20:48  

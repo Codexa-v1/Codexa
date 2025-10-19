@@ -1,4 +1,4 @@
-# 📋 Codexa: Scrum 05 Meeting Minutes
+# 📋Scrum 05 Meeting Minutes
 
 **Date:** September 21, 2025  
 **Time:** 21:00 – 21:17  

@@ -1,4 +1,4 @@
-# 📋 Codexa: Scrum 07 Meeting Minutes
+# 📋Scrum 07 Meeting Minutes
 
 **Date:** September 25, 2025  
 **Time:** 20:37 – 20:44  

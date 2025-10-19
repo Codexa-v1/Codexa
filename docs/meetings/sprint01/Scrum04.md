@@ -1,4 +1,4 @@
-# 📝 Codexa: Scrum 04 Meeting Minutes
+# 📝Scrum 04 Meeting Minutes
 
 ## Meeting Details
 - **Title:** Third Online Team Meeting  

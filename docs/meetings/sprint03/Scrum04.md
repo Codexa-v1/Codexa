@@ -1,4 +1,4 @@
-# 📋 Codexa: Scrum 04 Meeting Minutes
+# 📋Scrum 04 Meeting Minutes
 
 **Date:** September 18, 2025  
 **Time:** 20:32 – 20:54  

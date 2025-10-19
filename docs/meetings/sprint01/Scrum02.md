@@ -1,4 +1,4 @@
-# Codexa: Scrum 2 Minutes
+# 📝Scrum 02 Minutes
 
 **Date:** August 10, 2025  
 **Time:** 14:15 – 16:00  

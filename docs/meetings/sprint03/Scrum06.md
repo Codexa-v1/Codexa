@@ -1,4 +1,4 @@
-# 📋 Codexa: Scrum 06 Meeting Minutes
+# 📋Scrum 06 Meeting Minutes
 
 **Date:** September 23, 2025  
 **Time:** 20:40 – 20:47  

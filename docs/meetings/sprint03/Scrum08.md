@@ -1,4 +1,4 @@
-# 📋 Codexa: Scrum 08 Meeting Minutes
+# 📋Scrum 08 Meeting Minutes
 
 **Date:** September 28, 2025  
 **Time:** 20:33 – 20:52  
