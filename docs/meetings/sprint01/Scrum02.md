@@ -1,4 +1,4 @@
-# 📝Scrum 02 Minutes
+# 📝Scrum 03 Minutes
 
 **Date:** August 10, 2025  
 **Time:** 14:15 – 16:00  
