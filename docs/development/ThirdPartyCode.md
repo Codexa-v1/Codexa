@@ -77,7 +77,7 @@ We worked with two other groups during the integration phase:
 Among the two collaborations, only the **LSDFTH** team provided sufficient technical documentation and clarification for successful integration.  
 Their API offered **storage functionality**, enabling the uploading and retrieval of **images and PDF files** and generating **downloadable links** so users could share their event media externally.  
 
-Although the API worked as intended, one limitation was identified — it only supported uploading **a single PDF per event**, restricting flexibility for multiple document storage.  
+Although the API worked as intended, one limitation was identified, it only supported uploading **a single PDF per event**, restricting flexibility for multiple document storage.  
 Despite this, the API proved **stable** and was successfully **integrated into our production environment**.
 
 ### 🚫 Collaboration with Bronze Fury

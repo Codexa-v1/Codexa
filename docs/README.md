@@ -35,7 +35,7 @@ This structure helps keep all project documentation organized and easy to naviga
 ## Testing and Third Party Documentation
 - **[Sprint 2 Testing](./planning/Sprint02/Testing.md):** Frontend, Backend, Manual Testing, User testing
 - **[Sprint 3 Testing](./planning/Sprint03/Testing.md):** Expands Sprint 3 testing across frontend components, backend APIs, and Express routes.
-- **[Third Party code](./development/ThirdPartyCode.md):** Auth0, OpenWeather API
+- **[Third Party code](./development/ThirdPartyCode.md):** Auth0, OpenWeather API, Inter-Group API Integration
 - **[Our Backend API Documentation](./development/BackendApi.md)**
 
 
@@ -102,5 +102,6 @@ We follow the Github Flow methodology:
     - [Scrum 01](./meetings/sprint04/Scrum01.md)
     - [Scrum 02](./meetings/sprint04/Scrum02.md)
     - [Scrum 03](./meetings/sprint04/Scrum03.md)
+    - [Scrum 04](./meetings/sprint04/Scrum04.md)
     
 ---
