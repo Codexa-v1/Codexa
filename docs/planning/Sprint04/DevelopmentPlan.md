@@ -104,7 +104,9 @@ Deliver a **feature-complete, stable, well-documented, and deployed** event-plan
 ## 3. ⌛ Sprint Timeline
 - Below are snapshots of our Trello board as we progress through the entire sprint. The trello board can be accessed via this [Link](https://trello.com/invite/b/688926a06672f847b26eadd8/ATTI44809ab9733ae3526b4a7133a7e97f41E5E6470D/codexa)
 
-- Our trello board as pf 07 October 2025
+- Our trello board as of 07 October 2025
 ![Alt text](../../assets/meetings/Sprint04/16_Oct.png)
+- Our trello board as of 16 October 2025
+![Alt text](../../assets/meetings/Sprint04/19_Oct.png)
 
 ---

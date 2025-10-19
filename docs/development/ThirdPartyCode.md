@@ -64,7 +64,29 @@ We integrated the **OpenWeather Hourly Forecast (4-day)** API to enhance event p
 
 ---
 
-## Why These Services?
+## 🔗 Inter-Group API Integration
 
-- **Auth0:** Simplifies secure authentication without having to build/maintain our own identity management system.  
-- **OpenWeather API:** Adds real-world, dynamic data to our app, making it more useful and engaging for end-users.  
+In line with project requirements, our backend was designed to communicate with APIs developed by other student teams. To ensure interoperability, we exchanged API documentation with multiple groups and aimed to achieve cross-team functionality.
+
+### 🤝 Collaborating Teams
+We worked with two other groups during the integration phase:
+- **Bronze Fury**
+- **LSDFTH**
+
+### 🧠 Integration with LSDFTH
+Among the two collaborations, only the **LSDFTH** team provided sufficient technical documentation and clarification for successful integration.  
+Their API offered **storage functionality**, enabling the uploading and retrieval of **images and PDF files** and generating **downloadable links** so users could share their event media externally.  
+
+Although the API worked as intended, one limitation was identified — it only supported uploading **a single PDF per event**, restricting flexibility for multiple document storage.  
+Despite this, the API proved **stable** and was successfully **integrated into our production environment**.
+
+### 🚫 Collaboration with Bronze Fury
+The **Bronze Fury** group did not provide finalized API endpoints or adequate technical feedback within the required timeframe.  
+As a result, their API could not be integrated into our system.  
+The main barriers were **communication delays** and **incomplete endpoint documentation**, which prevented successful integration within the sprint schedule.
+
+✅ **Summary:**  
+This inter-group collaboration exercise emphasized the importance of clear API documentation, consistent communication, and version control coordination.  
+Future cross-team projects would benefit from standardized specifications such as **OpenAPI/Swagger**, earlier testing, and shared staging environments.
+
+---

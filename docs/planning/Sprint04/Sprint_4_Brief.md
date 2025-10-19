@@ -1,11 +1,11 @@
-# PlanIt Event Planner: Sprint 4 (Final Submission) Brief
+# PlanIt Event Planner: Sprint 4 Brief
 
 ## 1. 🥅 Sprint Goal
 Deliver a **feature-complete, stable, well-documented, and deployed** event-planner application that meets all requirements, production-ready database and API, fully functional web app (responsive & accessible), comprehensive documentation, thorough testing, and clear evidence of Agile process and stakeholder interaction.
 
 ---
 
-## 2. 🔑 Key Deliverables (must be submitted by 19 Oct 2025)
+## 2. 🔑 Key Deliverables 
 - **Deployed Web App** (publicly accessible URL; production-ready).  
 - **Deployed API** (externally available and documented).  
 - **Database** deployed with sample/production data and schema documentation.   
