@@ -1,8 +1,8 @@
 # 🎉 Planit: Event Planner Project Documentation 
 
 ## 🧭 Overview  
-Planit is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning. Visit our Github [repository](https://github.com/Codexa-v1/Codexa.git) here!!. *PlanIt, Plan events that people remember because perfect events don't happen by accident!*.
-
+Planit is an Event Planning platform that allows users to create and plan events, invite guests, and connect with vendors. The system will be mobile-friendly, support OAuth authentication, and provide a user-friendly interface for event organization and planning. *PlanIt, Plan events that people remember because perfect events don't happen by accident!*.
+Visit our App here: https://victorious-ground-09423c310.1.azurestaticapps.net/
 
 ## 🗂️ Documentation Folder Structure 
 The `docs` folder is organized as follows:
