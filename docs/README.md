@@ -53,43 +53,48 @@ This structure helps keep all project documentation organized and easy to naviga
 
 
 ## 🚀 Implementation 
-- 🏁 Sprint One
-    - [Sprint 1 brief](./planning/Sprint01/Sprint01Brief.md)
-    - [Sprint 1 User Stories](./planning/Sprint01/UserStories.md)
-    - [Team Roles](./planning/Sprint01/TeamRoles.md)
-    - [Mockups](./development/Mockups.md)
-    - [Scrum 1 minutes](./meetings/sprint01/2025-08-07-first-meeting.md)
-    - [Scrum 2 minutes](./meetings/sprint01/Scrum.md)
-    - [Scrum 3 minutes](./meetings/sprint01/Scrum02.md)
-    - [Scrum 4 minutes](./meetings/sprint01/Scrum03.md)
-    - [Scrum 5 minutes](./meetings/sprint01)
-- ⚡ Sprint Two  
-    - [Sprint 2 brief](./planning/Sprint02/Sprint02Brief.md)
-    - [Development Plan](./planning/Sprint02/DevelopmentPlan.md)
-    - [Scrum 1 minutes](./meetings/sprint02/Scrum01.md)
-    - [Scrum 2 minutes](./meetings/sprint02/Scrum02.md)
-    - [Scrum 3 minutes](./meetings/sprint02/Scrum03.md)
-    - [Scrum 4 minutes](./meetings/sprint02/Scrum04.md)
-    - [Scrum 5 minutes](./meetings/sprint02/Scrum05.md)
-- 🔧 Sprint Three
-    - [Sprint 3 brief](./planning/Sprint03/Sprint_3_Brief.md)
-    - [Development Plan](./planning/Sprint03/DevelopmentPlan.md)
-    - [Scrum 1 minutes](./meetings/sprint03/scrum01.md)
-    - [Scrum 2 minutes](./meetings/sprint03/Scrum02.md)
-    - [Scrum 3 minutes](./meetings/sprint03/Scrum03.md)
-    - [Scrum 4 minutes](./meetings/sprint03/Scrum04.md)
-    - [Scrum 5 minutes](./meetings/sprint03/Scrum05.md)
-    - [Scrum 6 minutes](./meetings/sprint03/Scrum06.md)
-    - [Scrum 7 minutes](./meetings/sprint03/Scrum07.md)
-    - [Scrum 8 minutes](./meetings/sprint03/Scrum08.md)
+### 🏁 Sprint One
+- [Sprint 1 brief](./planning/Sprint01/Sprint01Brief.md)
+- [Sprint 1 User Stories](./planning/Sprint01/UserStories.md)
+- [Team Roles](./planning/Sprint01/TeamRoles.md)
+- [Mockups](./development/Mockups.md)
+- [Scrum 1 minutes](./meetings/sprint01/2025-08-07-first-meeting.md)
+- [Scrum 2 minutes](./meetings/sprint01/Scrum.md)
+- [Scrum 3 minutes](./meetings/sprint01/Scrum02.md)
+- [Scrum 4 minutes](./meetings/sprint01/Scrum03.md)
+- [Scrum 5 minutes](./meetings/sprint01)
 
-- 🎯 Sprint Four
-    - [Sprint 4 brief](./planning/Sprint04/Sprint_4_Brief.md)
-    - [Development Plan](./planning/Sprint04/DevelopmentPlan.md)
-    - [Scrum 1 minutes](./meetings/sprint04/Scrum01.md)
-    - [Scrum 2 minutes](./meetings/sprint04/Scrum02.md)
-    - [Scrum 3 minutes](./meetings/sprint04/Scrum03.md)
-    - [Scrum 4 minutes](./meetings/sprint04/Scrum04.md)
+
+### ⚡ Sprint Two  
+- [Sprint 2 brief](./planning/Sprint02/Sprint02Brief.md)
+- [Development Plan](./planning/Sprint02/DevelopmentPlan.md)
+- [Scrum 1 minutes](./meetings/sprint02/Scrum01.md)
+- [Scrum 2 minutes](./meetings/sprint02/Scrum02.md)
+- [Scrum 3 minutes](./meetings/sprint02/Scrum03.md)
+- [Scrum 4 minutes](./meetings/sprint02/Scrum04.md)
+- [Scrum 5 minutes](./meetings/sprint02/Scrum05.md)
+
+
+### 🔧 Sprint Three
+- [Sprint 3 brief](./planning/Sprint03/Sprint_3_Brief.md)
+- [Development Plan](./planning/Sprint03/DevelopmentPlan.md)
+- [Scrum 1 minutes](./meetings/sprint03/scrum01.md)
+- [Scrum 2 minutes](./meetings/sprint03/Scrum02.md)
+- [Scrum 3 minutes](./meetings/sprint03/Scrum03.md)
+- [Scrum 4 minutes](./meetings/sprint03/Scrum04.md)
+- [Scrum 5 minutes](./meetings/sprint03/Scrum05.md)
+- [Scrum 6 minutes](./meetings/sprint03/Scrum06.md)
+- [Scrum 7 minutes](./meetings/sprint03/Scrum07.md)
+- [Scrum 8 minutes](./meetings/sprint03/Scrum08.md)
+
+
+### 🎯 Sprint Four
+- [Sprint 4 brief](./planning/Sprint04/Sprint_4_Brief.md)
+- [Development Plan](./planning/Sprint04/DevelopmentPlan.md)
+- [Scrum 1 minutes](./meetings/sprint04/Scrum01.md)
+- [Scrum 2 minutes](./meetings/sprint04/Scrum02.md)
+- [Scrum 3 minutes](./meetings/sprint04/Scrum03.md)
+- [Scrum 4 minutes](./meetings/sprint04/Scrum04.md)
     
 ---
 
